@@ -11,6 +11,7 @@ RAM-Disk Konfigurator
 Einträge in Kontextmenüs aktivieren
 Administratorrechte im Explorer erbitten
 Verknüpfungen auf Desktop anlegen
+ImDskSvc automatisch laden
 Sprache:
 Zeige mit der Maus auf einen Eintrag, um mehr zu erfahren.
 Treiber installieren. Dies enthält ein Systemsteuerungs-Applet, ein Befehlszeilen-Tool, imdisk.exe und Oberflächen, um Volumes über Kontextmenüs des Explorer zu bedienen.##Bitte tippe "imdisk" in einem Kommandozeilenfenster für weitere Details.
@@ -19,6 +20,7 @@ Dieses Programm ermöglicht die einfache Konfiguration von einer oder mehrerer R
 Füge Einträge zum Kontextmenü des Laufwerks und das Datei-Kontextmenü hinzu, um die ImDisk-Volumes und Abbilder direkt vom Explorer aus zu verwalten.##Diese Option kann später vom Windows-Startmenü aus gesetzt werden.
 Dies betrifft die Befehle im Laufwerks-Kontextmenü: "Diskinhalt als Abbild speichern" und "ImDisk Virtual Disk trennen".##Löst einige UAC-bezogene Probleme.##Diese Option kann später vom Windows-Startmenü aus gesetzt werden.
 Verknüpfungen auf dem Desktop anlegen.##Windows-Startmenü werden stets alle Verknüpfungen angelegt.
+ImDskSvc beim Systemstart automatisch starten.##Kein Teil dieses Pakets nutzt diesen Dienst, sodass diese Option sicher abgeschaltet werden kann.##Er wird vom Treiber installiert, um Verbindungen per TCP/IP oder serieller Schnittstelle über Proxy-Software zu ermöglichen.
 Mitwirkende
 Installieren
 Abbrechen
@@ -28,7 +30,7 @@ Ungültiger Pfad.
 Fehler: Kann Dienst nicht anlegen.
 Das vorherige Setup befindet sich in einem anderen Verzeichnis.#Möchtest du es löschen?
 Installation abgeschlossen.
-Installation abgeschlossen.##Allerdings ist .NET Framework 4 auf deinem System derzeit nicht installiert.#Ohne es kannst du einige Abbilder nicht einbinden.##Besuche <a href="http://www.microsoft.com/en-us/download/details.aspx?id=17113">Microsoft Download Center</a> für ein Setup.
+Installation abgeschlossen.##Allerdings ist .NET Framework 4 auf deinem System derzeit nicht installiert.#Ohne es kannst du einige Abbilder nicht einbinden.##Besuche <a href="https://www.microsoft.com/en-us/download/details.aspx?id=17113">Microsoft Download Center</a> für ein Setup.
 OK
 
 ImDisk - Mitwirkende
@@ -136,7 +138,7 @@ Nur Dateien mit Archiv-Eigenschaft kopieren
 Aus der RAM-Disk entfernte Dateien löschen
 Ausgenommene Verzeichnisse:
 Jetzt synchronisieren
-Wenn du ein Verzeichnis auswählst, wird sein gesamter Inhalt kopiert sobald die RAM-Disk#angelegt wurde. Je nach Dateisystem beinhaltet das auch Dateiattribute und ACL.
+Wenn du ein Verzeichnis auswählst, wird sein gesamter Inhalt kopiert sobald die RAM-Disk#angelegt wurde. Je nach Dateisystem beinhaltet das auch Dateiattribute und ACL.##Ein Abbild in einer Datei muss Roh - ohne Partition - und mit gültigem Dateisystem sein.#Dieses Abbild kann zum Beispiel im Explorer mit einem Rechtsklick auf einem#Laufwerksbuchstaben angelegt werden: "Diskinhalt als Abbild speichern".
 Voreinstellung: ausgeschaltet.##Kopiert vor dem Herunterfahren Daten von der RAM-Disk in ein Verzeichnis oder#ein Abbild - je nachdem welche Parameter unten angegeben sind.
 Ein Verzeichnis pro Zeile.#Verzeichnisse sind relativ zum Hauptverzeichnis der RAM-Disk#(Laufwerksbuchstabe oder Bereitstellungspunkt): nicht hinzufügen.
 Jetzt alle registrierten RAM-Disks synchronisieren.
@@ -250,13 +252,12 @@ Beenden
 
 Neues Abbild anlegen
 Diese Datei existiert nicht.#Möchtest du eine neues RAW-Abbild anlegen?
-        Dateigröße:#        (Min. 20 KB)
+        Dateigröße:#        (Min. 65 KB)
 Einbinden
 Anlegen
 Abbrechen
 Fehler: Datei kann nicht angelegt werden.
 Fehler: Datei der angegebenen Größe kann nicht angelegt werden.
-Fehler: Kann Datei nicht initialisieren.
 
 Bytes
 KB

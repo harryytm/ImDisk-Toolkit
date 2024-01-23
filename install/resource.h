@@ -8,6 +8,7 @@
 #define ID_TEXT8 108
 #define ID_TEXT9 109
 #define ID_TEXT10 110
+#define ID_TEXT11 111
 
 #define ID_GROUP1 201
 #define ID_GROUP2 202
@@ -20,6 +21,7 @@
 #define ID_CHECK4 404
 #define ID_CHECK5 405
 #define ID_CHECK6 406
+#define ID_CHECK7 407
 #define ID_CHECK_A 500
 
 #define ID_PBUTTON1 601

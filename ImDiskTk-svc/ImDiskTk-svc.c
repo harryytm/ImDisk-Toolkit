@@ -166,7 +166,6 @@ static DWORD __stdcall save_ramdisk(LPVOID lpParam)
 	if (!(buf = VirtualAlloc(NULL, DEF_BUFFER_SIZE + 2 * 32768 * sizeof(WCHAR) + 501 * sizeof(WCHAR), MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE))) goto stop;
 	path_source = buf + DEF_BUFFER_SIZE;
 	path_dest = path_source + 32768;
-	sync_excluded = path_dest + 32768;
 
 	if (RegOpenKeyExA(HKEY_LOCAL_MACHINE, "SOFTWARE\\ImDisk", 0, KEY_QUERY_VALUE | KEY_SET_VALUE | KEY_WOW64_64KEY, &reg_key) != ERROR_SUCCESS) goto stop;
 	data_size = sizeof wanted_drive;
@@ -219,15 +218,15 @@ static DWORD __stdcall save_ramdisk(LPVOID lpParam)
 		}
 
 		// excluded folders
+		sync_excluded = path_dest + 32768;
 		*sync_excluded = 0;
 		wcscpy(&key_name[2], L"SyncExcluded");
 		data_size = 499 * sizeof(WCHAR);
 		RegQueryValueEx(reg_key, key_name_ptr, NULL, NULL, (void*)sync_excluded, &data_size);
-		i = 0;
-		for (;;) {
+		for (i = 0;; i++) {
 			while (*(ULONG*)sync_excluded == '\r' + ('\n' << 16)) sync_excluded += 2;
 			if (!*sync_excluded) break;
-			excluded_list[i++] = sync_excluded;
+			excluded_list[i] = sync_excluded;
 			if (!(sync_excluded = wcsstr(sync_excluded, L"\r\n"))) break;
 			*sync_excluded = 0;
 			sync_excluded += 2;
@@ -237,6 +236,7 @@ static DWORD __stdcall save_ramdisk(LPVOID lpParam)
 		base_source = path_source + i;
 		j = _snwprintf(path_dest, 32767, dest_is_dir && image_file[0] == '\\' && image_file[1] == '\\' ? L"%s" : L"\\\\?\\%s", dest_is_dir ? image_file : temp_letter);
 		base_dest = path_dest + j;
+
 		if (flags & 4) scan_dir_delete(i, j, FALSE);
 		scan_dir_copy(i, j);
 

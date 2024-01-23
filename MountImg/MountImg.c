@@ -62,7 +62,7 @@ enum {
 	TTIP_1, TTIP_2, TTIP_3, TTIP_4, TTIP_5, TTIP_6, TTIP_7, TTIP_8,
 	ERR_1, ERR_2, ERR_3, ERR_4, ERR_5, ERR_6,
 	INV_0, INV_1, INV_2, INV_3, INV_4,
-	CREA_0, CREA_1, CREA_2, CREA_3, CREA_4, CREA_5, CREA_6, CREA_7, CREA_8,
+	CREA_0, CREA_1, CREA_2, CREA_3, CREA_4, CREA_5, CREA_6, CREA_7,
 	UNIT_1, UNIT_2, UNIT_3, UNIT_4, UNIT_5, UNIT_6,
 	NB_TXT
 };
@@ -405,8 +405,6 @@ static INT_PTR __stdcall CreateFile_Proc(HWND hDlg, UINT Msg, WPARAM wParam, LPA
 	HANDLE h;
 	WCHAR txt_size[18];
 	__int64 size;
-	void *buf;
-	DWORD bytes;
 	int i, unit;
 
 	switch (Msg)
@@ -447,7 +445,7 @@ static INT_PTR __stdcall CreateFile_Proc(HWND hDlg, UINT Msg, WPARAM wParam, LPA
 
 			GetDlgItemText(hDlg, ID_EDIT21, txt_size, _countof(txt_size));
 			size = min(_wtoi64(txt_size), _I64_MAX >> unit) << unit;
-			EnableWindow(GetDlgItem(hDlg, IDOK), size >= 20480);
+			EnableWindow(GetDlgItem(hDlg, IDOK), size >= 65537);
 
 			if (LOWORD(wParam) == IDOK) {
 				if ((h = CreateFile(filename, GENERIC_WRITE, 0, NULL, CREATE_NEW, FILE_ATTRIBUTE_NORMAL, NULL)) == INVALID_HANDLE_VALUE) {
@@ -461,18 +459,9 @@ static INT_PTR __stdcall CreateFile_Proc(HWND hDlg, UINT Msg, WPARAM wParam, LPA
 					MessageBox(hDlg, t[CREA_7], L"ImDisk", MB_ICONERROR);
 					return TRUE;
 				}
-				SetFilePointerEx(h, (LARGE_INTEGER)0LL, NULL, FILE_BEGIN);
-				buf = VirtualAlloc(NULL, 20480, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
-				new_file = WriteFile(h, buf, 20480, &bytes, NULL);
 				CloseHandle(h);
-				VirtualFree(buf, 0, MEM_RELEASE);
-				if (new_file) {
-					if (!(i = IsDlgButtonChecked(hDlg, ID_CHECK21))) file_check();
-					EndDialog(hDlg, i);
-				} else {
-					DeleteFile(filename);
-					MessageBox(hDlg, t[CREA_8], L"ImDisk", MB_ICONERROR);
-				}
+				if (!(i = IsDlgButtonChecked(hDlg, ID_CHECK21))) file_check();
+				EndDialog(hDlg, i);
 			}
 
 			if (LOWORD(wParam) == IDCANCEL)
@@ -923,7 +912,10 @@ static INT_PTR __stdcall DlgProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPar
 				ofn.nMaxFile = _countof(filename);
 				ofn.Flags = OFN_PATHMUSTEXIST | OFN_HIDEREADONLY;
 				GetOpenFileName(&ofn);
-				if (filename[0]) SetDlgItemText(hDlg, ID_COMBO1, filename);
+				if (filename[0]) {
+					SetDlgItemText(hDlg, ID_COMBO1, filename);
+					file_check();
+				}
 			}
 
 			if (LOWORD(wParam) == ID_PBUTTON2) {

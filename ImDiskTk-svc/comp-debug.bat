@@ -7,10 +7,10 @@
 del "%TEMP%\resource.o"
 
 
-\mingw32\bin\i686-w64-mingw32-gcc.exe ImDiskTk-svc.c -S -o ImDiskTk-svc32.s -municode -s -Os -Wall
+\mingw32\bin\gcc.exe ImDiskTk-svc.c -S -o ImDiskTk-svc32.s -municode -s -Os -Wall
 
-\mingw32\bin\i686-w64-mingw32-windres.exe resource.rc "%TEMP%\resource.o"
-\mingw32\bin\i686-w64-mingw32-gcc.exe ImDiskTk-svc.c "%TEMP%\resource.o" -o ImDiskTk-svc32.exe -municode -s -Os -Wall^
+\mingw32\bin\windres.exe resource.rc "%TEMP%\resource.o"
+\mingw32\bin\gcc.exe ImDiskTk-svc.c "%TEMP%\resource.o" -o ImDiskTk-svc32.exe -municode -s -Os -Wall^
  -lmsvcrt -lkernel32 -lntdll -lshlwapi
 
 del "%TEMP%\resource.o"

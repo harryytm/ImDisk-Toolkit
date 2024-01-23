@@ -56,7 +56,7 @@ CREATE_FILE DIALOGEX 0, 0, 210, 126
 			CAPTION "Create New Image File"
 BEGIN
 	LTEXT "The file does not exist.\nDo you want to create a new RAW image file?", ID_TEXT1, 42, 12, 168, 30
-	LTEXT "File Size:\n(Min 20KB)", ID_TEXT2, 20, 49, 64, 20
+	LTEXT "File Size:\n(Min 65KB)", ID_TEXT2, 20, 49, 64, 20
 	EDITTEXT ID_EDIT21, 84, 51, 68, 12, ES_NUMBER
 	AUTORADIOBUTTON "Bytes", ID_RB21, 156, 42, 52, 8
 	AUTORADIOBUTTON "KB", ID_RB22, 156, 50, 52, 8
@@ -70,7 +70,7 @@ END
 
 
 1 VERSIONINFO
-FILEVERSION 3,0,4,0
+FILEVERSION 3,1,0,0
 BEGIN
 BLOCK "StringFileInfo"
 	BEGIN
@@ -78,7 +78,7 @@ BLOCK "StringFileInfo"
 		BEGIN
 			VALUE "FileDescription", "Mount new virtual disk"
 			VALUE "ProductName", "imdisk"
-			VALUE "ProductVersion", "3.0.4.0"
+			VALUE "ProductVersion", "3.1.0.0"
 		END
 	END
 BLOCK "VarFileInfo"

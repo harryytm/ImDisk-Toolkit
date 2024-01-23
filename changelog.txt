@@ -1,3 +1,12 @@
+Version 20180917
+- installer: added an option to disable automatic loading of the ImDskSvc service which is installed by the driver
+- installer: added a command line switch to set the installation folder
+- RamDiskUI.exe: added informations in a tooltip about the image file that can be used to load data
+- raised minimal volume size to 65 KB in RamDiskUI and MountImg because of a new size check appeared in driver 2.0.8
+- fix in RamDiskUI.exe: synchronization parameters were not properly registered when a ramdisk on a drive letter was defined just after one on a mount point
+- fix in ImDiskTk-svc.exe: the service could crash with several ramdisks to be synchronized
+- fix in MountImg.exe: when a file was selected with the "..." button, the "OK" button was not enabled
+
 Version 20170706
 - RamDiskUI.exe: added a tooltip about the creation of other folders than Temp
 - fix in RamDiskUI.exe: ImDiskTk-svc service was not created if the system is shut down without closing the GUI (regression introduced in 20160726)

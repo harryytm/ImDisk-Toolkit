@@ -11,6 +11,7 @@ Outil de Configuration de RamDisk
 Entrées dans les menus contextuels
 Demander les droits admin dans l'Explorateur
 Créer des raccourcis sur le bureau
+Charger ImDskSvc automatiquement
 Langue :
 Laisser la souris sur un élément pour obtenir des informations.
 Installer le pilote. Ceci inclut un composant du Panneau de Configuration, un outil en ligne de commande, imdisk.exe, et des interfaces pour gérer les volumes depuis les menus contextuels de l'Explorateur.##Tapez "imdisk" dans une invite de commande pour plus d'informations.
@@ -19,6 +20,7 @@ Cet outil vous permettra de configurer facilement un ou plusieurs RamDisks avec 
 Ajouter des entrées dans le menu contextuel de lecteur et le menu contextuel de fichier pour gérer les volumes ImDisk et les fichiers images depuis l'Explorateur.##Cette option peut être définie plus tard dans le Menu Démarrer de Windows.
 Ceci affecte les commandes dans le menu contextuel de lecteur : "Sauvegarder dans un fichier image" et "Démonter le disque virtuel ImDisk".##Résout certains problèmes liés à l'UAC.##Cette option peut être définie plus tard dans le Menu Démarrer de Windows.
 Créer des raccourcis sur le bureau.##Tous les raccourcis sont toujours créés dans le Menu Démarrer de Windows.
+Lance ImDskSvc automatiquement au démarrage du système.##Aucun outil dans ce paquet utilise ce service, vous pouvez donc sans risque décocher cette option.##Il est installé par le pilote pour initier des connexions TCP/IP ou port série avec des logiciels proxy.
 Crédits
 Installer
 Annuler
@@ -28,7 +30,7 @@ Chemin invalide.
 Erreur : impossible de créer le service.
 L'installation précédente est dans un autre dossier.#Voulez-vous la supprimer ?
 Installation terminée.
-Installation terminée.##Cependant, .NET Framework 4 n'est pas présent sur votre système. Sans cela, vous ne pourrez pas monter certains formats de fichier image.#Veuillez visiter le <a href="http://www.microsoft.com/en-us/download/details.aspx?id=17113">Centre de téléchargement Microsoft</a> pour télécharger l'installateur.
+Installation terminée.##Cependant, .NET Framework 4 n'est pas présent sur votre système. Sans cela, vous ne pourrez pas monter certains formats de fichier image.#Veuillez visiter le <a href="https://www.microsoft.com/en-us/download/details.aspx?id=17113">Centre de téléchargement Microsoft</a> pour télécharger l'installateur.
 OK
 
 ImDisk - Crédits
@@ -136,7 +138,7 @@ Ne copier que les fichiers avec attribut Archive
 Supprimer les données retirées du RamDisk
 Dossiers Exclus :
 Synchroniser maintenant
-Si vous sélectionnez un dossier, son contenu sera intégralement copié une fois le#ramdisk créé, avec les attributs de fichier et ACL, en fonction du système de fichiers.
+Si vous sélectionnez un dossier, son contenu sera intégralement copié une fois le#ramdisk créé, avec les attributs de fichier et ACL, en fonction du système de fichiers.##Un fichier image doit être raw, sans partition, et avec un système de fichiers valide.#Une telle image peut être créée par exemple avec un clic droit sur une lettre de#lecteur dans l'Explorateur: "Sauvegarder dans un fichier image".
 Par défaut : désactivé.##Copie les données du RamDisk vers le dossier ou le fichier image#à l'arrêt du système, en fonction des paramètres ci-dessous.
 Un dossier par ligne.#Les dossiers sont relatifs à la racine du ramdisk (lettre#de lecteur ou point de montage) : ne l'ajoutez pas.
 Synchroniser maintenant tous les ramdisks enregistrés.
@@ -250,13 +252,12 @@ Quitter
 
 Créer un Nouveau Fichier Image
 Le fichier n'existe pas.#Voulez-vous créer un nouveau fichier image vide ?
-Taille de Fichier :#(Min 20 Ko)
+Taille de Fichier :#(Min 65 Ko)
 Monter
 Créer
 Annuler
 Erreur : le fichier ne peut pas être créé.
 Erreur : impossible de créer un fichier de la taille spécifiée.
-Erreur : impossible d'initialiser le fichier.
 
 Octets
 Ko

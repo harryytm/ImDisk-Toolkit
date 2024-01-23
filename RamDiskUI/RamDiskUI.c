@@ -29,7 +29,7 @@ static FARPROC ImDisk_OpenDeviceByMountPoint, ImDisk_NotifyShellDriveLetter;
 static SECURITY_ATTRIBUTES sa;
 
 static UINT min_size[4][9] = {{2761, 2752, 2754, 2757, 2761, 2785, 2849, 2977, 3009},
-							  {20, 20, 20, 20, 20, 20, 20, 20, 20},
+							  {65, 65, 65, 65, 65, 65, 65, 65, 65}, // 20 KB for FAT, but minimal volume size for driver 2.0.8 is 65537
 							  {36860, 36860, 69623, 135150, 266204, 528312, 1052528, 2100960, 4197824},
 							  {181, 181, 181, 181, 181, 208, 288, 448, 768}};
 static UINT max_size[2][9] = {{4194003, 33039, 65802, 131329, 262383, 524491, 1048707, 2097139, 4194003},
@@ -878,7 +878,7 @@ err_cannot_mount:
 	param_name[1] = '_';
 	if (mount_current)
 		copy_list_param(param_name, FALSE);
-	if (reg_sync_flags & 1 && reg_image_file)
+	if (reg_sync_flags & 1 && reg_image_file && !reg_use_MP)
 		copy_list_param(param_name, TRUE);
 
 	wanted_drive = drive_select[0];

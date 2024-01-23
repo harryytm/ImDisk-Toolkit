@@ -11,6 +11,7 @@ RamDisk Configuration Tool
 Enable entries in context menus
 Request administrator rights in Explorer
 Create shortcuts on desktop
+Load ImDskSvc automatically
 Language:
 Please keep your mouse over an item to get details.
 Install driver. This includes a Control Panel applet, a command line tool, imdisk.exe, and interfaces to manage volumes from Explorer context menus.##Please type "imdisk" in a command prompt for details.
@@ -19,6 +20,7 @@ This tool will allow you to easily configure one or several RamDisks with variou
 Add entries in the drive context menu and the file context menu to manage ImDisk volumes and image files directly from Explorer.##This option can be set later in the Windows Start Menu.
 This affects the commands in the drive context menu: "Save disk contents as image file" and "Unmount ImDisk Virtual Disk".##Solves some UAC related issues.##This option can be set later in the Windows Start Menu.
 Create shortcuts on desktop.##All shortcuts are always created in the Windows Start Menu.
+Start ImDskSvc automatically at system startup.##No tool in this package uses this service, so you can safely uncheck this option.##It is installed by the driver to initiate TCP/IP or serial port connections with proxy softwares.
 Credits
 Install
 Cancel
@@ -28,7 +30,7 @@ Invalid path.
 Error: cannot create service.
 The previous installation is in another folder.#Do you want to remove it?
 Installation finished.
-Installation finished.##However, .NET Framework 4 is not present on your system.#Without it, you will not be able to mount some image file formats.##Please visit the <a href="http://www.microsoft.com/en-us/download/details.aspx?id=17113">Microsoft Download Center</a> to download installer.
+Installation finished.##However, .NET Framework 4 is not present on your system.#Without it, you will not be able to mount some image file formats.##Please visit the <a href="https://www.microsoft.com/en-us/download/details.aspx?id=17113">Microsoft Download Center</a> to download installer.
 OK
 
 ImDisk - Credits
@@ -136,7 +138,7 @@ Copy only files with Archive attribute
 Delete data removed from the RamDisk
 Excluded Folders:
 Synchronize now
-If you select a folder, its entire content will be copied once the ramdisk#created, with file attributes and ACL, depending on the file system.
+If you select a folder, its entire content will be copied once the ramdisk#created, with file attributes and ACL, depending on the file system.##An image file must be raw, without partition, and with a valid file system.#Such image can be created for instance with a right click on a drive letter#in Explorer: "Save disk contents as image file".
 Default: disabled.##Copy data from the ramdisk to the folder or image file at#system shutdown, depending on the parameters below.
 One folder per line.#Folders are relative to the root of the ramdisk#(drive letter or mount point): do not add it.
 Synchronize all the registered ramdisks now.
@@ -250,13 +252,12 @@ Exit
 
 Create New Image File
 The file does not exist.#Do you want to create a new RAW image file?
-        File Size:#        (Min 20KB)
+        File Size:#        (Min 65KB)
 Mount
 Create
 Cancel
 Error: file cannot be created.
 Error: cannot create a file of the specified size.
-Error: cannot initialize file.
 
 Bytes
 KB
