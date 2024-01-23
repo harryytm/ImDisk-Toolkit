@@ -98,6 +98,7 @@ ImDisk - Установка
 Отключить выбранные образа ImDisk и отменить их регистрацию.
 Файловые системы FAT/FAT32 быстрее, но имеют меньше возможностей.#В частности они имеют ограничения на максимальный размер файла.
 Создать и зарегистрировать RAM-диск для автоподключения при запуске Windows.#Можно зарегистрировать несколько RAM-дисков.
+Create a Temp folder at the root of the volume.##To create other folders, define what you want in a#folder of your hard drive, and specify it in the Data tab.
 
 Форматирование
 Размер кластера:

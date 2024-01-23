@@ -45,6 +45,7 @@ Translations:
 
 General Settings
 Uninstall
+Home page
 RamDisk Configuration
 Mount Image File
 
@@ -97,6 +98,7 @@ Instead of allocating the whole size, memory is#allocated only when it is actual
 Unmount the selected ImDisk drive and unregister it.
 Default: NTFS.##*FAT* file systems are usually faster but with less features.#FAT and FAT32 also have limitations in the maximal volume size.
 Once created, register the ramdisk to be started with Windows.#Several ramdisks can be registered.
+Create a Temp folder at the root of the volume.##To create other folders, define what you want in a#folder of your hard drive, and specify it in the Data tab.
 
 Advanced
 Cluster Size:
@@ -184,19 +186,16 @@ Free Space Wiping
 These parameters are ignored when TRIM commands are used.
 Minimal Amount of Data to Clean:
 Minimal Time between 2 Cleanups:
-Security Margin:
 Maximal Activity before Cleanup:
 Seconds
-MB
 MB/s
 Size of Allocated Memory Blocks:
 OK
 Cancel
-"Automatic" uses TRIM commands when available. They are much#more efficient but they require NTFS and Windows 7 or later.##Otherwise, when required, depending on the 4 parameters below, a#cleanup function wipes the whole empty space with a temporary file#filled with 0 (because data blocks filled with 0 are automatically freed).
+"Automatic" uses TRIM commands when available. They are much#more efficient but they require NTFS and Windows 7 or later.##Otherwise, when required, depending on the 3 parameters below, a#cleanup function wipes the whole empty space with a temporary file#filled with 0 (because data blocks filled with 0 are automatically freed).
 Default: 20.##Number of bytes per allocated memory block, in power of 2.#The minimal value is 12 (4 KB). Use 13 for 8 KB, 14 for 16 KB,#and so on, up to 30 (1 GB).##A lower value can reduce the memory use and improve#efficiency of the cleanup function in case of highly#fragmented files, but it also reduces the performances.
 Default: 10.##The cleanup function runs only if this amount of memory can#be freed. The value is a ratio of the total drive space (e.g.:#10/1000 of a 4 GB drive = 40 MB). This is only an estimate: the#memory amount actually freed can be slightly higher or lower.
 Default: 10.##A low value can make the cleanup more responsive but may be inappropriate#in case where files are regularly deleted without being recreated.
-Default: 10.##Disk space reserved for other softwares that need to write data while#the cleanup is processing. If memory blocks are located in this space,#they may not be freed (but may be freed at the next cleanup). A low#value can free a few more space but can create errors with softwares#that need to write data at the very end of the cleanup processing.
 Default: 10.##Wait until reads and writes are below this value before processing the cleanup.
 
 Warning: the fast startup feature of Windows is enabled. This can lead to some issues:##● The system writes the ramdisk content onto the hard drive at shutdown, and restores it at startup.#● The data synchronization feature of ImDisk Toolkit does not work at system shutdown.##Open the Shutdown settings to disable the fast startup.

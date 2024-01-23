@@ -98,6 +98,7 @@ Au lieu d'allouer la taille entière, la mémoire est allouée#seulement lorsqu'
 Démonte le lecteur ImDisk sélectionné#et supprime son enregistrement.
 Par défaut : NTFS.##Les systèmes de fichiers *FAT* sont généralement plus rapides mais avec#moins de fonctionnalités.#FAT et FAT32 ont aussi des limitations sur la taille de volume maximale.
 Une fois créé, enregistre le ramdisk pour le démarrer avec Windows.#Plusieurs ramdisks peuvent être enregistrés.
+Crée un dossier Temp à la racine du volume.##Pour créer d'autres dossiers, définissez ce que vous souhaitez dans#un dossier de votre disque dur, et spécifiez-le dans l'onglet Données.
 
 Avancé
 Taille de Cluster :

@@ -98,6 +98,7 @@ En lugar de asignar todo el tamaño, la memoria se asigna sólo cuando#se utiliz
 Desmontar la unidad ImDisk seleccionada#y anular el registro de la misma.
 Por defecto: NTFS.##Los sistemas de archivos *FAT* son generalmente más rápidos pero con menos funciones.#FAT y FAT32 también tienen limitaciones en el tamaño del volumen máximo.
 Una vez creado, registrar el disco RAM para iniciarse con Windows.#Varios ramdisks pueden ser registrados.
+Crear una carpeta Temp en la raíz del volumen.##Para crear otras carpetas, defina lo que desee en una#carpeta de su disco duro y especifíquelo en la ficha Datos.
 
 Avanzado
 Tamaño de cluster:

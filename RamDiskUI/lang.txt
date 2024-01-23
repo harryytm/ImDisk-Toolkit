@@ -45,6 +45,7 @@ Translations:
 
 General Settings
 Uninstall
+Home page
 RamDisk Configuration
 Mount Image File
 
@@ -97,6 +98,7 @@ Instead of allocating the whole size, memory is#allocated only when it is actual
 Unmount the selected ImDisk drive and unregister it.
 Default: NTFS.##*FAT* file systems are usually faster but with less features.#FAT and FAT32 also have limitations in the maximal volume size.
 Once created, register the ramdisk to be started with Windows.#Several ramdisks can be registered.
+Create a Temp folder at the root of the volume.##To create other folders, define what you want in a#folder of your hard drive, and specify it in the Data tab.
 
 Advanced
 Cluster Size:

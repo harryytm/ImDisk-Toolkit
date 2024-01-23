@@ -18,7 +18,7 @@ typedef union {struct {unsigned char filesystem, compress, pad[2];}; unsigned lo
 
 static SERVICE_STATUS_HANDLE SvcStatusHandle;
 static SERVICE_STATUS SvcStatus = {SERVICE_WIN32_OWN_PROCESS, SERVICE_RUNNING, SERVICE_ACCEPT_STOP, NO_ERROR, 0, 0, 3600000};
-static SC_HANDLE h_svc;
+static SC_HANDLE h_scman, h_svc;
 
 static OSVERSIONINFO os_ver;
 static HINSTANCE hinst;
@@ -58,7 +58,7 @@ static DWORD mask0;
 static WCHAR svc_cmd_line[MAX_PATH + 16], hlp_svc_path[MAX_PATH + 4], key_name[16];
 static HWND hwnd[4];
 static BOOL item_enable;
-static HWND hwnd_edit1, hwnd_edit2, hwnd_edit3, hwnd_edit4, hwnd_edit5, hwnd_check1, hwnd_check2, hwnd_check4, hwnd_check5, hwnd_check6, hwnd_check7, hwnd_check8;
+static HWND hwnd_edit1, hwnd_edit2, hwnd_edit3, hwnd_edit4, hwnd_edit5, hwnd_check1, hwnd_check2, hwnd_check3, hwnd_check4, hwnd_check5, hwnd_check6, hwnd_check7, hwnd_check8;
 static HWND hwnd_combo2, hwnd_combo3, hwnd_combo5, hwnd_pbutton2, hwnd_pbutton3, hwnd_pbutton7, hwnd_edit11, hwnd_edit12, hwnd_edit13, hwnd_edit14;
 static COMBOBOXINFO combo4;
 
@@ -72,7 +72,7 @@ static WCHAR TTip_txt[200] = {};
 enum {
 	TITLE,
 	TAB1_0, TAB1_1, TAB1_2, TAB1_3, TAB1_4, TAB1_5, TAB1_6, TAB1_7, TAB1_8, TAB1_9, TAB1_10, TAB1_11,
-	TTIP1_1, TTIP1_2, TTIP1_3, TTIP1_4, TTIP1_5, TTIP1_6,
+	TTIP1_1, TTIP1_2, TTIP1_3, TTIP1_4, TTIP1_5, TTIP1_6, TTIP1_7,
 	TAB2_0, TAB2_1, TAB2_2, TAB2_3, TAB2_4, TAB2_5, TAB2_6, TAB2_7, TAB2_8, TAB2_9,
 	CLUST_0, CLUST_1, CLUST_2, CLUST_3, CLUST_4, CLUST_5, CLUST_6, CLUST_7, CLUST_8,
 	TTIP2_1, TTIP2_2, TTIP2_3, TTIP2_4, TTIP2_5, TTIP2_6, TTIP2_7, TTIP2_8, TTIP2_9,
@@ -256,6 +256,52 @@ static BOOL is_MP_imdisk_device()
 	if (!ImDisk_OpenDeviceByMountPoint) return FALSE;
 	CloseHandle(h = (HANDLE)ImDisk_OpenDeviceByMountPoint(mount_point, GENERIC_READ));
 	return h != INVALID_HANDLE_VALUE;
+}
+
+__declspec(noreturn) static void configure_services_and_exit()
+{
+	BOOL RD_found, sync_found;
+	SERVICE_DESCRIPTION svc_description;
+	SERVICE_PRESHUTDOWN_INFO svc_preshutdown_info;
+	DWORD dw;
+
+	RD_found = mount_current;
+	sync_found = reg_sync_flags & 1 && reg_image_file;
+	key_name[1] = '_';
+	for (key_name[0] = '0'; key_name[0] <= 'Z'; key_name[0] == '9' ? key_name[0] = 'A' : key_name[0]++) {
+		if (param_reg_query_dword(L"Awealloc", &dw) == ERROR_SUCCESS) RD_found = TRUE;
+		if (param_reg_query_dword(L"SyncFlags", &dw) == ERROR_SUCCESS) sync_found = TRUE;
+	}
+
+	if (!RD_found) DeleteService(h_svc);
+	CloseServiceHandle(h_svc);
+
+	h_svc = OpenService(h_scman, L"ImDiskTk-svc", SERVICE_CHANGE_CONFIG | SERVICE_START | SERVICE_STOP | DELETE);
+	if (sync_found) {
+		if (h_svc)
+			ChangeServiceConfig(h_svc, SERVICE_WIN32_OWN_PROCESS, SERVICE_NO_CHANGE, SERVICE_ERROR_NORMAL, hlp_svc_path, NULL, NULL, L"ImDisk\0", NULL, NULL, NULL);
+		else {
+			h_svc = CreateService(h_scman, L"ImDiskTk-svc", L"ImDisk Toolkit helper service", SERVICE_CHANGE_CONFIG | SERVICE_START, SERVICE_WIN32_OWN_PROCESS, SERVICE_AUTO_START, SERVICE_ERROR_NORMAL,
+								  hlp_svc_path, NULL, NULL, L"ImDisk\0", NULL, NULL);
+			if (h_svc) {
+				svc_description.lpDescription = L"Service used for data synchronization at system shutdown.";
+				ChangeServiceConfig2(h_svc, SERVICE_CONFIG_DESCRIPTION, &svc_description);
+				if (os_ver.dwMajorVersion >= 6) {
+					svc_preshutdown_info.dwPreshutdownTimeout = 3600000;
+					ChangeServiceConfig2(h_svc, SERVICE_CONFIG_PRESHUTDOWN_INFO, &svc_preshutdown_info);
+				}
+			} else
+				MessageBox(NULL, t[MSG_20], L"ImDisk", MB_ICONERROR);
+		}
+		StartService(h_svc, 0, NULL);
+	} else {
+		ControlService(h_svc, SERVICE_CONTROL_STOP, &SvcStatus);
+		DeleteService(h_svc);
+	}
+	CloseServiceHandle(h_svc);
+	CloseServiceHandle(h_scman);
+
+	ExitProcess(0);
 }
 
 static void load_mount_point()
@@ -476,6 +522,9 @@ static INT_PTR __stdcall VarProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPar
 
 			return TRUE;
 
+		case WM_ENDSESSION:
+			configure_services_and_exit();
+
 		default:
 			return FALSE;
 	}
@@ -570,6 +619,9 @@ static INT_PTR __stdcall DynProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPar
 			}
 			return TRUE;
 
+		case WM_ENDSESSION:
+			configure_services_and_exit();
+
 		default:
 			return FALSE;
 	}
@@ -624,6 +676,9 @@ static INT_PTR __stdcall WarnProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPa
 					EndDialog(hDlg, 0);
 			}
 			return TRUE;
+
+		case WM_ENDSESSION:
+			configure_services_and_exit();
 
 		default:
 			return FALSE;
@@ -912,6 +967,8 @@ static INT_PTR __stdcall Tab1Proc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPa
 			add_tooltip(&tool_info);
 			tool_info.uId = (UINT_PTR)(hwnd_check2 = GetDlgItem(hDlg, ID_CHECK2));
 			add_tooltip(&tool_info);
+			tool_info.uId = (UINT_PTR)(hwnd_check3 = GetDlgItem(hDlg, ID_CHECK3));
+			add_tooltip(&tool_info);
 
 			// set localized strings
 			if (t[0]) {
@@ -995,6 +1052,8 @@ static INT_PTR __stdcall Tab1Proc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPa
 					((NMTTDISPINFO*)lParam)->lpszText = t[TTIP1_5];
 				if (((NMHDR*)lParam)->idFrom == (UINT_PTR)hwnd_check2)
 					((NMTTDISPINFO*)lParam)->lpszText = t[TTIP1_6];
+				if (((NMHDR*)lParam)->idFrom == (UINT_PTR)hwnd_check3)
+					((NMTTDISPINFO*)lParam)->lpszText = t[TTIP1_7];
 			}
 
 			if (((NMHDR*)lParam)->code == PSN_APPLY) {
@@ -1045,6 +1104,9 @@ static INT_PTR __stdcall Tab1Proc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPa
 				DialogBox(hinst, L"VAR_DLG", hwnd[0], VarProc);
 
 			return TRUE;
+
+		case WM_ENDSESSION:
+			configure_services_and_exit();
 
 		default:
 			return FALSE;
@@ -1225,6 +1287,9 @@ static INT_PTR __stdcall Tab2Proc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPa
 
 			return TRUE;
 
+		case WM_ENDSESSION:
+			configure_services_and_exit();
+
 		default:
 			return FALSE;
 	}
@@ -1345,6 +1410,9 @@ static INT_PTR __stdcall Tab3Proc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPa
 		case WM_PAINT:
 			circ_draw(hDlg);
 			return TRUE;
+
+		case WM_ENDSESSION:
+			configure_services_and_exit();
 
 		default:
 			return FALSE;
@@ -1600,11 +1668,8 @@ int __stdcall wWinMain(HINSTANCE hinstance, HINSTANCE hPrevInstance, LPWSTR lpCm
 	PACL pACL = NULL;
 	EXPLICIT_ACCESS ea = {GENERIC_ALL, SET_ACCESS, SUB_CONTAINERS_AND_OBJECTS_INHERIT, {NULL, NO_MULTIPLE_TRUSTEE, TRUSTEE_IS_SID, TRUSTEE_IS_WELL_KNOWN_GROUP, (LPTSTR)sid}};
 	SECURITY_DESCRIPTOR sd;
-	SC_HANDLE h_scman;
 	SERVICE_DESCRIPTION svc_description;
-	SERVICE_PRESHUTDOWN_INFO svc_preshutdown_info;
 	DWORD data_size, dw;
-	BOOL RD_found, sync_found;
 	int argc;
 	WCHAR **argv;
 	SERVICE_TABLE_ENTRY DispatchTable[] = {{L"", SvcMain}, {NULL, NULL}};
@@ -1759,42 +1824,5 @@ int __stdcall wWinMain(HINSTANCE hinstance, HINSTANCE hPrevInstance, LPWSTR lpCm
 
 	PropertySheet(&psh);
 
-	// manage services
-	RD_found = mount_current;
-	sync_found = reg_sync_flags & 1 && reg_image_file;
-	key_name[1] = '_';
-	for (key_name[0] = '0'; key_name[0] <= 'Z'; key_name[0] == '9' ? key_name[0] = 'A' : key_name[0]++) {
-		if (param_reg_query_dword(L"Awealloc", &dw) == ERROR_SUCCESS) RD_found = TRUE;
-		if (param_reg_query_dword(L"SyncFlags", &dw) == ERROR_SUCCESS) sync_found = TRUE;
-	}
-
-	if (!RD_found) DeleteService(h_svc);
-	CloseServiceHandle(h_svc);
-
-	h_svc = OpenService(h_scman, L"ImDiskTk-svc", SERVICE_CHANGE_CONFIG | SERVICE_START | SERVICE_STOP | DELETE);
-	if (sync_found) {
-		if (h_svc)
-			ChangeServiceConfig(h_svc, SERVICE_WIN32_OWN_PROCESS, SERVICE_NO_CHANGE, SERVICE_ERROR_NORMAL, hlp_svc_path, NULL, NULL, L"ImDisk\0", NULL, NULL, NULL);
-		else {
-			h_svc = CreateService(h_scman, L"ImDiskTk-svc", L"ImDisk Toolkit helper service", SERVICE_CHANGE_CONFIG | SERVICE_START, SERVICE_WIN32_OWN_PROCESS, SERVICE_AUTO_START, SERVICE_ERROR_NORMAL,
-								  hlp_svc_path, NULL, NULL, L"ImDisk\0", NULL, NULL);
-			if (h_svc) {
-				svc_description.lpDescription = L"Service used for data synchronization at system shutdown.";
-				ChangeServiceConfig2(h_svc, SERVICE_CONFIG_DESCRIPTION, &svc_description);
-				if (os_ver.dwMajorVersion >= 6) {
-					svc_preshutdown_info.dwPreshutdownTimeout = 3600000;
-					ChangeServiceConfig2(h_svc, SERVICE_CONFIG_PRESHUTDOWN_INFO, &svc_preshutdown_info);
-				}
-			} else
-				MessageBox(NULL, t[MSG_20], L"ImDisk", MB_ICONERROR);
-		}
-		StartService(h_svc, 0, NULL);
-	} else {
-		ControlService(h_svc, SERVICE_CONTROL_STOP, &SvcStatus);
-		DeleteService(h_svc);
-	}
-	CloseServiceHandle(h_svc);
-	CloseServiceHandle(h_scman);
-
-	ExitProcess(0);
+	configure_services_and_exit();
 }

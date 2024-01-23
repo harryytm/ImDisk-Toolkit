@@ -604,7 +604,7 @@ static LRESULT __stdcall WndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lPar
 		return DefWindowProc(hWnd, Msg, wParam, lParam);
 }
 
-static DWORD __stdcall msg_window(LPVOID lpParam)
+__declspec(noreturn) static DWORD __stdcall msg_window(LPVOID lpParam)
 {
 	MSG msg;
 	WNDCLASSA wc = {};
@@ -618,7 +618,6 @@ static DWORD __stdcall msg_window(LPVOID lpParam)
 		GetMessage(&msg, NULL, 0, 0);
 		DispatchMessage(&msg);
 	}
-	return 0;
 }
 
 

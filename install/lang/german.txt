@@ -98,6 +98,7 @@ Anstatt die gesamte Speichermenge zu reservieren,#wird nur die jeweils benötigt
 Das gewählte ImDisk Laufwerk trennen und deregistrieren.
 Voreinstellung: NTFS##*FAT* Dateisysteme sind gewöhnlich schneller aber haben weniger Funktionen.#FAT und FAT32 haben auch Grenzen bei der maximalen Volumegröße.
 Einmal angelegt, kann diese (oder auch mehrere)#RAM-Disks beim Systemstart mitgestartet werden.
+Ein Temp-Verzeichnis im Hauptverzeichnis des Volumens anlegen.##Um andere Verzeichnisse anzulegen (mit z.B. R: als RAM-Disk und C: als#Festplatte), spezifiziere C:\mein_Verzeichnis im Daten-Reiter und lege#dort die gewünschten Unterverzeichnisse für das RAM-Laufwerk an.
 
 Fortgeschritten
 Blockgröße:

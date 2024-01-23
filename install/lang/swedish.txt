@@ -98,6 +98,7 @@ Minne allokeras endast när det verkligen används, istället för#att allokera 
 Avmontera markerad ImDisk-enhet och avregistrera den.
 Standard: NTFS.##*FAT* filsystem är vanligtvis snabbare, men med färre funktioner.#FAT och FAT32 är också begränsade i den maximala volymstorleken.
 Registrerar ramdisken att startas med Windows.#Flera ramdiskar kan registreras.
+Skapa en temporär mapp i roten på volymen.##För att skapa andra mappar, definierar du vad du vill i en#mapp på din hårddisk och specificerar det i datafliken.
 
 Avancerat
 Klusterstorlek:

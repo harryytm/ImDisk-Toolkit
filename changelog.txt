@@ -1,3 +1,7 @@
+Version 20170706
+- RamDiskUI.exe: added a tooltip about the creation of other folders than Temp
+- fix in RamDiskUI.exe: ImDiskTk-svc service was not created if the system is shut down without closing the GUI (regression introduced in 20160726)
+
 Version 20170407
 - fix: missing error handling for process creation could lead to unpredictable results
 
