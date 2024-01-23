@@ -431,7 +431,7 @@ static int do_comm()
 	unsigned char *shm_view, *main_buf;
 	struct {unsigned char request_code, pad[7]; ULONGLONG offset; ULONGLONG length;} *req_block;
 	struct {unsigned char errorno, pad[7]; ULONGLONG length;} *resp_block;
-	struct {unsigned char request_code, pad[7]; ULONGLONG length;} *trim_block;
+	struct {unsigned char request_code, pad[7]; unsigned int length;} *trim_block;
 	HANDLE hFileMap;
 	ULARGE_INTEGER map_size;
 	char proxy_name[24], objname[40], *objname_ptr;
@@ -539,9 +539,10 @@ static int do_comm()
 		return 1;
 
 	_snwprintf(txt, _countof(txt) - 1, L"imdisk -a -t proxy -o shm -f %S -m \"%s\" %s", proxy_name, drive_arg, add_param);
-	CreateProcess(NULL, txt, NULL, NULL, FALSE, CREATE_NO_WINDOW, NULL, NULL, &si, &pi);
-	CloseHandle(pi.hProcess);
-	CloseHandle(pi.hThread);
+	if (CreateProcess(NULL, txt, NULL, NULL, FALSE, CREATE_NO_WINDOW, NULL, NULL, &si, &pi)) {
+		CloseHandle(pi.hProcess);
+		CloseHandle(pi.hThread);
+	}
 
 	if (WaitForSingleObject(shm_request_event, 10000) != WAIT_OBJECT_0 || req_block->request_code != IMDPROXY_REQ_INFO)
 		return 1;
@@ -641,7 +642,7 @@ syntax_help:
 						  "* CleanRatio: with -1, TRIM commands are used in replacement of the cleanup function, and the 2 following parameters are not used; "
 									   "otherwise, it's an approximate ratio, per 1000, of the total drive space from which the cleanup function attempts to free the memory of the deleted files (default: 10).\n"
 						  "* CleanTimer: minimal time between 2 cleanups (default: 10).\n"
-						  "* CleanMaxActivity: the cleanup function waits until reads and writes are below this value, in MB/s (default:10).\n"
+						  "* CleanMaxActivity: the cleanup function waits until reads and writes are below this value, in MB/s (default: 10).\n"
 						  "* PhysicalMemory: use 0 for allocating virtual memory, 1 for allocating physical memory (default: 0); "
 										   "allocating physical memory requires the privilege to lock pages in memory in the local group policy.\n"
 						  "* BlockSize: size of memory blocks, in power of 2, from 12 (4 KB) to 30 (1 GB) (default: 20).\n"

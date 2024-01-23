@@ -103,23 +103,27 @@ static DWORD start_process(WCHAR *cmd, BYTE flag)
 	TOKEN_LINKED_TOKEN lt = {};
 	HANDLE token;
 	DWORD dw;
+	BOOL result;
 
 	if (flag == 2 && (dw = WTSGetActiveConsoleSessionId()) != -1 && WTSQueryUserToken(dw, &token)) {
 		if (!GetTokenInformation(token, TokenLinkedToken, &lt, sizeof lt, &dw) ||
-			!CreateProcessAsUser(lt.LinkedToken, NULL, cmd, NULL, NULL, FALSE, CREATE_NO_WINDOW, NULL, NULL, &si, &pi))
-			CreateProcessAsUser(token, NULL, cmd, NULL, NULL, FALSE, CREATE_NO_WINDOW, NULL, NULL, &si, &pi);
+			!(result = CreateProcessAsUser(lt.LinkedToken, NULL, cmd, NULL, NULL, FALSE, CREATE_NO_WINDOW, NULL, NULL, &si, &pi)))
+			result = CreateProcessAsUser(token, NULL, cmd, NULL, NULL, FALSE, CREATE_NO_WINDOW, NULL, NULL, &si, &pi);
 		CloseHandle(token);
 		CloseHandle(lt.LinkedToken);
 	} else
-		CreateProcess(NULL, cmd, NULL, NULL, FALSE, CREATE_NO_WINDOW, NULL, NULL, &si, &pi);
+		result = CreateProcess(NULL, cmd, NULL, NULL, FALSE, CREATE_NO_WINDOW, NULL, NULL, &si, &pi);
 
-	if (flag) {
-		WaitForSingleObject(pi.hProcess, INFINITE);
-		GetExitCodeProcess(pi.hProcess, &dw);
+	dw = 1;
+	if (result) {
+		if (flag) {
+			WaitForSingleObject(pi.hProcess, INFINITE);
+			GetExitCodeProcess(pi.hProcess, &dw);
+		}
+		CloseHandle(pi.hProcess);
+		CloseHandle(pi.hThread);
 	}
-	CloseHandle(pi.hProcess);
-	CloseHandle(pi.hThread);
-	return dw;
+	return (dw != 0);
 }
 
 
@@ -187,7 +191,7 @@ static BOOL discutils_check()
 	pipe = _rdtsc();
 	_snwprintf(txt_partition, _countof(txt_partition), list_partition != 1 ? L" /partition=%d" : L"", list_partition);
 	_snwprintf(cmdline, _countof(cmdline), L"DiscUtilsDevio /name=ImDisk%I64x%s /filename=\"%s\" /readonly", pipe, txt_partition, filename);
-	CreateProcess(NULL, cmdline, NULL, NULL, FALSE, CREATE_NO_WINDOW, NULL, NULL, &si, &pi);
+	if (!CreateProcess(NULL, cmdline, NULL, NULL, FALSE, CREATE_NO_WINDOW, NULL, NULL, &si, &pi)) return FALSE;
 	if ((list_unit = get_imdisk_unit()) < 0) return FALSE;
 	_snwprintf(cmdline, _countof(cmdline), L"imdisk -a -t proxy -u %d -o shm,%cd,ro,%s -f ImDisk%I64x", list_unit, dev_list[dev_type], rm_list[removable], pipe);
 	for (i = 0; i < 100; i++) {
@@ -1051,18 +1055,19 @@ static void __stdcall SvcMain(DWORD dwArgc, LPTSTR *lpszArgv)
 	if (dwArgc >= 4) {
 		_snwprintf(cmd_line, _countof(cmd_line) - 1, L"DiscUtilsDevio %s", lpszArgv[1]);
 		cmd_line[_countof(cmd_line) - 1] = 0;
-		CreateProcess(NULL, cmd_line, NULL, NULL, FALSE, CREATE_NO_WINDOW, NULL, NULL, &si, &pi);
-		_snwprintf(cmd_line, _countof(cmd_line) - 1, L"imdisk -a -t proxy -m \"%s\" %s", lpszArgv[3], lpszArgv[2]);
-		j = 0;
-		do {
-			Sleep(100);
-			GetExitCodeProcess(pi.hProcess, &ExitCode);
-			if (ExitCode != STILL_ACTIVE) {
-				error = TRUE;
-				break;
-			}
-			error = start_process(cmd_line, TRUE);
-		} while (error && ++j < 100);
+		if (CreateProcess(NULL, cmd_line, NULL, NULL, FALSE, CREATE_NO_WINDOW, NULL, NULL, &si, &pi)) {
+			_snwprintf(cmd_line, _countof(cmd_line) - 1, L"imdisk -a -t proxy -m \"%s\" %s", lpszArgv[3], lpszArgv[2]);
+			j = 0;
+			do {
+				Sleep(100);
+				GetExitCodeProcess(pi.hProcess, &ExitCode);
+				if (ExitCode != STILL_ACTIVE) {
+					error = TRUE;
+					break;
+				}
+				error = start_process(cmd_line, TRUE);
+			} while (error && ++j < 100);
+		} else error = TRUE;
 		
 		h = OpenSemaphoreA(SEMAPHORE_MODIFY_STATE, FALSE, "Global\\MountImgSvcSema");
 		ReleaseSemaphore(h, 1 + error, NULL);
@@ -1091,7 +1096,7 @@ static void __stdcall SvcMain(DWORD dwArgc, LPTSTR *lpszArgv)
 			pipe = _rdtsc();
 			_snwprintf(txt_partition, _countof(txt_partition), param.HighPart != 1 ? L" /partition=%d" : L"", param.HighPart);
 			_snwprintf(cmd_line, _countof(cmd_line), L"DiscUtilsDevio /name=ImDisk%I64x%s /filename=\"%s\"", pipe, txt_partition, filename);
-			CreateProcess(NULL, cmd_line, NULL, NULL, FALSE, CREATE_NO_WINDOW, NULL, NULL, &si, &pi);
+			if (!CreateProcess(NULL, cmd_line, NULL, NULL, FALSE, CREATE_NO_WINDOW, NULL, NULL, &si, &pi)) continue;
 			_snwprintf(cmd_line, _countof(cmd_line), L"imdisk -a -t proxy -m \"%s\" -o shm,%cd,r%c,%s -f ImDisk%I64x", drive, dev_list[param.LowPart >> 16], ro_list[param.LowPart & 1], rm_list[(param.LowPart >> 1) & 1], pipe);
 			j = 0;
 			do {

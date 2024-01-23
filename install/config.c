@@ -114,6 +114,7 @@ static void start_process(BYTE wait)
 {
 	STARTUPINFO si = {sizeof si};
 	PROCESS_INFORMATION pi;
+	BOOL result;
 
 #ifndef _WIN64
 	FARPROC lpFunc;
@@ -122,15 +123,17 @@ static void start_process(BYTE wait)
 	if ((lpFunc = GetProcAddress(hDLL, "Wow64DisableWow64FsRedirection")))
 		lpFunc(&ptr);
 #endif
-	CreateProcess(NULL, cmd, NULL, NULL, FALSE, CREATE_NO_WINDOW, NULL, NULL, &si, &pi);
+	result = CreateProcess(NULL, cmd, NULL, NULL, FALSE, CREATE_NO_WINDOW, NULL, NULL, &si, &pi);
 #ifndef _WIN64
 	if (lpFunc)
 		GetProcAddress(hDLL, "Wow64RevertWow64FsRedirection")(ptr);
 #endif
 
-	if (wait) WaitForSingleObject(pi.hProcess, INFINITE);
-	CloseHandle(pi.hProcess);
-	CloseHandle(pi.hThread);
+	if (result) {
+		if (wait) WaitForSingleObject(pi.hProcess, INFINITE);
+		CloseHandle(pi.hProcess);
+		CloseHandle(pi.hThread);
+	}
 }
 
 

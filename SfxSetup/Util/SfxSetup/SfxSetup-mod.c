@@ -73,10 +73,7 @@ static void RemoveDirWithSubItems(WCHAR *path)
       RemoveDirWithSubItems(path);
     }
     else
-    {
-      SetFileAttributesW(path, 0);
       DeleteFileW(path);
-    }
   } while (FindNextFileW(handle, &fd));
 
   FindClose(handle);
@@ -154,8 +151,6 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmd
       res = SZ_ERROR_FAIL;
     else if (File_Seek(&archiveStream.file, (Int64 *)&pos, SZ_SEEK_SET) != 0)
       res = SZ_ERROR_FAIL;
-    if (res != 0)
-      errorMessage = "Can't find 7z archive";
   }
 
   if (res == SZ_OK)
@@ -319,9 +314,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmd
   if (res == SZ_OK)
     ExitProcess(exitCode);
 
-  if (res == SZ_ERROR_UNSUPPORTED)
-    errorMessage = "Decoder doesn't support this archive";
-  else if (res == SZ_ERROR_MEM)
+  if (res == SZ_ERROR_MEM)
     errorMessage = "Can't allocate required memory";
   else if (res == SZ_ERROR_CRC)
     errorMessage = "CRC error";

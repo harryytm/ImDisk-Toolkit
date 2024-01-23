@@ -122,18 +122,21 @@ static void start_process(WCHAR *cmd, BYTE flag)
 	TOKEN_LINKED_TOKEN lt = {};
 	HANDLE token;
 	DWORD dw;
+	BOOL result;
 
 	if (flag == 2 && (dw = WTSGetActiveConsoleSessionId()) != -1 && WTSQueryUserToken(dw, &token)) {
 		if (!GetTokenInformation(token, TokenLinkedToken, &lt, sizeof lt, &dw) ||
-			!CreateProcessAsUser(lt.LinkedToken, NULL, cmd, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi))
-			CreateProcessAsUser(token, NULL, cmd, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi);
+			!(result = CreateProcessAsUser(lt.LinkedToken, NULL, cmd, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi)))
+			result = CreateProcessAsUser(token, NULL, cmd, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi);
 		CloseHandle(token);
 		CloseHandle(lt.LinkedToken);
 	} else
-		CreateProcess(NULL, cmd, NULL, NULL, FALSE, CREATE_NO_WINDOW, NULL, NULL, &si, &pi);
-	if (flag) WaitForSingleObject(pi.hProcess, INFINITE);
-	CloseHandle(pi.hProcess);
-	CloseHandle(pi.hThread);
+		result = CreateProcess(NULL, cmd, NULL, NULL, FALSE, CREATE_NO_WINDOW, NULL, NULL, &si, &pi);
+	if (result) {
+		if (flag) WaitForSingleObject(pi.hProcess, INFINITE);
+		CloseHandle(pi.hProcess);
+		CloseHandle(pi.hThread);
+	}
 }
 
 static void reg_set_dword(WCHAR *name, DWORD *value)
@@ -1388,21 +1391,22 @@ static void __stdcall SvcMain(DWORD dwArgc, LPTSTR *lpszArgv)
 	if (dwArgc >= 3) {
 		_snwprintf(cmd_line, _countof(cmd_line) - 1, L"RamDyn \"%s\" %s", lpszArgv[1], lpszArgv[2]);
 		cmd_line[_countof(cmd_line) - 1] = 0;
-		CreateProcess(NULL, cmd_line, NULL, NULL, FALSE, CREATE_NO_WINDOW, NULL, NULL, &si, &pi);
-		for (;;) {
-			Sleep(100);
-			GetExitCodeProcess(pi.hProcess, &exit_code);
-			if (exit_code != STILL_ACTIVE) break;
-			if ((h = (HANDLE)ImDisk_OpenDeviceByMountPoint(lpszArgv[1], 0)) != INVALID_HANDLE_VALUE) {
-				CloseHandle(h);
-				break;
+		if (CreateProcess(NULL, cmd_line, NULL, NULL, FALSE, CREATE_NO_WINDOW, NULL, NULL, &si, &pi)) {
+			for (;;) {
+				Sleep(100);
+				GetExitCodeProcess(pi.hProcess, &exit_code);
+				if (exit_code != STILL_ACTIVE) break;
+				if ((h = (HANDLE)ImDisk_OpenDeviceByMountPoint(lpszArgv[1], 0)) != INVALID_HANDLE_VALUE) {
+					CloseHandle(h);
+					break;
+				}
 			}
+			CloseHandle(pi.hProcess);
+			CloseHandle(pi.hThread);
 		}
 		h = OpenEventA(EVENT_MODIFY_STATE, FALSE, "Global\\RamDynSvcEvent");
 		SetEvent(h);
 		CloseHandle(h);
-		CloseHandle(pi.hProcess);
-		CloseHandle(pi.hThread);
 	}
 	else
 	{
@@ -1500,18 +1504,19 @@ static void __stdcall SvcMain(DWORD dwArgc, LPTSTR *lpszArgv)
 				if (reg_dyn_method == 1 || (!reg_dyn_method && !reg_fs.filesystem && trim_ok)) i += _snwprintf(&cmd_line[i], 4, L"-1 ");
 				else i += _snwprintf(&cmd_line[i], 34, L"%u %u %u ", reg_clean_ratio, reg_clean_timer, reg_max_activity);
 				_snwprintf(&cmd_line[i], 280, L"%u %u \"%s\"", reg_awealloc, reg_block_size, reg_add_param);
-				CreateProcess(NULL, cmd_line, NULL, NULL, FALSE, CREATE_NO_WINDOW, NULL, NULL, &si, &pi);
-				for (;;) {
-					Sleep(100);
-					GetExitCodeProcess(pi.hProcess, &data_size);
-					if (data_size != STILL_ACTIVE) break;
-					if ((h = (HANDLE)ImDisk_OpenDeviceByMountPoint(current_MP, 0)) != INVALID_HANDLE_VALUE) {
-						CloseHandle(h);
-						break;
+				if (CreateProcess(NULL, cmd_line, NULL, NULL, FALSE, CREATE_NO_WINDOW, NULL, NULL, &si, &pi)) {
+					for (;;) {
+						Sleep(100);
+						GetExitCodeProcess(pi.hProcess, &data_size);
+						if (data_size != STILL_ACTIVE) break;
+						if ((h = (HANDLE)ImDisk_OpenDeviceByMountPoint(current_MP, 0)) != INVALID_HANDLE_VALUE) {
+							CloseHandle(h);
+							break;
+						}
 					}
+					CloseHandle(pi.hProcess);
+					CloseHandle(pi.hThread);
 				}
-				CloseHandle(pi.hProcess);
-				CloseHandle(pi.hThread);
 			} else if (reg_mount_file) {
 				_snwprintf(cmd_line, _countof(cmd_line), L"imdisk -a %S -m \"%s\" %s -f \"%s\"", fileawe_list[reg_awealloc], current_MP, reg_add_param, reg_image_file);
 				start_process(cmd_line, TRUE);

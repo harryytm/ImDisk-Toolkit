@@ -1,3 +1,6 @@
+Version 20170407
+- fix: missing error handling for process creation could lead to unpredictable results
+
 Version 20161231
 - fix in RamDyn.exe: a bug occured with volumes larger than 4 GB (regression introduced in 20161230)
 
