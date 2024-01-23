@@ -1,0 +1,312 @@
+[Setup]
+ImDisk - Installation
+Välkommen till ImDisk Toolkits installation.
+Detta installerar ImDisk Toolkit (build %S).
+Installationsmapp:
+ Komponenter 
+ImDisk Virtual Disk Driver (obligatorisk)
+DiscUtils library (använder .NET Framework 4)
+RamDisk Configuration Tool
+ Alternativ 
+Aktivera kontextmenyposter
+begär administratörsrättigheter i Utforskaren
+Skapa genvägar på skrivbordet
+Språk:
+Håll muspekaren över ett objekt för info.
+Installerar drivrutin. Detta inkluderar en kontrollpanelpost, ett kommandoradsverktyg, imdisk.exe, och användargränssnitt för att hantera volymer från utforskarens kontextmeny.##Skriv "imdisk" i kommandotolken för info.
+Krävs för att montera avancerade avbildsformat som VHD, VDI, VMDK och några andra.##Lägger också till ett kommandoradsverktyg i installationsmappen (DiscUtilsDevio.exe) och en dialogruta för att använda biblioteket från filkontextmenyn i Utforskaren.
+Detta verktyg låter dig enkelt konfigurera en eller flera RamDiskar med varierande inställningar.
+Lägger till poster i disk- och filkontext för att hantera ImDisk-volymer och avbildsfiler direkt från Utforskaren.##Detta alternativ kan aktiveras senare, i Windows startmeny.
+Detta påverkar diskkontextens kommandon: "Spara diskinnehåll som avbildsfil" och "Avmontera ImDisk Virtual Disk".##Löser några UAC-relaterade frågor.##Detta alternativ kan aktiveras senare, i Windows startmeny.
+Skapar genvägar på skrivbordet.##Alla genvägar skapas alltid i Windows startmeny.
+Tack
+Installera
+Avbryt
+Installerar...
+Filkopieringsfel.
+Ogiltig sökväg.
+Fel: Kan inte skapa tjänst.
+Föregående installation finns i en annan mapp.#Vill du ta bort den?
+Installation slutförd.
+Installationen slutförd.##.NET Framework 4 finns dock inte i ditt system.#Utan det, kan du inte montera vissa avbildsformat.##Besök <a href="http://www.microsoft.com/en-us/download/details.aspx?id=17113">Microsoft Download Center</a> för att ladda ner en installerare.
+OK
+
+ImDisk - Tack!
+● Olof Lagerkvist: ImDisk Virtual Disk Driver, och flera verktyg för att använda DiscUtils library
+● v77: RamDisk Configuration Tool, dialogruta för att använda DiscUtils och installerare för det här paketet
+● Kenneth Bell: DiscUtils .NET library
+● Igor Pavlov: Komprimering och en liten 7z-SFX-modul, använd av det här paketet
+Översättningar:
+- Français: v77
+- Español: alacran
+- Svenska: Åke Engelbrektson
+- Deutsch: Bodo Thevissen
+- русский: 0x00ffh
+
+Allmänna inställningar
+Avinstallera
+Hemsida
+RamDisk-inställningar
+Montera avbildsfil
+
+Montera som ImDisk virtuell disk
+Spara diskinnehåll som avbildsfil
+Avmontera ImDisk virtuell disk
+
+
+ImDisk - Avinstallation
+Avinstallera drivrutin (kräver ej omstart)
+Ta bort inställningar
+Avinstallera
+Avbryt
+ImDisk virtuell disk upptäckt.#Alla befintliga ImDisk virtuella diskar avmonteras!
+Avmonterar ImDisk-volymer...
+Stoppar %s...
+Tar bort kvarvarande komponenter...
+
+
+ImDisk - Installation
+ Allmänna inställningar 
+Aktivera kontextmenyposter
+Kräv administratörsrättighet i Utforskaren
+Återställ dolda dialogrutor
+ Dölj följande diskenheter i Utforskaren: 
+Spara parametrar...
+med TEMP-miljövariabler
+OK
+Avbryt
+De här ändringarna verkställs#först efter Windows-omstart!
+
+
+[RamDiskUI]
+ RamDisk Inställningar 
+Grundläggande
+    Storlek:
+KB
+MB
+GB
+Allokera minne dynamiskt
+    Enhetsbokstav:
+Avmontera
+    Filsystem:
+Starta vid systemstart
+Skapa TEMP-mapp
+Ange TEMP-variabler...
+Min: %d %s
+Max: %d %s
+Minne allokeras endast när det verkligen används, istället för#att allokera hela storleken. Detta är långsammare men kan spara#minne om du endast använder en liten del av ramdisken.
+Avmontera markerad ImDisk-enhet och avregistrera den.
+Standard: NTFS.##*FAT* filsystem är vanligtvis snabbare, men med färre funktioner.#FAT och FAT32 är också begränsade i den maximala volymstorleken.
+Registrerar ramdisken att startas med Windows.#Flera ramdiskar kan registreras.
+
+Avancerat
+Klusterstorlek:
+Volymetikett:
+Snabbformatera
+Aktivera NTFS-komprimering
+Använd AWE
+Dynamiska RamDisk-parametrar...
+Använd monteringspunkt:
+Avmontera
+Tilläggsparametrar:
+Standard
+0.5 KB
+1 KB
+2 KB
+4 KB
+8 KB
+16 KB
+32 KB
+64 KB
+Större kluster är vanligtvis snabbare men kan använda#mer diskutrymme, särskilt vid ett större antal filer.
+Etikettstorleken begränsas av filsystemet:#32 tecken med NTFS, 11 med *FAT*.
+Standard: Inaktiverad.##Utför snabbformatering. Det kan påskynda RamDisk-skapandet men det allokerade#minnet påvisas inte omedelbart som använt i Windows aktivitetshanterare.
+Standard: Inaktiverad.##Låter filer komprimeras för skrivning till ramdisken.#Fungerar endast med NTFS filsystem.#Använd det inte om hastighet är viktigt!
+Standard: Inaktiverad.##Allokerar minnet genom AWE.#Detta garanterar att minnet aldrig skrivs till växlingsfilen.##På 32-bitars system kringgår det också 2- och 4GB/process-begränsningarna#och tillåter allokering av så mycket minne som systemet kan hantera#(men inte ohanterat eller osynligt minne).
+Standard: Inaktiverad.##Använd en mapp istället för en enhetsbokstav för att montera ramdisken.
+Avmontera markerad ImDisk-monteringspunkt och avregistrera den.
+Monteringspunkten måste vara en tom mapp, placerad på en NTFS-volym.#Upp till 10 monteringspunkter kan registreras för automatisk montering vid systemstart.
+Här kan du lägga till valfri parameter som inte redan används av GUI.#Exempelvis, så lägger "-o rem" till borttagningsattribut till enheten.#Klicka på "..." för att se en lista över alla parametrar.
+
+Data
+Läs in innehåll från avbildsfil eller mapp:
+Synkronisera vid systemavstängning
+Kopiera endast filer med arkivattribut
+Radera data som tagits bort från RamDisken
+Undantagna mappar:
+Synkronisera nu
+Om du väljer en mapp kommer hela innehållet att kopieras så fort ramdisken#skapats, inklusive filattribut och ACL, beroende på filsystemet.
+Standard: Inaktiverad.##Kopierar data från ramdisken till mappen eller avbilden#vid systemavstängning, beroende på nedanstående parametrar.
+En mapp per rad.#Mappar är relativa till ramdiskens root#(enhetsbeteckning eller monteringspunkt): Lägg inte till det.
+Synkronisera alla registrerade ramdiskar nu.
+
+Användning av AWE med dynamiska ramdiskar kräver rättighet att låsa sidor i minnet, i Lokala grupprinciper.#Om du väljer att fortsätta, kommer dessa rättigheter att tilldelas Administratörsgruppen.##Vill du fortsätta?
+Rättigheter tilldelade.#Utloggning krävs för att ändringen skall slutföras.#Vill du logga ut nu?
+Fel: Kan inte tilldela rättigheter.
+
+Klar
+Startar processen...
+Fel: Storleken måste vara minst %d KB.
+Fel: Storleken får inte överstiga %d %cB.
+Fel: Inkorrekt storlek.
+Fel: Ingen tom mapp specificerad.
+Den valda monteringspunkten kommer att avmonteras.#All osparad data kommer att förloras.#Vill du fortsätta?
+Avmonterar vald monteringspunkt...
+Denna volym kommer att avmonteras.#All osparad data kommer att förloras.#Vill du fortsätta?
+Avmonterar aktuell volym...
+Fel: Volymen kan inte avmonteras.
+Monterar ny RamDisk...
+Fel: Kan inte nå monteringspunkens mål.
+Fel: Filen innehåller inget giltigt filsystem.
+Fel: Volymen kan inte formateras.
+Fel: Volymen kan inte monteras.
+Kopierar filer...
+Visar ny enhet...
+Sparar parametrar...
+Varning: för många monteringspunkter.#Denna kommer inte att registreras.
+Fel: Kan inte skapa tjänst.
+Klar.
+Avmonterar volym...
+Synkroniserar...
+
+ TEMP-miljövariabler 
+ Användare 
+ System 
+Ange alla som:
+Ange standard
+OK
+Avbryt
+
+Minnesrensningsmetod:
+Automatisk
+TRIM-kommandon
+Rensning av ledigt utrymme
+ Rensningsparametrar för ledigt utrymme
+Dessa parametarar undantas vid användning av TRIM-kommandon.
+Minimal mängd data att rensa:
+Minimal tid mellan 2 rensningar:
+Maximal aktivitet före rensning:
+Sekunder
+MB/s
+Storlek på allokerade minnesblock:
+OK
+Avbryt
+"Automatisk" använder TRIM-kommandon om tillgängliga. De är mycket#mer effektiva men kräver NTFS och Windows 7 eller senare.##Annars, vid behov beroende på nedanstående 3 parametrar, kan#en rensningsfunktion skriva över hela det tomma utrymmet med en temporär fil#fylld med nollor (eftersom datablock fyllda med 0 frigörs automatiskt).
+Standard: 20.##Antal byte per allokerat minnesblock, i kraft av 2.#Minimivärde är 12 (4 KB). Använd 13 för 8 KB, 14 för 16 KB,#och så vidare, upp till 30 (1 GB).##Ett lägre värde kan reducera minnesanvändningen och#förbättra effektiviteten i rensningsfunktionen i fall#av kraftigt fragmenterade filer, men det minskar också prestanda.
+Standard: 10.##Rensningsfunktionen körs endast om denna minnesmängd kan frigöras.#Värdet är en andel av det totala enhetsutrymmet (ex: 10/1000 av en 4 GB-enhet = 40 MB).#Detta är endast en uppskattning. Den verkliga minnesmängd#som frigörs kan bli något högre eller något lägre.
+Standard: 10.##Ett lågt värde kan göra rensningen känsligare men vara olämpligt#i de fall där filer regelbundet tas bort utan att återskapas.
+Standard: 10.##Vänta tills läsningar och skrivningar är under detta värde, innan rensningsåtgärd startas.
+
+Varning! Funktionen för snabb uppstart av Windows är aktiverad. Detta kan leda till vissa besvär:##● Systemet skriver ramdiskinnehållet till hårddisken vid avstängning, och återställer det vid systemstart.#● Datasynkroniseringsfunktionen i ImDisk Toolkit fungerar inte vid systemavstängning.##Öppna avstängningsinställningarna för att inaktivera snabb uppstart.
+Avstängningsinställningar
+Visa inte denna varning igen
+Stäng
+
+
+[MountImg]
+ Montera ny virtuell disk 
+Avbildsfil:
+Enhetsbokstav
+Monteringspunkt
+Avmontera
+Enhetstyp:
+Hårddisk
+CD/DVD
+Diskett
+Skrivskyddad
+Flyttbar
+Partition:
+Montera automatiskt vid systemstart
+Växla till drivrutinsgränssnitt
+OK
+Avbryt
+Monterar...
+ImDisk - Monteringspunkt
+Storlek
+Filsystem
+Volymetikett
+Avregistrerar den valda avbildsfilen från Windows autostart,#och avmonterar den valda enheten eller monteringspunkten.
+Ange avbildens filnamn, bläddra fram den med "..."#eller 'Dra och släpp'.#Fel filformat kan omöjliggöra montering!##Om filen inte finns, blir du ombedd att skapa en ny råfil.##Rullgardinsmenyn visar de filer som registrerats för#att automatiskt monteras vid systemstart.
+Monteringspunkten måste vara en tom mapp, placerad på en NTFS-volym.##Om du drar och släpper en mapp, kommer den att väljas som monteringspunkt.
+"CD/DVD" rekommenderas för ISO-, BIN- och NRG-filer,#"Diskett" för VFD-filer, "Hårddisk" för andra format.
+Ange 1 om avbildsfilen innehåller endast en eller ingen partition.#0 innebär hela avbilden. Partitionstabellen kommer att skrivas över, om det finns någon.
+Förhindra skrivning till avbildsfilen.
+Detta inaktiverar vanligen skrivcache. Data skrivs direkt#till avbildsfilen, men det kan reducera prestanda.
+Registrerar avbildsfilen med parametrar#för montering vid systemstart.#Upp till 64000 avbildsfiler kan registreras.
+
+Ett fel uppstod vid montering.#Kontrollera parametrarna.
+Fel: Filsystemet på den valda monteringspunkten, stöder inte referenspunkter.
+Den valda mappen är redan en monteringspunkt.#Om du väljer att fortsätta, kommer den tidigare monterade volymen att bli onåbar via den här monteringspunkten.##Vill du fortsätta ändå?
+Fel: Den valda monteringspunkten är inte en tom mapp.
+Fel: Den valda enhetsbokstaven används redan.
+Fel: Kan inte skapa tjänst.
+
+Ogiltigt filsystem
+Volymen innehåller inget giltigt filsystem.##Vad vill du göra?
+Avmontera
+Formatera
+Avsluta
+
+Skapa ny avbildsfil
+Filen finns inte.#Vill du skapa en ny rå avbildsfil?
+        Filstorlek:#        (Min 20KB)
+Montera
+Skapa
+Avbryt
+Fel: Filen kan inte skapas.
+Fel: Kan inte skapa en fil med specificerad storlek.
+Fel: Kan inte initiera filen.
+
+Byte
+KB
+MB
+GB
+TB
+PB
+
+
+[ImDisk-Dlg]
+Varning! Du har inte tillräckliga rättigheter för att avmontera den här volymen korrekt.#Skrivcachebufferten kanske inte töms och det finns därför risk för dataförluster.##Vill du fortsätta ändå?
+Volymen används av en annan process och kan inte låsas.##Om du säkert har sparat all din data, är det säkert att fortsätta och volymen kommer att avmonteras korrekt.##Vill du fortsätta?
+Den virtuella disken har ändrats.##Vill du spara den som en avbildsfil innan den tas bort?
+Visa inte den här varningen igen
+Fråga inte igen
+OK
+Avbryt
+Ja
+Nej
+Öppnar enhet...
+Meddelar program om enhetsborttagning...
+Tömmer filbuffertar...
+Låser volym...
+Avmonterar filsystem...
+Sparar avbildsfil...
+Tar bort enhet...
+Tar bort enhetsbokstav...
+Kan inte öppna enheten.
+%s är inte en ImDisk virtuell disk.
+Kan inte ta bort enheten.
+Kan inte ta bort monteringspunkten.
+
+ Spara diskavbild 
+Avbildsfil:
+Förskjutning i avbildsfil:
+Skriv MBR i början på filen
+OK
+Avbryt
+Avbildsfiler
+ISO-avbilder
+Alla filer
+%s låst och klar.
+%s används av en annan process och kan inte låsas.#Därför kan den ändras vid kopiering.
+%s sparas... %u%%
+Volymen %s sparades i %s.
+Enhetstypen stöds ej.
+Fel vid läsning av volymegenskaper.
+Kan inte öppna avbildsfil.
+Kan inte allokera minne.
+Fel vid skapande av ny MBR.
+Fel vid skrivning av MBR.
+Fel vid inställning av filpekare.
+Läsfel.
+Skrivfel.

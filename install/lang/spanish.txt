@@ -1,0 +1,312 @@
+[Setup]
+ImDisk - Instalación
+Bienvenido al instalador de ImDisk Toolkit.
+Este instalará ImDisk Toolkit (build %S).
+Carpeta de instalación:
+ Componentes 
+Controlador de disco virtual (requerido)
+Librería DiscUtils (usa .NET Framework 4)
+Herramienta de configuración RamDisk
+ Opciones 
+Permitir entradas en menús contextuales
+Derechos de administrador en el Explorador
+Crear accesos directos en escritorio
+Lenguaje:
+Mantenga su mouse sobre un artículo para obtener detalles.
+Instalar controlador. Esto incluye un panel de control, una herramienta de línea de  comandos, imdisk.exe, e interfaces para manejar volúmenes desde menús contextuales en el Explorador.##Favor de escribir "imdisk" en línea de comandos para detalles.
+Requeridos para montar formatos de archivo de imagen avanzadas como VHD, VDI, VMDK y algunos otros.##También agrega una herramienta de línea de comandos en la carpeta de instalación, DiscUtilsDevio.exe, y una caja de dialogo dedicada a usar la librería desde el menú en el Explorador.
+Esta herramienta permitirá configurar fácilmente uno o varios RamDisks con varios ajustes.
+Agregar entradas en el menú contextual de la unidad y en el menú contextual del archivo para manejar volúmenes ImDisk y archivos imagen directamente desde el explorador.##Esta opción puede ajustarse después en el menú de inicio de Windows.
+Esto afecta los comandos en el menú contextual de la unidad: "Guardar contenidos del disco como archivo imagen" y "Desmontar disco virtual ImDisk".##Resuelve algunos problemas relacionados con UAC.##Esta opción se puede ajustar más tarde en el menú Inicio de Windows.
+Crear accesos directos en el escritorio.##Todos los accesos directos se crean siempre en el menú Inicio de Windows.
+Créditos
+Instalar
+Cancelar
+Instalando
+Error de copia de archivo.
+Ruta no válida.
+Error: No se puede crear el servicio.
+Existe una instalación anterior en otra carpeta.#¿Le gustaría eliminarla?
+Instalación finalizada.
+Instalación finalizada.##Sin embargo, .NET Framework 4 no está presente en su sistema. Sin él, usted no será capaz de montar algunos formatos de archivo de imagen.#Por favor, visite la <a href="http://www.microsoft.com/eses/download/details.aspx?id=17113">Centro de descargas de Microsoft</a> para descargar el instalador.
+OK
+
+ImDisk - Créditos
+● Olof Lagerkvist: Controlador de disco virtual ImDisk, y varias herramientas para usar la librería DiscUtils
+● v77: Herramienta de configuración RamDisk, caja de dialogo para usar DiscUtils y el  instalador de este paquete
+● Kenneth Bell: Librería DiscUtils .NET
+● Igor Pavlov: compresor y pequeño modulo 7z-SFX module usado para este paquete
+Traducciones:
+- Français: v77
+- Español: alacran
+- Svenska: Åke Engelbrektson
+- Deutsch: Bodo Thevissen
+- русский: 0x00ffh
+
+Ajustes Generales
+Desinstalar
+Página principal
+Configurar RamDisk
+Montar archivo imagen
+
+Montar como disco virtual ImDisk
+Guardar contenidos de disco como archivo imagen
+Desmontar disco virtual ImDisk
+
+
+ImDisk - Instalación
+Desinstalar controlador (no requiere reinicio)
+Remover ajustes
+Desinstalar
+Cancelar
+Disco virtual ImDisk detectado.#¡Todos los discos virtuales ImDisk existentes serán desmontados!
+Desmontando volúmenes ImDisk...
+Deteniendo %s...
+Removiendo contenidos remanentes...
+
+
+ImDisk - Instalación
+ Ajustes generales 
+Permitir entradas en menús contextuales
+Derechos de administrador en el Explorador
+Restaurar los cuadros de diálogo ocultos
+ Ocultar las unidades siguientes en el Explorador: 
+Guardar Parámetros...
+con variables de entorno TEMP
+OK
+Cancelar
+Estos cambios entrarán en efecto#¡sólo después de reiniciar Windows!
+
+
+[RamDiskUI]
+ Herramienta de configuración RamDisk 
+Básico
+Tamaño:
+KB
+MB
+GB
+Asignar memoria dinámicamente
+Letra de unidad:
+Desmontar
+Sistema de archivos:
+Lanzar al inicio de Windows
+Crear carpeta TEMP
+Establecer variables TEMP ...
+Mín: %d %s
+Máx: %d %s
+En lugar de asignar todo el tamaño, la memoria se asigna sólo cuando#se utiliza realmente. Esto es más lento, pero puede ahorrar un montón#de Memoria si está utilizando sólo una pequeña parte de la ramdisk.
+Desmontar la unidad ImDisk seleccionada#y anular el registro de la misma.
+Por defecto: NTFS.##Los sistemas de archivos *FAT* son generalmente más rápidos pero con menos funciones.#FAT y FAT32 también tienen limitaciones en el tamaño del volumen máximo.
+Una vez creado, registrar el disco RAM para iniciarse con Windows.#Varios ramdisks pueden ser registrados.
+
+Avanzado
+Tamaño de cluster:
+Etiqueta de unidad:
+Formato rápido
+Habilitar compresión NTFS
+Usar la memoria física AWE
+Parámetros RAMDISK dinámicos...
+Usar Punto de montaje:
+Desmontar
+Parámetros adicionales:
+Por defecto
+0.5 KB
+1 KB
+2 KB
+4 KB
+8 KB
+16 KB
+32 KB
+64 KB
+Clusters más grandes son generalmente más rápidos, pero puede usar#más espacio de disco, sobre todo con un gran número de archivos.
+Tamaño de la etiqueta está limitado por el sistema#de archivos: 32 caracteres con NTFS, 11 con *FAT*.
+Por defecto: deshabilitado.##Hacer un formato rápido. Se puede acelerar la construcción del#RamDisk pero la memoria asignada no aparece inmediatamente,#como se usa en el Administrador de tareas de Windows.
+Por defecto: deshabilitado.##Permite que los archivos sean comprimidos antes de ser escritos en el ramdisk.#Solo funciona con el sistema de archivos NTFS.#No usar si Ud. se preocupa por la velocidad.
+Por defecto: deshabilitado.##Asignar memoria a través de AWE.#Esto garantiza que la  memoria nunca escribirá en el archivo de paginación.##En los sistemas de 32 bits, esto  también pasa por alto los límites de 2GB y 4GB#por proceso y permite asignar tanta memoria como el sistema gestiona#(pero no la no administrada o la memoria invisible).
+Por defecto: deshabilitado.##Use una carpeta en ligar de una letra de drive para montar el ramdisk.
+Desmontar punto de montaje ImDisk seleccionado y anular el registro de la misma.
+El punto de montaje debe ser un directorio vacío situado en un volumen NTFS.#Hasta 10 puntos de montaje se pueden registrar para ser montados en el#arranque de Windows.
+Usted puede agregar aquí cualquier parámetro que aún no se usa por la GUI.#Por ejemplo, "-o rem" agregará atributo extraíble para la unidad.#Haga clic en el botón "..." para listar todos los parámetros.
+
+Data
+Carga contenido de archivo imagen o carpeta:
+Sincronizar al apagar el sistema
+Copiar solo archivos con atributo de archivo
+Borrar datos removidos del RamDisk
+Carpetas excluidas:
+Sincronizar ahora
+Si selecciona una carpeta, todo su contenido se copiará una vez que el ramdisk#se creó, con atributos de archivo y ACL, dependiendo del sistema de archivos.
+Por defecto: desactivado.##Copie los datos desde el disco RAM en la carpeta o archivo de imagen#en apagado de sistema, dependiendo de los parámetros de abajo.
+Una carpeta por línea.#Las carpetas son relativas a la raíz del disco RAM#(Letra de unidad o punto de montaje): no agregarlo.
+Sincronizar todos los ramdisks registrados ahora.
+
+El uso de AWE con ramdisks dinámicos requiere el privilegio para bloquear páginas en memoria en la directiva de grupo local.#Si decide continuar, se otorgará este privilegio para el grupo de administradores.##¿Quieres continuar?
+Privilegio concedido con éxito.#Se requiere un cierre de sesión para que este cambio surta efecto.#¿Salir ahora?
+Error: no se puede otorgar el privilegio.
+
+Listo
+Iniciando procesamiento de ...
+Error: el tamaño debe ser de al menos %d KB.
+Error: el tamaño no debe exceder %d %cB.
+Error: tamaño incorrecto.
+Error: no hay una carpeta vacía seleccionada.
+El punto seleccionado de montaje se desmontará.#Se perderán los datos no guardados.#¿Continuar?
+Desmontar punto de montaje seleccionado...
+Este volumen se desmontará.#Se perderán los datos no guardados.#¿Continuar?
+Desmontar volumen actual...
+Error: el volumen no se puede desmontar.
+Montando nuevo RamDisk ...
+Error: No se puede recuperar objetivo de punto de montaje.
+Error: el archivo no contiene un sistema de archivo válido.
+Error: el volumen no se puede formatear.
+Error: el volumen no se puede montar.
+Copiando archivos...
+Viendo nueva unidad...
+Guardando Parámetros...
+Advertencia:. Demasiados puntos de montaje#Este no será registrado.
+Error: No se puede crear el servicio.
+Hecho.
+Desmontando Volumen...
+Sincronizando...
+
+ Variables de entorno TEMP 
+ Usuario 
+ Sistema 
+Ajustar todo a:
+Ajustar por defecto
+OK
+Cancelar
+
+Método de liberación de memoria:
+Automático
+Comandos TRIM
+Limpiar espacio libre
+ Parametros de limpiado de espacio libre 
+Estos parámetros son ignorados cuando se utilizan comandos TRIM.
+Mínima cantidad de datos a limpiar:
+Tiempo mínimo entre 2 limpiezas:
+Actividad máxima antes de Limpieza:
+Segundos
+MB/s
+Tamaño de los bloques de memoria asignada:
+OK
+Cancelar
+"Automático" usa comandos TRIM si están disponibles. Ellos son#mas eficientes pero requieren NTFS y Windows 7 o posterior.##De otro modo, cuando se requiere, dependiendo de los 3 parámetros debajo, una#función limpiar borra el total del espacio vacío con un archivo temporal#lleno con 0 (por que blocs de datos llenos con 0 son automáticamente liberados).
+Por defecto: 20.##Número de bytes por bloque de memoria asignada, en potencia de 2.#El valor mínimo es 12 (4 KB). Utilice 13 para 8 KB, 14 de 16 KB, y así#sucesivamente, hasta 30 (1 GB).##Un valor inferior puede reducir el uso de memoria y mejorar eficacia#de la función de limpieza en caso de archivos altamente#fragmentados, pero también reduce los rendimientos.
+Por defecto: 10.##La función de limpieza se ejecuta sólo si esta cantidad de memoria puede ser#liberada. El valor es una proporción entre el espacio total de la unidad (ejem.:#10/1000 de una unidad de 4 GB = 40 MB). Esta es sólo una estimación: la#cantidad de memoria realmente liberada puede ser ligeramente mayor o menor.
+Por defecto: 10.##Un valor bajo puede hacer la limpieza más sensible, pero puede ser inapropiado#en caso de que los archivos se eliminen regularmente sin ser recreados.
+Por defecto: 10.##Espere hasta que las lecturas y escrituras están por#debajo de este valor antes de procesar la limpieza.
+
+Advertencia: la función de inicio rápido de Windows está habilitada. Esto puede llevar a algunos problemas:##● El sistema escribe el contenido de los discos ram al apagar el equipo en el disco duro, y los restaura en el arranque.#● La función de sincronización de datos de ImDisk Toolkit no funciona en el cierre del sistema.##Abra la configuración de apagado para desactivar el inicio rápido.
+Configuración de apagado del PC
+No mostrar este mensaje otra vez
+Cerrar
+
+
+[MountImg]
+ Montar nuevo disco virtual 
+Archivo de imagen:
+Letra de unidad
+Punto de montaje
+Desmontar
+Tipo de dispositivo:
+Disco duro
+CD/DVD
+Floppy
+Sólo lectura
+Removible
+Partición:
+Montar al inicio de Windows
+Interfaz del controlador
+OK
+Cancelar
+Montando
+ImDisk - Punto de montaje
+Tamaño
+Sistema de archivos
+Etiqueta
+Desregistra el archivo imagen del arranque de Windows,#y desmonta el drive seleccionado o punto de montaje.
+Introduzca el nombre del archivo de imagen, seleccione con#el botón "..." o arrastrarlo y soltarlo.#!Una extensión incorrecta puede hacer que el montaje falle!##Si el archivo no existe, se le pedirá crear un nuevo archivo RAW.##La lista desplegable muestra los archivos registrados a ser#montados al inicio de Windows.
+El punto de montaje debe ser un directorio vacío situado en un volumen NTFS.##Si arrastra y coloca una carpeta, esta será seleccionada como punto de montaje.
+"CD/DVD" se recomienda para ISO, BIN and NRG files,#"Floppy" para archivos VFD, "Disco Duro" para otros formatos.
+Poner 1 si el archivo imagen no contiene ninguna partición o sólo una.#0 Es toda la imagen: la tabla de particiones, si la hay, se sobrescribirá.
+Evitar escribir en el archivo de imagen.
+Esto deshabilita la caché de escritura: los datos#son inmediatamente escritos en el archivo imagen#pero esto puede disminuir el rendimiento.
+Registra el archivo imagen y parametros#a ser montado al inicio de Windows.#Hasta 64,000 archivos imagen pueden registrarse.
+
+Se ha producido un error durante el montaje.#Por favor, compruebe los parámetros.
+Error: sistema de archivos del punto de montaje seleccionado no admite puntos de análisis.
+El directorio seleccionado ya es un punto de montaje.#Si decide continuar, el volumen  montado anteriormente no será accesible a través de este punto de montaje.##¿Aún desea continuar?
+Error: el punto de montaje seleccionado no es un directorio vacío.
+Error: the selected drive letter is already in use.
+Error: No se puede crear el servicio.
+
+Sistema de archivo no válido
+El volumen no contiene un sistema de archivo válido.##¿Qué quiere hacer?
+Desmontar
+Formatear
+Salir
+
+Crear nuevo archivo de imagen
+El archivo no existe.#¿Quieres crear un nuevo archivo de imagen RAW?
+        Tamaño:#        (Mín. 20KB)
+Montar
+Crear
+Cancelar
+Error: El archivo no puede ser creado.
+Error: No se puede crear un archivo del tamaño especificado.
+Error: No se puede inicializar archivo.
+
+Bytes
+KB
+MB
+GB
+TB
+PB
+
+
+[ImDisk-Dlg]
+Advertencia: No tiene derechos suficientes para desmontar correctamente este volumen.#Los buffers de escritura no pueden ser eliminados, por lo que hay el riesgo de pérdida de datos.##¿Todavía quiere continuar?
+El volumen está en uso por otro proceso y no se puede bloquear.##Si se guardan todos sus datos, puede continuar con seguridad y el volumen será debidamente desmontado.##¿Todavía quiere continuar?
+El disco virtual se ha modificado.##¿Quieres guardarlo como un archivo de imagen antes de removerlo?
+No mostrar este mensaje otra vez
+No preguntar de nuevo
+OK
+Cancelar
+Si
+No
+Abriendo dispositivo...
+Notificando a las aplicaciones sobre la remoción del dispositivo...
+Limpiando buffers de archivos...
+Bloqueando volumen...
+Desmontando sistema de archivos...
+Guardando archivo de imagen...
+Removiendo dispositivo...
+Removiendo letra de unidad...
+No se puede abrir el dispositivo.
+%s No es un disco virtual ImDisk.
+No se puede quitar el dispositivo.
+No se puede remover el punto de montaje.
+
+ Guardar imagen de disco 
+Archivo de imagen:
+Ajuste en Archivo de Imagen:
+Escribe una MBR en el principio del archivo
+OK
+Cancelar
+Archivos de imagen
+Imágenes ISO
+Todos Los Archivos
+%s bloqueado y listo.
+%s está en uso por otro proceso y no se puede bloquear.#Por lo tanto, puede ser modificado durante la copia.
+Guardado de %s en curso... %u%%
+Volumen %s guardado con éxito en %s.
+Tipo de unidad no compatible.
+Error al recuperar las propiedades del volumen.
+No se puede abrir archivo de imagen.
+No se puede asignar memoria.
+Error al crear el nuevo MBR.
+Error al escribir MBR.
+Error de ajuste de puntero de archivo.
+Error de lectura.
+Error de escritura.

@@ -1,0 +1,4 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+*/lang.txt text working-tree-encoding=UTF-16
+install/lang/*.txt text working-tree-encoding=UTF-16

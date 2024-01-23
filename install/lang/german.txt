@@ -1,0 +1,312 @@
+[Setup]
+ImDisk - Setup
+Willkommen beim Installer von ImDisk Toolkit.
+Dieser installiert das ImDisk Toolkit (Build %S).
+Installationsverzeichnis:
+ Komponenten 
+ImDisk Virtual Disk Treiber (benötigt)
+DiscUtils Bibliothek (nutzt .Net Framework 4)
+RAM-Disk Konfigurator
+ Einstellungen 
+Einträge in Kontextmenüs aktivieren
+Administratorrechte im Explorer erbitten
+Verknüpfungen auf Desktop anlegen
+Sprache:
+Zeige mit der Maus auf einen Eintrag, um mehr zu erfahren.
+Treiber installieren. Dies enthält ein Systemsteuerungs-Applet, ein Befehlszeilen-Tool, imdisk.exe und Oberflächen, um Volumes über Kontextmenüs des Explorer zu bedienen.##Bitte tippe "imdisk" in einem Kommandozeilenfenster für weitere Details.
+Benötigt, um fortgeschrittene Abbilder wie VHD, VDI, VMDK und einige andere einzubinden.##Ermöglicht auch ein Kommandozeilen-Tool im Installationsverzeichnis, DiscUtilsDevio.exe, und ein dediziertes Eingabefeld, um die Bibliothek im Dateikontextmenü des Explorers zu verwenden.
+Dieses Programm ermöglicht die einfache Konfiguration von einer oder mehrerer RAM-Disks mit unterschiedlichen Einstellungen.
+Füge Einträge zum Kontextmenü des Laufwerks und das Datei-Kontextmenü hinzu, um die ImDisk-Volumes und Abbilder direkt vom Explorer aus zu verwalten.##Diese Option kann später vom Windows-Startmenü aus gesetzt werden.
+Dies betrifft die Befehle im Laufwerks-Kontextmenü: "Diskinhalt als Abbild speichern" und "ImDisk Virtual Disk trennen".##Löst einige UAC-bezogene Probleme.##Diese Option kann später vom Windows-Startmenü aus gesetzt werden.
+Verknüpfungen auf dem Desktop anlegen.##Windows-Startmenü werden stets alle Verknüpfungen angelegt.
+Mitwirkende
+Installieren
+Abbrechen
+Installiere ...
+Kopierfehler
+Ungültiger Pfad.
+Fehler: Kann Dienst nicht anlegen.
+Das vorherige Setup befindet sich in einem anderen Verzeichnis.#Möchtest du es löschen?
+Installation abgeschlossen.
+Installation abgeschlossen.##Allerdings ist .NET Framework 4 auf deinem System derzeit nicht installiert.#Ohne es kannst du einige Abbilder nicht einbinden.##Besuche <a href="http://www.microsoft.com/en-us/download/details.aspx?id=17113">Microsoft Download Center</a> für ein Setup.
+OK
+
+ImDisk - Mitwirkende
+● Olof Lagerkvist: ImDisk Virtual Disk Driver und einige andere Tools, die die DiscUtils Bibliothek verwendet
+● v77: RAM-Disk Konfigurator, Dialog Box von DiscUtils und den Installer dieses Pakets
+● Kenneth Bell: DiscUtils .NET Bibliothek
+● Igor Pavlov: Kompressionsprogramm und kleines 7z-SFX-Modul, das von diesem Paket verwendet wird
+Übersetzungen:
+- Français: v77
+- Español: alacran
+- Svenska: Åke Engelbrektson
+- Deutsch: Bodo Thevissen
+- русский: 0x00ffh
+
+Allgemeine Einstellungen
+Deinstallation
+Homepage
+RAM-Disk Konfigurator
+Abbild einbinden
+
+Als ImDisk Virtual Disk einbinden
+Diskinhalt als Abbild speichern
+ImDisk Virtual Disk trennen
+
+
+ImDisk - Setup
+Treiber deinstallieren (kein Neustart benötigt)
+Einstellungen entfernen
+Deinstallieren
+Abbrechen
+ImDisk Virtual Disk erkannt.#Alle existierenden ImDisk Virtual Disks werden getrennt!
+Trenne ImDisk-Volume ...
+Stoppe %s...
+Entferne verbleibende Komponenten
+
+
+ImDisk - Setup
+ Allgemeine Einstellungen 
+Einträge in Kontextmenüs aktivieren
+Administratorrechte im Explorer erbitten
+Verborgene Dialogfenster wiederherstellen
+ Die folgenden Laufwerke im Explorer verbergen: 
+Parameter speichern ...
+mit TEMP Umgebungsvariablen
+OK
+Abbrechen
+Diese Änderungen wirken erst#nach einem Windows-Neustart
+
+
+[RamDiskUI]
+ RAM-Disk Konfigurator 
+Grundlegend
+Größe:    
+KB
+MB
+GB
+Speicher dynamisch belegen
+Laufwerksbuchstabe:
+Trennen
+Dateisystem:
+Bei Windowsstart mitstarten
+TEMP-Verzeichnis anlegen
+TEMP-Variablen anlegen ...
+Minimum: %d %s
+Maximum: %s %s
+Anstatt die gesamte Speichermenge zu reservieren,#wird nur die jeweils benötigte Menge Speicher belegt.#Dies ist langsamer, spart aber sehr viel Speicher,#falls nur ein kleiner Teil der RAM-Disk belegt ist.
+Das gewählte ImDisk Laufwerk trennen und deregistrieren.
+Voreinstellung: NTFS##*FAT* Dateisysteme sind gewöhnlich schneller aber haben weniger Funktionen.#FAT und FAT32 haben auch Grenzen bei der maximalen Volumegröße.
+Einmal angelegt, kann diese (oder auch mehrere)#RAM-Disks beim Systemstart mitgestartet werden.
+
+Fortgeschritten
+Blockgröße:
+Laufwerksname:
+Schnellformatieren
+NTFS-Kompression aktivieren
+Physischen AWE-Speicher verwenden
+Parameter der dynamischen RAM-Disk
+Bereitstellungspunkt verwenden:
+Trennen
+Zusätzliche Parameter:
+Standard
+0,5 KB
+1 KB
+2 KB
+4 KB
+8 KB
+16 KB
+32 KB
+64 KB
+Größere Blöcke sind gewöhnlich schneller, aber belegen mehr#Laufwerksplatz insbesondere bei einer großen Anzahl Dateien.
+Die Länge des Namen wird vom Dateisystem begrenzt:#32 Zeichen bei NTFS, 11 bei FAT.
+Voreinstellung: ausgeschaltet##Eine Schnellformatierung durchführen. Dies kann die Erstellung der RAM-Disk beschleunigen,#aber der verwendete Speicher wird im Windows Task Manager nicht sofort als belegt angezeigt.
+Voreinstellung: ausgeschaltet##Erlaubt Kompression beim Schreiben in die RAM-Disk.#Funktioniert nur mit NTFS-Dateisystem.#Sollte nur verwendet werden, wenn die Geschwindigkeit keine Rolle spielt.
+Voreinstellung: abgeschaltet##Speicher über AWE reservieren.#Dies gewährleistet, dass der Speicher nicht in die Auslagerungsdatei geschrieben wird.##Auf 32-Bit-Systemen umgeht dies auch die 2 und 4 GB-Grenzen pro#Prozess und erlaubt so viel Speicher zu reservieren, wie das System hat#(aber weder unzugreifbaren noch unsichtbaren Speicher).
+Voreinstellung: abgeschaltet##Verwende ein Verzeichnis anstatt eines Laufwerksbuchstaben, um die RAM-Disk zu einzubinden.
+Den gewählten ImDisk Bereitstellungspunkt trennen und deregistrieren.
+Der Bereitstellungspunkt muss ein leeres Verzeichnis auf einem NTFS-Volume sein.#Bis zu zehn Bereitstellungspunkte können registriert und beim Start von Windows eingebunden werden.
+Hier kannst du jegliche Parameter einfügen, die noch nicht von der GUI verwendet werden.#Zum Beispiel: "-o rem" fügt dem Laufwerk das Wechseldatenträger-Attribut hinzu.#Klicke auf den "..."-Knopf, um alle Parameter aufzulisten.
+
+Daten
+Inhalt eines Abbildes oder Verzeichnisses laden:
+Beim Herunterfahren synchronisieren
+Nur Dateien mit Archiv-Eigenschaft kopieren
+Aus der RAM-Disk entfernte Dateien löschen
+Ausgenommene Verzeichnisse:
+Jetzt synchronisieren
+Wenn du ein Verzeichnis auswählst, wird sein gesamter Inhalt kopiert sobald die RAM-Disk#angelegt wurde. Je nach Dateisystem beinhaltet das auch Dateiattribute und ACL.
+Voreinstellung: ausgeschaltet.##Kopiert vor dem Herunterfahren Daten von der RAM-Disk in ein Verzeichnis oder#ein Abbild - je nachdem welche Parameter unten angegeben sind.
+Ein Verzeichnis pro Zeile.#Verzeichnisse sind relativ zum Hauptverzeichnis der RAM-Disk#(Laufwerksbuchstabe oder Bereitstellungspunkt): nicht hinzufügen.
+Jetzt alle registrierten RAM-Disks synchronisieren.
+
+Die Verwendung von AWE mit dynamischen RAM-Disks erfordert das Privileg, Speicherseiten innerhalb der lokalen Gruppenpolitik zu sperren.#Wenn du Fortfahren auswählst, wird dieses Rest der Administratorgruppe gewährt.##Möchtest du fortfahren?
+Privileg erfolgreich gewährt.#Für die Durchführung der Änderung ist eine Abmeldung erforderlich.#Jetzt abmelden?
+Fehler: Kann die Rechte nicht einräumen.
+
+Bereit
+Starte Prozess...
+Fehler: Größe muss mindestens %d KB betragen.
+Fehler: Größe darf %d %cB nicht übersteigen.
+Fehler: Falsche Größe.
+Fehler: Kein leeres Verzeichnis ausgewählt.
+Der gewählte Bereitstellungspunkt wird getrennt.#Jegliche ungespeicherten Daten gehen verloren.#Fortfahren?
+Trenne ausgewählten Bereitstellungspunkt ...
+Dieses Laufwerk wird getrennt.#Alle nicht gespeicherten Daten gehen verloren.#Fortfahren?
+Trenne aktuelles Laufwerk ...
+Fehler: Das Volume kann nicht getrennt werden.
+Binde neue RAM-Disk ein ...
+Fehler: Kann das Ziel für den Bereitstellungspunkt nicht finden.
+Fehler: Diese Datei enthält kein gültiges Dateisystem.
+Fehler: Das Laufwerk kann nicht formatiert werden.
+Fehler: Das Laufwerk kann nicht eingebunden werden.
+Kopiere Dateien ...
+Zeige neues Laufwerk an ...
+Speichere Parameter ...
+Warnung: Zu viele Bereitstellungspunkte.#Dieser kann nicht registriert werden.
+Fehler: Kann Dienst nicht anlegen.
+Fertig.
+Trenne Laufwerk ...
+Synchronisiere ...
+
+ TEMP Umgebungsvariablen 
+Anwender  
+System  
+Alle setzen auf:
+Zurücksetzen
+OK
+Abbrechen
+
+Speicherfreigabemethode:
+Automatisch
+TRIM-Befehle
+Löschen freier Bereiche
+ Einstellungen für das Löschen freier Bereiche 
+Diese Einstellungen werden bei Verwendung von TRIM ignoriert.
+Zu löschende Mindestdatenmenge:
+Intervall zwischen zwei Aufräumvorgängen:
+Maximale Aktivität vor Aufräumvorgang:
+Sekunden
+MB/s
+Größe der belegten Speicherblöcke:
+OK
+Abbrechen
+"Automatisch" verwendet, wenn verfügbar, TRIM-Befehle. Diese sind#deutlich effizienter, erfordern aber NTFS und mindestens Windows 7.##Andernfalls löscht die Aufräumfunktion gelöschte Dateien, indem der#gesamte freie Platz mit Nullen beschrieben wird (da dieser automatisch#gelöscht wird).
+Voreinstellung: 20.##Anzahl Bytes pro reserviertem Speicherblock (als Zweierpotenz).#Mindestwert ist 12 (4 KB). Verwende 13 für 8 KB, 14 für 16 KB#und so weiter bis zu 30 (1 GB).##Ein niedriger Wert kann die verwendete Speichermenge reduzieren#und im Fall von fragmentierten Dateien die Effizienz#des Aufräumvorgangs erhöhen.#Allerdings verringert er auch die Geschwindigkeit.
+Voreinstellung: 10.##Die Aufräumfunktion startet erst, wenn diese#Menge Speicher freigegeben werden kann. Dieser Wert ist ein Promillesatz der Gesamtlaufwerksgröße#(z. B. 10/1000 eines 4 GB-Laufwerkes=40 MB). Dies ist nur eine Schätzung:#Die tatsächlich freigegebene Menge kann leicht darüber oder darunter liegen.
+Voreinstellung: 10.##Bei einem niedrigeren Wert wird das Aufräumen früher ausgelöst. Allerdings#kann dies unpassend sein, wenn häufig Dateien gelöscht werden ohne neu geschrieben zu werden.
+Voreinstellung: 10.##Warten bis Lesen und Schreiben unterhalb dieses Wertes ist bevor das Aufräumen beginnt.
+
+Warnung: Die Schnellstartfunktion von Windows ist ausgeschaltet. Dies kann zu Problemen führen.#● Das System schreibt den Inhalt der RAM-Disks beim Herunterfahren auf die Festplatte und stellt sie beim Hochfahren wieder her.#● Die Datensynchronisierungsfunktion von ImDisk Toolkit funktioniert beim Herunterfahren nicht.##Öffne die Einstellungen für das Herunterfahren, um die Schnellstart auszuschalten.
+Einstellungen für das Herunterfahren
+Diese Warnung nicht wieder anzeigen
+Schließen
+
+
+[MountImg]
+ Neue Virtual Disk einbinden 
+Abbild:
+Laufwerksbuchstabe
+Bereitstellungspunkt
+Trennen
+Geräteart:
+Festplatte
+CD/DVD
+Diskette
+Schreibgeschützt
+Entfernbar
+Partition:
+Bei Windows-Start registrieren
+Zur Treiber-GUI wechseln
+OK
+Abbrechen
+Binde ein ...
+ImDisk - Bereitstellungspunkt
+Größe
+Dateisystem
+Laufwerksname
+Trägt das gewählte Abbild vom Windows-Start ab und meldet#das gewählte Laufwerk oder den Bereitstellungspunkt ab.
+Gib den Namen eines Abbildes ein, wähle ihn mit dem "..."-Knopf aus#oder nutze Drag & Drop.#Eine falsche Dateiendung kann zu einem Scheitern des Einbindens führen.##Wenn die Datei nicht existiert, wirst du aufgefordert, eine#neue Raw-Datei anzulegen.##Die Drop-Down-Liste zeigt die Liste der bei Systemstart#eingebundenen Dateien an.
+Der Bereitstellungspunkt muss ein leeres Verzeichnis in einem NTFS-Volume sein.##Wenn du ein Verzeichnis per Drag & Drop auswählst, wird es als Bereitstellungspunkt verwendet.
+"CD/DVD" wird für ISO-, BIN- und NRG-Dateien empfohlen,#"Floppy" für VFD-Dateien, "Festplatte" für andere Formate.
+Gib 1 ein, wenn das Abbild keine Partition oder nur eine enthält.#0 steht für das vollständige Abbild: Die Partitionstabelle wird, falls vorhanden, überschrieben.
+Schreibzugriffe in Abbild verhindern.
+Dies schaltet gewöhnlich den Schreibcache ab, sodass Daten sofort#in das Abbild geschrieben werden. Dies kann allerdings die#Geschwindigkeit verringern.
+Trägt das Abbild und die gweählten Einstellungen für den Windows-Start ein.#Bis zu 6400 Abbilder können registriert werden.
+
+Ein Fehler trat beim Einbinden auf.#Bitte prüfe die Parameter.
+Fehler: Das Dateisystem des gewählten Bereitstellungspunktes unterstützt keine Analysepunkte.
+Das gewählte Verzeichnis ist bereits ein Bereitstellungspunkt.#Wenn du fortfährst, wird das zuvor eingebundene Volume über diesen Bereitstellungspunkt unerreichbar.##Möchtest du trotzdem fortfahren?
+Fehler: Der ausgewählte Bereitstellungspunkt ist kein leeres Verzeichnis.
+Fehler: der gewählte Laufwersbuchstabe wird bereits verwendet.
+Fehler: Kann Dienst nicht anlegen.
+
+Ungültiges Dateisystem
+Dieses Volume enthält kein gültiges Dateisystem.##Was möchtest du tun?
+Trennen
+Formatieren
+Beenden
+
+Neues Abbild anlegen
+Diese Datei existiert nicht.#Möchtest du eine neues RAW-Abbild anlegen?
+        Dateigröße:#        (Min. 20 KB)
+Einbinden
+Anlegen
+Abbrechen
+Fehler: Datei kann nicht angelegt werden.
+Fehler: Datei der angegebenen Größe kann nicht angelegt werden.
+Fehler: Kann Datei nicht initialisieren.
+
+Bytes
+KB
+MB
+GB
+TB
+PB
+
+
+[ImDisk-Dlg]
+Warnung: Du hast nicht ausreichende Rechte, um dieses Volume zu trennen.#Die Schreibpuffer könnten nicht geleert werden und somit droht Datenverlust.#Möchtest du trotzdem fortfahren?
+Das Volume wird noch von einem anderen Prozess verwendet und kann nicht gesperrt werden.##Wenn all deine Daten gesichert sind, kannst du fortfahren und das Volume trennen.##Möchtest du fortfahren?
+Die virtuelle Disk wurde verändert.##Möchtest du sie vor dem Entfernen als Abbild speichern?
+Diese Warnung nicht erneut anzeigen
+Nicht erneut fragen
+OK
+Abbrechen
+Ja
+Nein
+Öffne Laufwerk ...
+Benachrichtige Anwendungen über Laufwerksentfernung
+Lösche Dateipuffer ...
+Sperre Volume ...
+Trenne Dateisystem
+Speichere Abbild ...
+Entferne Gerät ...
+Entferne Laufwerksbuchstabe ...
+Kann Gerät nicht öffnen.
+%s ist keine ImDisk Virtual Disk.
+Kann Gerät nicht entfernen.
+Kann Bereitstellungspunkt nicht entfernen.
+
+ Diskabbild speichern 
+Abbild:
+Offset in Abbild:
+MBR an den Dateianfang schreiben
+OK
+Abbrechen
+Abbilder
+ISO-Abbilder
+Alle Dateien
+%s ist gesperrt und bereit.
+%s wird von anderen Prozessen verwendet. Es ist während des Kopierens veränderbar.
+Speicherung von %s läuft ... %u%%
+Volume %s erfolgreich in %s gespeichert.
+Nicht unterstützte Laufwerksart.
+Fehler beim Erlangen der Volumeeigenschaften.
+Kann Abbild nicht öffnen.
+Kann Speicher nicht belegen.
+Fehler beim Anlegen des neuen MBR.
+Fehler beim Schreiben des MBR.
+Fehler beim Setzen des Datei-Pointers.
+Lesefehler.
+Schreibfehler.
