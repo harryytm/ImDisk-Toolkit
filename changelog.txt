@@ -1,6 +1,13 @@
+Version 20220826
+- added korean language
+- installer: added command line switches to force installation settings
+- installer: syntax help no longer requires administrative privileges
+- executables are now compiled with MinGW 12.2.1 (instead of 11.2.1)
+
 Version 20220807
 - added hungarian language
 - added an icon in context menus (Windows 7 and later)
+- executables are now compiled with MinGW 11.2.1 (instead of 10.2.1)
 
 Version 20220301
 - updated to driver 2.1.1 (2.0.9 kept on x64 systems without SHA256 signature support)

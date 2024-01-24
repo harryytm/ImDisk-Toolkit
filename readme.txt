@@ -1,8 +1,8 @@
-These sources are compiled with MinGW 10.2.1, available here: https://gcc-mcf.lhmouse.com/
+These sources are compiled with MinGW 12.2.1, available here: https://gcc-mcf.lhmouse.com/
 64-bit:
-https://gcc-mcf.lhmouse.com/mingw-w64-gcc-mcf_20201010_10.2.1_x64_554c631b4f4c3b9d9de8721f04ee2287d6b7ad0d.7z
+https://gcc-mcf.lhmouse.com/mingw-w64-gcc-mcf_20220823_12.2.1_x64-msvcrt_e94c5578c707d2784c6279bca30fcf692e84a180.7z
 32-bit:
-https://gcc-mcf.lhmouse.com/mingw-w64-gcc-mcf_20201010_10.2.1_x86_3b362c8b23ad5514b005aa15ad0eb55ae76276a1.7z
+https://gcc-mcf.lhmouse.com/mingw-w64-gcc-mcf_20220823_12.2.1_x86-msvcrt_cb1d274e635aad28e23acb786294abb9d950ac7e.7z
 
 Source files without copyright notice can be used without any restriction and
 are provided without any warranty.

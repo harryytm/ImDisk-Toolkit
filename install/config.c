@@ -25,8 +25,6 @@ static _Bool copy_error = FALSE, reboot = FALSE, process_uninst = FALSE;
 static DWORD hid_drive_ini;
 static HANDLE h_file;
 static HKEY reg_key;
-static int silent = 0;
-static _Bool silent_uninstall = FALSE;
 
 static WCHAR path[MAX_PATH + 100] = {}, *path_name_ptr;
 static WCHAR install_path[MAX_PATH], *path_cmdline = NULL;
@@ -45,11 +43,15 @@ static DWORD EstimatedSize = 1813;
 static WCHAR *driver_svc_list[] = {L"ImDskSvc", L"DevIoDrv", L"AWEAlloc", L"ImDisk"};
 static WCHAR *tk_svc_list[] = {L"ImDiskRD", L"ImDiskTk-svc", L"ImDiskImg"};
 
-static WCHAR *lang_list[] = {L"english", L"deutsch", L"español", L"français", L"italiano", L"magyar", L"português brasileiro", L"русский", L"suomi", L"svenska", L"简体中文"};
-static WCHAR *lang_file_list[] = {L"english", L"german", L"spanish", L"french", L"italian", L"hungarian", L"brazilian-portuguese", L"russian", L"finnish", L"swedish", L"schinese"};
-static USHORT lang_id_list[] = {0, 0x07, 0x0a, 0x0c, 0x10, 0x0e, 0x16, 0x19, 0x0b, 0x1d, 0x04};
+static WCHAR *lang_list[] = {L"english", L"deutsch", L"español", L"français", L"italiano", L"magyar", L"português brasileiro", L"русский", L"suomi", L"svenska", L"简体中文", L"한국어"};
+static WCHAR *lang_file_list[] = {L"english", L"german", L"spanish", L"french", L"italian", L"hungarian", L"brazilian-portuguese", L"russian", L"finnish", L"swedish", L"schinese", L"korean"};
+static USHORT lang_id_list[] = {0, 0x07, 0x0a, 0x0c, 0x10, 0x0e, 0x16, 0x19, 0x0b, 0x1d, 0x04, 0x12};
 static int n_lang = 0;
+
 static _Bool lang_cmdline = FALSE;
+static int silent = 0;
+static _Bool silent_uninstall = FALSE;
+static WCHAR opt_cmd_mountimg = 0, opt_cmd_ramdiskui = 0, opt_cmd_menus = 0, opt_cmd_shortcutdesk = 0, opt_cmd_shortcutall = 0;
 
 static GUID _CLSID_ShellLink = {0x00021401, 0, 0, {0xc0, 0, 0, 0, 0, 0, 0, 0x46}};
 static GUID _CLSID_InternetShortcut = {0xfbf23b40, 0xe3f0, 0x101b, {0x84, 0x88, 0x00, 0xaa, 0x00, 0x3e, 0x56, 0xf8}};
@@ -65,7 +67,7 @@ enum {
 	ERR_1, ERR_2, ERR_3,
 	PREV_TXT,
 	FIN_1, FIN_2, FIN_3,
-	CRED_0, CRED_1, CRED_2, CRED_3, TRANS_0, TRANS_1, TRANS_2, TRANS_3, TRANS_4, TRANS_5, TRANS_6, TRANS_7, TRANS_8, TRANS_9, TRANS_MAX,
+	CRED_0, CRED_1, CRED_2, CRED_3, TRANS_0, TRANS_1, TRANS_2, TRANS_3, TRANS_4, TRANS_5, TRANS_6, TRANS_7, TRANS_8, TRANS_9, TRANS_10, TRANS_MAX,
 	SHORTCUT_1, SHORTCUT_2, SHORTCUT_3, SHORTCUT_4, SHORTCUT_5,
 	CONTEXT_1, CONTEXT_2, CONTEXT_3,
 
@@ -836,6 +838,12 @@ static INT_PTR __stdcall InstallProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM 
 			}
 			SetDlgItemText(hDlg, ID_EDIT1, path_cmdline ? path_cmdline : path);
 
+			if (opt_cmd_mountimg) CheckDlgButton(hDlg, ID_CHECK2, opt_cmd_mountimg - 1);
+			if (opt_cmd_ramdiskui) CheckDlgButton(hDlg, ID_CHECK3, opt_cmd_ramdiskui - 1);
+			if (opt_cmd_menus) CheckDlgButton(hDlg, ID_CHECK4, opt_cmd_menus - 1);
+			if (opt_cmd_shortcutdesk) CheckDlgButton(hDlg, ID_CHECK5, opt_cmd_shortcutdesk - 1);
+			if (opt_cmd_shortcutall) CheckDlgButton(hDlg, ID_CHECK6, opt_cmd_shortcutall - 1);
+
 			if (silent) {
 				install(hDlg);
 				return TRUE;
@@ -1361,9 +1369,15 @@ int __stdcall wWinMain(HINSTANCE hinstance, HINSTANCE hPrevInstance, LPWSTR lpCm
 	cmdline_ptr = GetCommandLine();
 	argv = CommandLineToArgvW(cmdline_ptr, &argc);
 
-	if (argc > 1 && !_wcsicmp(argv[1], L"/version")) {
-		puts(APP_VERSION);
-		ExitProcess(APP_NUMBER);
+	if (argc > 1) {
+		if (!_wcsicmp(argv[1], L"/version")) {
+			puts(APP_VERSION);
+			ExitProcess(APP_NUMBER);
+		}
+		if (wcscmp(argv[1], L"/UAC") && wcscmp(argv[1], L"/u") && _wcsicmp(argv[1], L"/silentuninstall") && _wcsicmp(argv[1], L"/silent") && _wcsicmp(argv[1], L"/fullsilent") &&
+			_wcsnicmp(argv[1], L"/installfolder:", 15) && _wcsnicmp(argv[1], L"/discutils:", 11) && _wcsnicmp(argv[1], L"/ramdiskui:", 11) && _wcsnicmp(argv[1], L"/menu_entries:", 14) &&
+			_wcsnicmp(argv[1], L"/shortcuts_desktop:", 19) && _wcsnicmp(argv[1], L"/shortcuts_all:", 15) && _wcsnicmp(argv[1], L"/lang:", 6))
+			goto syntax_help;
 	}
 
 	if (os_ver.dwMajorVersion >= 6) {
@@ -1403,17 +1417,24 @@ int __stdcall wWinMain(HINSTANCE hinstance, HINSTANCE hPrevInstance, LPWSTR lpCm
 			argv++;
 			if (!_wcsicmp(argv[0], L"/silent")) silent = 1;
 			else if (!_wcsicmp(argv[0], L"/fullsilent")) silent = 2;
-			else if (!wcsncmp(argv[0], L"/installfolder:", 15))
-				path_cmdline = &argv[0][15];
-			else if (!wcsncmp(argv[0], L"/lang:", 6)) {
+			else if (!_wcsnicmp(argv[0], L"/installfolder:", 15)) path_cmdline = &argv[0][15];
+			else if (!_wcsnicmp(argv[0], L"/discutils:", 11)) opt_cmd_mountimg = argv[0][11] - '0' + 1;
+			else if (!_wcsnicmp(argv[0], L"/ramdiskui:", 11)) opt_cmd_ramdiskui = argv[0][11] - '0' + 1;
+			else if (!_wcsnicmp(argv[0], L"/menu_entries:", 14)) opt_cmd_menus = argv[0][14] - '0' + 1;
+			else if (!_wcsnicmp(argv[0], L"/shortcuts_desktop:", 19)) opt_cmd_shortcutdesk = argv[0][19] - '0' + 1;
+			else if (!_wcsnicmp(argv[0], L"/shortcuts_all:", 15)) opt_cmd_shortcutall = argv[0][15] - '0' + 1;
+			else if (!_wcsnicmp(argv[0], L"/lang:", 6)) {
 				for (i = 0; i < _countof(lang_file_list); i++)
 					if (!_wcsicmp(&argv[0][6], lang_file_list[i])) {
 						n_lang = i;
 						lang_cmdline = TRUE;
 					}
 			} else {
-				MessageBoxA(NULL, "Switches:\n\n/silent\nSilent installation. Error messages and reboot prompt are still displayed.\n\n/fullsilent\nSilent installation, without error message or prompt.\n\n"
+syntax_help:
+				MessageBoxA(NULL, "Switches:\n\n/silent\nSilent installation. Error messages and reboot prompt are still displayed.\n\n"
+								  "/fullsilent\nSilent installation, without error message or prompt. No reboot will occur, even if files are in use.\n\n"
 								  "/installfolder:\"path\"\nSet the installation folder.\n\n/lang:name\nBypass automatic language detection. 'name' is one of the available languages.\n\n"
+								  "/OPTION:[0|1]\nForce an installation option to be selected or not.\nOPTION can be one of the followings: discutils, ramdiskui, menu_entries, shortcuts_desktop, shortcuts_all.\n\n"
 								  "/silentuninstall\nSilent uninstallation. Driver (and therefore all existing virtual disk) and parameters are removed. This switch can also be passed to config.exe.\n\n"
 								  "/version\nReturn the application version in the standard output and the exit code.",
 								  "ImDisk - Setup", MB_ICONINFORMATION);

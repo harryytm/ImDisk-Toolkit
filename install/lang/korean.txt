@@ -46,6 +46,7 @@ ImDisk - 크레딧
 - português brasileiro: Rodolfo Bendinelli
 - suomi: Sampo Hippeläinen
 - magyar: I. Horváth Ferenc
+- 한국어: 비너스걸💋 (VenusGirl)
 
 일반 설정
 설치 제거
@@ -66,11 +67,11 @@ ImDisk - 설치
 ImDisk 가상 디스크가 탐지되었습니다.#기존 ImDisk 가상 디스크가 모두 마운트 해제됩니다!
 ImDisk 볼륨을 마운트 해제하는 중...
 %s을(를) 중지하는 중...
-나머지 구성 요소를 제거하는 중...
+나머지 구성 요소 제거...
 
 
 ImDisk - 설치
- 일반 설정
+ 일반 설정 
 상황에 맞는 메뉴에서 항목 사용
 볼륨 마운트 후 탐색기 표시 안 함
 숨겨진 대화 상자 복원
@@ -149,7 +150,7 @@ RamDisk에서 제거된 데이터 삭제
 등록된 모든 램 디스크를 지금 동기화합니다.
 
 동적 RAM 디스크와 함께 AWE를 사용하려면 로컬 그룹 정책의 메모리에 있는 페이지를 잠글 수 있는 권한이 필요합니다.#계속하도록 선택하면 관리자 그룹에 이 권한이 부여됩니다.##계속하시겠습니까?
-Privilege granted successfully.#A logout is required for this change to take effect.#Logout now?
+권한이 부여되었습니다.#이 변경 내용을 적용하려면 로그아웃해야 합니다.#지금 로그아웃하시겠습니까?
 오류: 권한을 부여할 수 없습니다.
 
 준비
