@@ -43,6 +43,7 @@ Traducciones:
 - Deutsch: Bodo Thevissen
 - русский: 0x00ffh
 - 简体中文: Arne Sacnussem
+- Italiano: Ajeje Brazorf
 
 Ajustes Generales
 Desinstalar

@@ -17,6 +17,7 @@ END
 
 WARN_DLG DIALOGEX 0, 0, 260, 110
 		   STYLE DS_SHELLFONT | DS_CENTER
+		   EXSTYLE WS_EX_TOPMOST
 		   FONT 9, "MS Shell Dlg"
 		   CAPTION "ImDisk"
 BEGIN
@@ -29,6 +30,7 @@ END
 
 IMGMOD_DLG DIALOGEX 0, 0, 260, 86
 		   STYLE DS_SHELLFONT | DS_CENTER
+		   EXSTYLE WS_EX_TOPMOST
 		   FONT 9, "MS Shell Dlg"
 		   CAPTION "ImDisk"
 BEGIN
@@ -60,7 +62,7 @@ END
 
 
 1 VERSIONINFO
-FILEVERSION 1,0,1,0
+FILEVERSION 1,1,0,0
 BEGIN
 BLOCK "StringFileInfo"
 	BEGIN
@@ -68,7 +70,7 @@ BLOCK "StringFileInfo"
 		BEGIN
 			VALUE "FileDescription", "ImDisk"
 			VALUE "ProductName", "imdisk"
-			VALUE "ProductVersion", "1.0.1.0"
+			VALUE "ProductVersion", "1.1.0.0"
 		END
 	END
 BLOCK "VarFileInfo"

@@ -1,3 +1,9 @@
+Version 20200609
+- added italian language
+- installer parameters can now be passed to install.bat
+- ImDisk-Dlg.exe: changed notifications while unmounting; this should fix an incompatibility with FreeCommander
+- ImDisk-Dlg.exe: while unmounting, dialog boxes are now put above all others
+
 Version 20200412
 - new packages without self-extracting modules
 - config.exe: added a command line option to retrieve the version of the package

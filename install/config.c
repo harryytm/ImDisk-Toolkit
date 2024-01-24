@@ -45,9 +45,9 @@ static DWORD EstimatedSize = 1813;
 static WCHAR *driver_svc_list[] = {L"ImDskSvc", L"AWEAlloc", L"ImDisk"};
 static WCHAR *tk_svc_list[] = {L"ImDiskRD", L"ImDiskTk-svc", L"ImDiskImg"};
 
-static WCHAR *lang_list[] = {L"english", L"deutsch", L"español", L"français", L"русский", L"svenska", L"简体中文"};
-static WCHAR *lang_file_list[] = {L"english", L"german", L"spanish", L"french", L"russian", L"swedish", L"schinese"};
-static USHORT lang_id_list[] = {0, 0x07, 0x0a, 0x0c, 0x19, 0x1d, 0x04};
+static WCHAR *lang_list[] = {L"english", L"deutsch", L"español", L"français", L"italiano", L"русский", L"svenska", L"简体中文"};
+static WCHAR *lang_file_list[] = {L"english", L"german", L"spanish", L"french", L"italian", L"russian", L"swedish", L"schinese"};
+static USHORT lang_id_list[] = {0, 0x07, 0x0a, 0x0c, 0x10, 0x19, 0x1d, 0x04};
 static int n_lang = 0;
 static _Bool lang_cmdline = FALSE;
 
@@ -65,7 +65,7 @@ enum {
 	ERR_1, ERR_2, ERR_3,
 	PREV_TXT,
 	FIN_1, FIN_2, FIN_3,
-	CRED_0, CRED_1, CRED_2, CRED_3, CRED_4, TRANS_0, TRANS_1, TRANS_2, TRANS_3, TRANS_4, TRANS_5, TRANS_MAX,
+	CRED_0, CRED_1, CRED_2, CRED_3, CRED_4, TRANS_0, TRANS_1, TRANS_2, TRANS_3, TRANS_4, TRANS_5, TRANS_6, TRANS_MAX,
 	SHORTCUT_1, SHORTCUT_2, SHORTCUT_3, SHORTCUT_4, SHORTCUT_5,
 	CONTEXT_1, CONTEXT_2, CONTEXT_3,
 

@@ -29,6 +29,7 @@ files\RamDyn64.exe
 install\lang\english.txt
 install\lang\french.txt
 install\lang\german.txt
+install\lang\italian.txt
 install\lang\russian.txt
 install\lang\schinese.txt
 install\lang\spanish.txt

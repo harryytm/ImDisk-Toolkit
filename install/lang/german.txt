@@ -43,6 +43,7 @@ ImDisk - Mitwirkende
 - Deutsch: Bodo Thevissen
 - русский: 0x00ffh
 - 简体中文: Arne Sacnussem
+- Italiano: Ajeje Brazorf
 
 Allgemeine Einstellungen
 Deinstallation

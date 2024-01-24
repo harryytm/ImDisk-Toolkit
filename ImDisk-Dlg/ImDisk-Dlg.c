@@ -3,6 +3,7 @@
 #include <shlwapi.h>
 #include <stdio.h>
 #include <ntsecapi.h>
+#include <dbt.h>
 #include "resource.h"
 #include "..\inc\imdisk.h"
 #include "..\inc\imdisktk.h"
@@ -409,8 +410,9 @@ int __stdcall wWinMain(HINSTANCE hinstance, HINSTANCE hPrevInstance, LPWSTR lpCm
 {
 	int argc;
 	WCHAR **argv, *command_line;
-	DWORD data_size;
-	DWORD access_list[] = {GENERIC_READ | GENERIC_WRITE, GENERIC_READ, FILE_READ_ATTRIBUTES, 0};
+	DWORD dw, access_list[] = {GENERIC_READ | GENERIC_WRITE, GENERIC_READ, FILE_READ_ATTRIBUTES, 0};
+	DWORD_PTR dwp;
+	DEV_BROADCAST_VOLUME dbv = {sizeof(DEV_BROADCAST_VOLUME), DBT_DEVTYP_VOLUME};
 	int n_access;
 	_Bool is_ramdisk;
 	FARPROC ImDiskOpenDeviceByMountPoint;
@@ -437,8 +439,8 @@ int __stdcall wWinMain(HINSTANCE hinstance, HINSTANCE hPrevInstance, LPWSTR lpCm
 		RegCreateKeyExA(HKEY_LOCAL_MACHINE, "SOFTWARE\\ImDisk", 0, NULL, REG_OPTION_NON_VOLATILE, KEY_QUERY_VALUE | KEY_WOW64_64KEY, NULL, &registry_key, NULL);
 		no_reg_write = TRUE;
 	}
-	data_size = sizeof(DWORD);
-	RegQueryValueExA(registry_key, "DlgFlags", NULL, NULL, (void*)&flags, &data_size);
+	dw = sizeof(DWORD);
+	RegQueryValueExA(registry_key, "DlgFlags", NULL, NULL, (void*)&flags, &dw);
 
 
 	if (!wcscmp(argv[1], L"RM")) {
@@ -447,13 +449,13 @@ int __stdcall wWinMain(HINSTANCE hinstance, HINSTANCE hPrevInstance, LPWSTR lpCm
 		for (n_access = 0; n_access < _countof(access_list); n_access++)
 			if ((h = (HANDLE)ImDiskOpenDeviceByMountPoint(mount_point, access_list[n_access])) != INVALID_HANDLE_VALUE) break;
 		if (h == INVALID_HANDLE_VALUE) {
-			error(NULL, t[RM_ERR_1] ? t[RM_ERR_1] : L"Cannot open device.");
+			error(hwnd_status, t[RM_ERR_1] ? t[RM_ERR_1] : L"Cannot open device.");
 			ExitProcess(1);
 		}
-		if (!DeviceIoControl(h, IOCTL_IMDISK_QUERY_DEVICE, NULL, 0, &create_data, sizeof create_data, &data_size, NULL)) {
+		if (!DeviceIoControl(h, IOCTL_IMDISK_QUERY_DEVICE, NULL, 0, &create_data, sizeof create_data, &dw, NULL)) {
 			_snwprintf(txt, _countof(txt) - 1, t[RM_ERR_2] ? t[RM_ERR_2] : L"%s is not an ImDisk virtual disk.", mount_point);
 			txt[_countof(txt) - 1] = 0;
-			error(NULL, txt);
+			error(hwnd_status, txt);
 			ExitProcess(1);
 		}
 		is_ramdisk = IMDISK_IS_MEMORY_DRIVE(create_data.icd.Flags) || !wcsncmp(file_name, L"\\BaseNamedObjects\\Global\\RamDyn", 31);
@@ -464,21 +466,24 @@ int __stdcall wWinMain(HINSTANCE hinstance, HINSTANCE hPrevInstance, LPWSTR lpCm
 		}
 
 		SetWindowText(hwnd_status, t[MSG_2]);
-		if (mount_point[1] == ':' && !mount_point[2]) GetProcAddress(h_cpl, "ImDiskNotifyRemovePending")(NULL, mount_point[0]);
+		if (mount_point[1] == ':' && !mount_point[2]) {
+			dbv.dbcv_unitmask = 1 << (mount_point[0] - 'A');
+			SendMessageTimeout(HWND_BROADCAST, WM_DEVICECHANGE, DBT_DEVICEREMOVEPENDING, (LPARAM)&dbv, SMTO_BLOCK | SMTO_ABORTIFHUNG, 4000, &dwp);
+		}
 
 		SetWindowText(hwnd_status, t[MSG_3]);
 		FlushFileBuffers(h);
 
 		SetWindowText(hwnd_status, t[MSG_4]);
-		if (!DeviceIoControl(h, FSCTL_LOCK_VOLUME, NULL, 0, NULL, 0, &data_size, NULL) && !(flags & FLAG_LOCK) && !flag_to_set) {
+		if (!DeviceIoControl(h, FSCTL_LOCK_VOLUME, NULL, 0, NULL, 0, &dw, NULL) && !(flags & FLAG_LOCK) && !flag_to_set) {
 			flag_to_set = FLAG_LOCK;
 			if (DialogBox(hinst, L"WARN_DLG", NULL, WarnProc)) ExitProcess(0);
 		}
 
 		SetWindowText(hwnd_status, t[MSG_5]);
-		DeviceIoControl(h, FSCTL_DISMOUNT_VOLUME, NULL, 0, NULL, 0, &data_size, NULL);
+		DeviceIoControl(h, FSCTL_DISMOUNT_VOLUME, NULL, 0, NULL, 0, &dw, NULL);
 
-		DeviceIoControl(h, FSCTL_LOCK_VOLUME, NULL, 0, NULL, 0, &data_size, NULL);
+		DeviceIoControl(h, FSCTL_LOCK_VOLUME, NULL, 0, NULL, 0, &dw, NULL);
 		if (!(flags & FLAG_IMG_MOD) && is_ramdisk && create_data.icd.Flags & IMDISK_IMAGE_MODIFIED)
 			switch (DialogBox(hinst, L"IMGMOD_DLG", NULL, ImgModProc)) {
 				case IDCANCEL:
@@ -490,15 +495,15 @@ int __stdcall wWinMain(HINSTANCE hinstance, HINSTANCE hPrevInstance, LPWSTR lpCm
 			}
 
 		SetWindowText(hwnd_status, t[MSG_7]);
-		if (!DeviceIoControl(h, IOCTL_STORAGE_EJECT_MEDIA, NULL, 0, NULL, 0, &data_size, NULL) && !GetProcAddress(h_cpl, "ImDiskForceRemoveDevice")(h, 0)) {
-			error(NULL, t[RM_ERR_3] ? t[RM_ERR_3] : L"Cannot remove device.");
+		if (!DeviceIoControl(h, IOCTL_STORAGE_EJECT_MEDIA, NULL, 0, NULL, 0, &dw, NULL) && !GetProcAddress(h_cpl, "ImDiskForceRemoveDevice")(h, 0)) {
+			error(hwnd_status, t[RM_ERR_3] ? t[RM_ERR_3] : L"Cannot remove device.");
 			ExitProcess(1);
 		}
 		CloseHandle(h);
 
 		SetWindowText(hwnd_status, t[MSG_8]);
 		if (!GetProcAddress(h_cpl, "ImDiskRemoveMountPoint")(mount_point)) {
-			error(NULL, t[RM_ERR_4] ? t[RM_ERR_4] : L"Cannot remove mount point.");
+			error(hwnd_status, t[RM_ERR_4] ? t[RM_ERR_4] : L"Cannot remove mount point.");
 			ExitProcess(1);
 		}
 	}
@@ -518,8 +523,8 @@ int __stdcall wWinMain(HINSTANCE hinstance, HINSTANCE hPrevInstance, LPWSTR lpCm
 			error(NULL, t[RM_ERR_1] ? t[RM_ERR_1] : L"Cannot open device.");
 			ExitProcess(1);
 		}
-		if (!DeviceIoControl(h, IOCTL_IMDISK_QUERY_DEVICE, NULL, 0, &create_data, sizeof create_data, &data_size, NULL))
-			if (!DeviceIoControl(h, IOCTL_DISK_GET_DRIVE_GEOMETRY, NULL, 0, &create_data.icd.DiskGeometry, sizeof(DISK_GEOMETRY), &data_size, NULL) ||
+		if (!DeviceIoControl(h, IOCTL_IMDISK_QUERY_DEVICE, NULL, 0, &create_data, sizeof create_data, &dw, NULL))
+			if (!DeviceIoControl(h, IOCTL_DISK_GET_DRIVE_GEOMETRY, NULL, 0, &create_data.icd.DiskGeometry, sizeof(DISK_GEOMETRY), &dw, NULL) ||
 				!GetProcAddress(h_cpl, "ImDiskGetVolumeSize")(h, &create_data.icd.DiskGeometry.Cylinders.QuadPart)) {
 				error(NULL, t[CP_ERR_2] ? t[CP_ERR_2] : L"Error retrieving volume properties.");
 				ExitProcess(1);
