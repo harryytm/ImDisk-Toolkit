@@ -124,7 +124,7 @@ Default
 Bigger clusters are usually faster but can use more#disk space, especially with a large number of files.
 Label size is limited by the file system:#32 characters with NTFS, 11 with *FAT*.
 Default: disabled.##Do a quick format. It can speed up the RamDisk building but the allocated#memory does not immediately appear as used in the Windows Task Manager.
-Default: disabled.##Allows files to be compressed before being written to the ramdisk.#Only works with the NTFS file system.#Do not use it if you care about speed!
+Default: disabled.##Allows files to be compressed before being written to the ramdisk.#Only works with the NTFS file system.#Do not use it if you care about speed!##Not recommended with dynamic ramdisks, because memory#may not be released properly.
 Default: disabled.##Allocate memory through AWE.#This guarantees that the memory is never written to the pagefile.##On 32-bit systems, this also bypasses the 2GB and 4GB limits per#process and allows to allocate as much memory as the system#manages (but not the unmanaged or invisible memory).
 Default: disabled.##Use a folder instead of a drive letter to mount the ramdisk.
 Unmount selected ImDisk mount point and unregister it.

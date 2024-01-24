@@ -41,7 +41,7 @@ ImDisk - Mitwirkende
 Übersetzungen:
 - Français: v77
 - Español: alacran
-- Svenska: Åke Engelbrektson
+- Svenska: Åke Engelbrektson / Olof Lagerkvist
 - Deutsch: Bodo Thevissen
 - русский: 0x00ffh
 
@@ -124,7 +124,7 @@ Standard
 Größere Blöcke sind gewöhnlich schneller, aber belegen mehr#Laufwerksplatz insbesondere bei einer großen Anzahl Dateien.
 Die Länge des Namen wird vom Dateisystem begrenzt:#32 Zeichen bei NTFS, 11 bei FAT.
 Voreinstellung: ausgeschaltet##Eine Schnellformatierung durchführen. Dies kann die Erstellung der RAM-Disk beschleunigen,#aber der verwendete Speicher wird im Windows Task Manager nicht sofort als belegt angezeigt.
-Voreinstellung: ausgeschaltet##Erlaubt Kompression beim Schreiben in die RAM-Disk.#Funktioniert nur mit NTFS-Dateisystem.#Sollte nur verwendet werden, wenn die Geschwindigkeit keine Rolle spielt.
+Voreinstellung: ausgeschaltet##Erlaubt Kompression beim Schreiben in die RAM-Disk.#Funktioniert nur mit NTFS-Dateisystem.#Sollte nur verwendet werden, wenn die Geschwindigkeit keine Rolle spielt.##Nicht in Zusammenarbeit mit dynamischen RAM-Disks empfohlen,#da der Speicher eventuell nicht ordnungsgemäß freigegeben wird.
 Voreinstellung: abgeschaltet##Speicher über AWE reservieren.#Dies gewährleistet, dass der Speicher nicht in die Auslagerungsdatei geschrieben wird.##Auf 32-Bit-Systemen umgeht dies auch die 2 und 4 GB-Grenzen pro#Prozess und erlaubt so viel Speicher zu reservieren, wie das System hat#(aber weder unzugreifbaren noch unsichtbaren Speicher).
 Voreinstellung: abgeschaltet##Verwende ein Verzeichnis anstatt eines Laufwerksbuchstaben, um die RAM-Disk zu einzubinden.
 Den gewählten ImDisk Bereitstellungspunkt trennen und deregistrieren.

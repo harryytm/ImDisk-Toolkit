@@ -1,3 +1,8 @@
+Version 20181221
+- updated to driver 2.0.10
+- RamDiskUI.exe: added an information in a tooltip about the incompatibility between NTFS compression and dynamic ramdisks
+- fix in the uninstaller: some shortcuts were not removed (regression introduced in 20161230)
+
 Version 20180917
 - installer: added an option to disable automatic loading of the ImDskSvc service which is installed by the driver
 - installer: added a command line switch to set the installation folder

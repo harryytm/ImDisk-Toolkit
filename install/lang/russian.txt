@@ -41,7 +41,7 @@ ImDisk - Создатели
 Локализация:
 - Français: v77
 - Español: alacran
-- Svenska: Åke Engelbrektson
+- Svenska: Åke Engelbrektson / Olof Lagerkvist
 - Deutsch: Bodo Thevissen
 - русский: 0x00ffh
 
@@ -124,7 +124,7 @@ Enable NTFS Compression
 Большой размер кластера увеличит производительность,#но увеличит накладные расходы.#Рекомендуется для небольшого количества файлов.#Средние потери места: ClusterSize * FileCount / 2
 Размер метки тома:# - 32 символа для NTFS-тома# - 11 для FAT-тома.
 Использовать быстрое форматирование. Это ускорит#создание RAM-диска, однако востребованная область памяти#не будет выделена как задействованная в Диспетчере задач.
-Default: disabled.##Allows files to be compressed before being written to the ramdisk.#Only works with the NTFS file system.#Do not use it if you care about speed!
+Default: disabled.##Allows files to be compressed before being written to the ramdisk.#Only works with the NTFS file system.#Do not use it if you care about speed!##Not recommended with dynamic ramdisks, because memory#may not be released properly.
 Не позволяет выделенной памяти выгружаться в файл подкачки.##Так-же обходит ограничение 2GB/4GB на процесс#Позволяет выделять для RAM-диска всю доступную системе память#(но не unmanaged or invisible).
 Default: disabled.##Use a folder instead of a drive letter to mount the ramdisk.
 Демонтирует и отключает выбраный том ImDisk.

@@ -41,7 +41,7 @@ ImDisk - Crédits
 Traductions :
 - Français: v77
 - Español: alacran
-- Svenska: Åke Engelbrektson
+- Svenska: Åke Engelbrektson / Olof Lagerkvist
 - Deutsch: Bodo Thevissen
 - русский: 0x00ffh
 
@@ -124,7 +124,7 @@ Par défaut
 De plus gros clusters sont généralement plus rapides mais peuvent utiliser#plus d'espace disque, surtout avec un grand nombre de fichiers.
 La taille du nom est limitée par le système de fichiers :#32 caractères avec NTFS, 11 avec *FAT*.
 Par défaut : désactivé.##Exécute un formatage rapide. Cela peut accélérer la création du#ramdisk mais la mémoire allouée n'apparaît pas immédiatement#comme utilisée dans le Gestionnaire des tâches de Windows.
-Par défaut : désactivé.##Permet aux fichiers d'être compressés avant d'être écrits dans le ramdisk.#Ne fonctionne qu'avec le système de fichiers NTFS.#Ne pas utiliser si vous vous souciez de la vitesse !
+Par défaut : désactivé.##Permet aux fichiers d'être compressés avant d'être écrits dans le ramdisk.#Ne fonctionne qu'avec le système de fichiers NTFS.#Ne pas utiliser si vous vous souciez de la vitesse !##Non recommandé avec les ramdisks dynamiques, car la mémoire peut#ne pas être libérée correctement.
 Par défaut : désactivé.##Allouer la mémoire avec AWE.#Ceci garantit que la mémoire ne soit jamais écrite dans le fichier d'échange.##Sur les systèmes 32 bits, cela contourne les limites de 2 Go et 4 Go par#processus et permet d'allouer autant de mémoire que le système gère#(mais pas la mémoire non gérée ou invisible).
 Par défaut : désactivé.##Utilise un dossier au lieu d'une lettre de lecteur pour monter le ramdisk.
 Démonte le point de montage ImDisk sélectionné et supprime son enregistrement.

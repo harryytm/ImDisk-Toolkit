@@ -1,3 +1,3 @@
-#define APP_VERSION "20180917"
-#define FILE_VER 2018,09,17,0
-#define PROD_VER "2018.09.17.0"
+#define APP_VERSION "20181221"
+#define FILE_VER 2018,12,21,0
+#define PROD_VER "2018.12.21.0"

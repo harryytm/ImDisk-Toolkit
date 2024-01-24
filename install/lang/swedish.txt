@@ -41,7 +41,7 @@ ImDisk - Tack!
 Översättningar:
 - Français: v77
 - Español: alacran
-- Svenska: Åke Engelbrektson
+- Svenska: Åke Engelbrektson / Olof Lagerkvist
 - Deutsch: Bodo Thevissen
 - русский: 0x00ffh
 
@@ -124,7 +124,7 @@ Standard
 Större kluster är vanligtvis snabbare men kan använda#mer diskutrymme, särskilt vid ett större antal filer.
 Etikettstorleken begränsas av filsystemet:#32 tecken med NTFS, 11 med *FAT*.
 Standard: Inaktiverad.##Utför snabbformatering. Det kan påskynda RamDisk-skapandet men det allokerade#minnet påvisas inte omedelbart som använt i Windows aktivitetshanterare.
-Standard: Inaktiverad.##Låter filer komprimeras för skrivning till ramdisken.#Fungerar endast med NTFS filsystem.#Använd det inte om hastighet är viktigt!
+Standard: Inaktiverad.##Låter filer komprimeras för skrivning till ramdisken.#Fungerar endast med NTFS filsystem.#Använd det inte om hastighet är viktigt!##Rekommenderas inte för dynamiska ramdiskar eftersom#risk finns att minne inte frigörs som förväntat.
 Standard: Inaktiverad.##Allokerar minnet genom AWE.#Detta garanterar att minnet aldrig skrivs till växlingsfilen.##På 32-bitars system kringgår det också 2- och 4GB/process-begränsningarna#och tillåter allokering av så mycket minne som systemet kan hantera#(men inte ohanterat eller osynligt minne).
 Standard: Inaktiverad.##Använd en mapp istället för en enhetsbokstav för att montera ramdisken.
 Avmontera markerad ImDisk-monteringspunkt och avregistrera den.

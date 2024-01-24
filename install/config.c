@@ -121,13 +121,11 @@ static void start_process(BYTE wait)
 	FARPROC lpFunc;
 	void *ptr;
 	HMODULE hDLL = GetModuleHandleA("kernel32");
-	if ((lpFunc = GetProcAddress(hDLL, "Wow64DisableWow64FsRedirection")))
-		lpFunc(&ptr);
+	if ((lpFunc = GetProcAddress(hDLL, "Wow64DisableWow64FsRedirection"))) lpFunc(&ptr);
 #endif
 	result = CreateProcess(NULL, cmd, NULL, NULL, FALSE, CREATE_NO_WINDOW, NULL, NULL, &si, &pi);
 #ifndef _WIN64
-	if (lpFunc)
-		GetProcAddress(hDLL, "Wow64RevertWow64FsRedirection")(ptr);
+	if (lpFunc) GetProcAddress(hDLL, "Wow64RevertWow64FsRedirection")(ptr);
 #endif
 
 	if (result) {
@@ -420,6 +418,19 @@ static void install(HWND hDlg)
 	}
 	driver_ok = RegOpenKeyExA(HKEY_LOCAL_MACHINE, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\ImDisk", 0, KEY_SET_VALUE | KEY_WOW64_64KEY, &h_key) == ERROR_SUCCESS;
 	if (driver_ok) {
+		SHGetFolderPath(NULL, CSIDL_SYSTEM, NULL, SHGFP_TYPE_CURRENT, cmd);
+		DeleteFile(wcscat(cmd, L"\\imdisk.cpl.manifest"));
+#ifdef _WIN64
+		SHGetFolderPath(NULL, CSIDL_SYSTEMX86, NULL, SHGFP_TYPE_CURRENT, cmd);
+		DeleteFile(wcscat(cmd, L"\\imdisk.cpl.manifest"));
+#else
+		FARPROC lpFunc;
+		void *ptr;
+		HMODULE hDLL = GetModuleHandleA("kernel32");
+		if ((lpFunc = GetProcAddress(hDLL, "Wow64DisableWow64FsRedirection"))) lpFunc(&ptr);
+		DeleteFile(cmd);
+		if (lpFunc) GetProcAddress(hDLL, "Wow64RevertWow64FsRedirection")(ptr);
+#endif
 		wcscpy(cmd, L"reg copy HKLM\\SOFTWARE\\ImDisk\\DriverBackup HKLM\\SYSTEM\\CurrentControlSet\\Services\\ImDisk\\Parameters /f");
 		start_process(TRUE);
 		del_key(HKEY_LOCAL_MACHINE, "SOFTWARE\\ImDisk\\DriverBackup");
@@ -1006,14 +1017,16 @@ static DWORD __stdcall uninstall(LPVOID lpParam)
 	SHGetFolderPath(NULL, CSIDL_DESKTOPDIRECTORY, NULL, SHGFP_TYPE_CURRENT, path);
 	path_name_ptr = PathAddBackslash(path);
 	del(L"ImDisk Virtual Disk Driver.lnk");
+	del_shortcut(t[SHORTCUT_5]);
 	del_shortcut(t[SHORTCUT_4]);
-	del_shortcut(t[SHORTCUT_3]);
 	SHGetFolderPath(NULL, CSIDL_PROGRAMS, NULL, SHGFP_TYPE_CURRENT, path);
 	wcscat(path, L"\\ImDisk");
 	path_name_ptr = PathAddBackslash(path);
 	del(L"ImDisk Virtual Disk Driver.lnk");
+	del_shortcut(t[SHORTCUT_5]);
 	del_shortcut(t[SHORTCUT_4]);
-	del_shortcut(t[SHORTCUT_3]);
+	_snwprintf(path_name_ptr, 99, L"%.94s.url", t[SHORTCUT_3]);
+	DeleteFile(path);
 	del_shortcut(t[SHORTCUT_2]);
 	del_shortcut(t[SHORTCUT_1]);
 	path_name_ptr[0] = 0;

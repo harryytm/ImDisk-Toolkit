@@ -12,8 +12,7 @@ available separately on the website of their respective authors.
 
 Building a release requires the following steps:
 - MinGW must be extracted in the root of the same drive of the sources. Otherwise, batch files must be adapted.
-- comp_all.bat can be used to compile both the 32 and 64-bit executables.
-- SFX modules must be compiled separately and moved in the root of the sources. Then, they are compressed with UPX (https://upx.github.io/) with the --ultra-brute switch.
+- comp_all.bat can be used to compile both the 32 and 64-bit executables, and SFX modules that are then compressed with UPX (https://upx.github.io/).
 - The driver (http://www.ltr-data.se/opencode.html/#ImDisk) must be extracted in the "files" folder.
 - The DiscUtils library and related tools must be copied in the "files" folder. See the FAQ of the driver for the links: http://reboot.pro/topic/15593-faqs-and-how-tos/
-- Finally, make_releases.bat can be used to produce the final install executable. It assumes that the x64 version of 7-Zip is installed: http://www.7-zip.org/
+- Finally, make_releases.bat can be used to produce the final install executable. It assumes that the x64 version of 7-Zip is installed: https://www.7-zip.org/

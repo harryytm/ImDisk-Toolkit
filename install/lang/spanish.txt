@@ -41,7 +41,7 @@ ImDisk - Créditos
 Traducciones:
 - Français: v77
 - Español: alacran
-- Svenska: Åke Engelbrektson
+- Svenska: Åke Engelbrektson / Olof Lagerkvist
 - Deutsch: Bodo Thevissen
 - русский: 0x00ffh
 
@@ -124,7 +124,7 @@ Por defecto
 Clusters más grandes son generalmente más rápidos, pero puede usar#más espacio de disco, sobre todo con un gran número de archivos.
 Tamaño de la etiqueta está limitado por el sistema#de archivos: 32 caracteres con NTFS, 11 con *FAT*.
 Por defecto: deshabilitado.##Hacer un formato rápido. Se puede acelerar la construcción del#RamDisk pero la memoria asignada no aparece inmediatamente,#como se usa en el Administrador de tareas de Windows.
-Por defecto: deshabilitado.##Permite que los archivos sean comprimidos antes de ser escritos en el ramdisk.#Solo funciona con el sistema de archivos NTFS.#No usar si Ud. se preocupa por la velocidad.
+Por defecto: deshabilitado.##Permite que los archivos sean comprimidos antes de ser escritos en el ramdisk.#Solo funciona con el sistema de archivos NTFS.#No usar si Ud. se preocupa por la velocidad.##No se recomienda con ramdisks dinámicos, ya que la memoria no se puede#liberar correctamente.
 Por defecto: deshabilitado.##Asignar memoria a través de AWE.#Esto garantiza que la  memoria nunca escribirá en el archivo de paginación.##En los sistemas de 32 bits, esto  también pasa por alto los límites de 2GB y 4GB#por proceso y permite asignar tanta memoria como el sistema gestiona#(pero no la no administrada o la memoria invisible).
 Por defecto: deshabilitado.##Use una carpeta en ligar de una letra de drive para montar el ramdisk.
 Desmontar punto de montaje ImDisk seleccionado y anular el registro de la misma.
