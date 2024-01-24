@@ -1,3 +1,7 @@
+Version 20240113
+- fix in RamDiskUI: in the synchronization tool, file removal did not work when the data source was an image file (regression from 20211103)
+- fix in RamDiskUI: if an image file was used with memory allocated dynamically, "Run after mounting" did not work at system startup
+
 Version 20231231
 - RamDiskUI.exe: an executable or a script can now be specified to be run after volume creation
 - uninstaller: added an option to reset the TEMP variables

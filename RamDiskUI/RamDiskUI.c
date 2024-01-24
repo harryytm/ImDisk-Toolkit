@@ -944,6 +944,7 @@ err_cannot_mount:
 			start_process(cmd_line, TRUE);
 		}
 	}
+	if (mount_file) sync_flags |= 8;
 
 	// run user command
 	if (run_object[0]) {
@@ -1731,10 +1732,15 @@ static void __stdcall SvcMain(DWORD dwArgc, LPTSTR *lpszArgv)
 						CloseHandle(pi.hProcess);
 						CloseHandle(pi.hThread);
 					}
+					if (reg_mount_file) {
+						reg_sync_flags |= 8;
+						goto data_ok;
+					}
 				} else if (reg_mount_file) {
 					_snwprintf(cmd_line, _countof(cmd_line), L"imdisk -a %S -m \"%s\" %s -f \"%s\"", fileawe_list[reg_awealloc], current_MP, reg_add_param, reg_image_file);
 					start_process(cmd_line, TRUE);
-					goto run_user_object;
+					reg_sync_flags |= 8;
+					goto data_ok;
 				} else {
 					_snwprintf(cmd_line, _countof(cmd_line), L"imdisk -a -m \"%s\" %S%s -s %d%C", current_MP, awe_list[reg_awealloc], reg_add_param, reg_drive_size, unit_list[reg_unit]);
 					start_process(cmd_line, TRUE);
@@ -1783,11 +1789,8 @@ static void __stdcall SvcMain(DWORD dwArgc, LPTSTR *lpszArgv)
 					_snwprintf(cmd_line, _countof(cmd_line), L"xcopy \"%s*\" \"%s\" /e /c /q /h /k /y", reg_image_file, current_MP);
 					if (!reg_fsys.filesystem) wcscat(cmd_line, L" /x");
 					if (os_ver.dwMajorVersion >= 6) wcscat(cmd_line, L" /b");
-					if (!start_process(cmd_line, TRUE)) {
-						wcscpy(&key_name[2], L"SyncFlags");
+					if (!start_process(cmd_line, TRUE))
 						reg_sync_flags |= 8;
-						reg_set_dword(key_name_ptr, &reg_sync_flags);
-					}
 					if ((reg_sync_flags & 3) == 3 && reg_image_file[0]) {
 						_snwprintf(cmd_line, _countof(cmd_line), L"attrib -a \"%s\\*\" /s", current_MP);
 						if (os_ver.dwMajorVersion >= 6) wcscat(cmd_line, L" /l");
@@ -1795,7 +1798,12 @@ static void __stdcall SvcMain(DWORD dwArgc, LPTSTR *lpszArgv)
 					}
 				}
 
-run_user_object:
+data_ok:
+				if (reg_sync_flags & 8) {
+					wcscpy(&key_name[2], L"SyncFlags");
+					reg_set_dword(key_name_ptr, &reg_sync_flags);
+				}
+
 				if (reg_run_object[0]) {
 					ShExInf.fMask = SEE_MASK_NOASYNC;
 					ShExInf.lpVerb = NULL;
