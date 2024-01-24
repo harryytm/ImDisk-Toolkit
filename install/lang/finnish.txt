@@ -1,0 +1,318 @@
+[Setup]
+ImDisk - Asennus
+Tervetuloa ImDisk Toolkitin asennusohjelmaan.
+Ohjelma asentaa ImDisk Toolkitin (koontiversio %S).
+Asennuskansio:
+ Osat 
+ImDiskin virtuaalisten levyjen ajuri (vaaditaan)
+DiscUtils-kirjasto (vaatii .NET Framework 4)
+RamDisk-määritystyökalu
+ Valinnat 
+Valinnat kontekstivalikoissa
+Luo pikakuvakkeet työpöydälle
+Lataa ImDskSvc automaattisesti
+Kieli:
+Pidä hiirtä kohteen päällä nähdäksesi lisätiedot.
+Asentaa ajurin. Sisältää ohjauspaneelisovelman, komentorivityökalun, imdisk.exe-ohjelman sekä käyttöliittymän taltioiden hallintaan resurssienhallinnan kontekstivalikoista.##Kirjoita "imdisk" komentoriville saadaksesi lisätietoja.
+Vaaditaan, jos haluat ottaa käyttöön edistyneempia levykuvamuotoja, kuten VHD, VDI, VMDK ja joitain muita.##Lisää myös DiscUtilsDevio.exe-komentorivityökalun asennuskansioon sekä valintaikkunan kirjaston käyttämiseen resurssienhallinnan kontekstivalikosta.
+Tällä työkalulla voit helposti määritellä yden tai useampia RAM-levyjä (RamDisk) eri asetuksilla.
+Lisää kohdat levyjen ja tiedostojen kontekstivalikkoon ImDisk-taltioiden ja levykuvien hallintaan suoraan resurssienhallinnasta.##Tämän voi myös myöhemmin valita käynnistysvalikosta.
+Luo pikakuvakkeet työpöydälle.##Pikakuvakkeet luodaan Windowsin käynnistysvalikkoon aina.
+Käynnistää ImDskSvc:n automaattisesti järjestelmän mukana.##Mikään työkalu ei käytä tätä palvelua, joten tämän voi turvallisesti jättää pois.##Ajuri asentaa sen käyttääkseen TCP/IP- ja sarjaporttiyhteyksiä määritettyjen välityspalvelinten kautta.
+Tekijät
+Asenna
+Peruuta
+Asennetaan
+Virhe tiedostojen kopioinnissa.
+VIrheellinen polku.
+Virhe palvelua luotaessa.
+Edellinen asennus on eri kansiossa.#Haluatko poistaa sen?
+Asennus valmis.
+Asennus valmis.##.NET Frameworkin versiota 4 ei havaittu järjestelmälläsi.#Ilman sitä et voi käyttää joitain levykuvien muotoja.##Sen saa asennettua <a href="https://www.microsoft.com/fi-fi/download/details.aspx?id=17113">Microsoftin latauskeskuksesta</a>.
+OK
+
+ImDisk - Tekijät
+● Olof Lagerkvist: ImDiskin virtuaalisten levyjen ajuri sekä DiscUtils-kirjastoa käyttäviä työkaluja
+● v77: RamDisk-määritystyökalu, DiscUtils-valintaikkuna sekä asennusohjelma
+● Kenneth Bell: DiscUtils .NET-kirjasto
+Käännökset:
+- français: v77
+- español: alacran
+- svenska: Åke Engelbrektson / Olof Lagerkvist
+- deutsch: Bodo Thevissen
+- русский: 0x00ffh / Strani
+- 简体中文: Arne Sacnussem
+- italiano: Ajeje Brazorf
+- português brasileiro: Rodolfo Bendinelli
+- suomi: Sampo Hippeläinen
+
+Yleiset asetukset
+Poista asennus
+Kotisivu
+RamDisk-asetukset
+Liitä levykuva
+
+Liitä ImDisk-virtuaalilevynä
+Tallenna levyn sisältö levykuvaan
+Irrota ImDisk-virtuaalilevy
+
+
+ImDisk - Määrittelyt
+Poista ajuri (uudelleenkäynnistystä ei vaadita)
+Poista asetukset
+Poista
+Peruuta
+ImDisk-virtuaalilevy havaittu.#Kaikki virtuaalilevyt irrotetaan!
+Irrotetaan ImDisk-taltioita...
+Pysäytetään %s...
+Poistetaan muut osat...
+
+
+ImDisk - Määrittelyt
+ Yleiset asetukset 
+Valinnat kontekstivalikoissa
+Älä avaa resurssienhallintaa, kun asema liitetty
+Palauta kaikki piilotetut valintaikkunat
+ Piilota asemat resurssienhallinnasta: 
+Tallenna parametrit...
+TEMP-ympäristömuuttujiin
+OK
+Peruuta
+Nämä muutokset tulevat voimaan#vasta käynnistäessä uudelleen!
+
+
+[RamDiskUI]
+ RamDisk-määritystyökalu 
+OK
+Poistu
+
+Perus
+         Koko:
+kt
+Mt
+Gt
+Varaa muisti dynaamisesti
+       Aseman kirjain:
+Irrota
+Tiedostojärjestelmä:
+Käynnistä Windowsin mukana
+Luo TEMP-kansio
+Aseta TEMP-muuttujat...
+Minimi: %d %s
+Maksimi: %d %s
+Sen sijaan että koko muisti varataan, sitä#varataan sitä mukaa, kun sitä tarvitaan.#Tämä on hitaampaa, mutta säästää paljon muistia#jos vain osaa RAM-levystä käytetään.
+Irrottaa aseman valitusta ImDisk-liitoskohdasta ja poistaa rekisteröinnin.
+Oletus: NTFS.##*FAT* on yleensä nopeampi, mutta vähemmän monipuolinen.#FAT ja FAT32 rajoittavat myös taltion enimmäiskokoa.
+Rekisteröi RAM-levyn luonnin jälkeen Windowsiin.#RAM-levyjä voi rekisteröidä useita.
+Luo väliaikaiskansion taltion juureen.##Jos haluat luoda muita kansiota, määrittele haluamasi#kansiot kiintolevyllä ja määrittele ne Tiedot-välilehdellä.
+
+Edistyneet
+Klusterin koko:
+Aseman nimi:
+Pika-alustus
+Käytä NTFS-pakkausta
+Käytä AWE:n fyysistä muistia
+Dynaamisen RAM-levyn parametrit...
+Käytä liitoskohtaa:
+Irrota
+Muut parametrit:
+Oletus
+0,5 kt
+1 kt
+2 kt
+4 kt
+8 kt
+16 kt
+32 kt
+64 kt
+Isommat klusterikoot ovat yleensä nopeampia, mutta#vaativat enemmän levytilaa, etenkin jos tiedostoja on paljon.
+Nimen kokoa rajoittaa tiedostojärjestelmä:#NTFS:llä 32 merkkiä, *FAT*:lla 11.
+Oletus: pois.##Suorittaa pika-alustuksen. Nopeuttaa RAM-levyn luomista, mutta varattu#muisti ei näy välittömästi Tehtävienhallinnassa.
+Oletus: pois.##Sallii tiedostojen pakkaamisen ennen RAM-levylle#kirjoittamista.Toimii vain NTFS-tiedostojärjestelmällä.#Älä käytä, jos nopeus on tärkeää!##Ei suositella dynaamiselle RAM-levyille, koska muisti#ei saata vapautua oikein.
+Oletus: pois.##Varaa muistin AWE:n avulla.#Näin varmistetaan, ettei muistia koskaan sivuteta pois.##32-bittisillä järjestelmillä tämä myös ohittaa prosessikohtaisen#2 tai 4 Gt:n muistirajan ja mahdollistaa kaiken järjestelmän hallinnoiman#muistin varaamiseen (muttei hallinnoimatonta tai näkymätöntä muistia).
+Oletus: pois.##Käyttää kansiota aseman sijasta RAM-levyn liittämiseen.
+Irrottaa aseman valitusta ImDisk-liitoskohdasta ja poistaa rekisteröinnin.
+Liitoskohdan tulee olla tyhjä kansio NTFS-taltiolla.#Korkeintaan 10 liitoskohtaa voidaan rekisteröidä Windowsin käynnistyksen yhteyteen.
+Voit lisätä tähän parametreja, joita käyttöliittymä ei tue.#Esimerkiksi "-o rem" merkitsee aseman siirrettäväksi.#Napsauta "...".painiketta nähdäksesi kaikki parametrit.
+
+Tiedot
+Lataa sisältö kuvatiedostosta tai kansiosta:
+Synkronoi, kun Windows sammutetaan
+Kopioi vain arkistoitavaksi merkityt tiedostot
+Poista RAM-levyltä poistetut tiedot
+Jätä pois kansiot:
+Synkronoi nyt
+Jos valitset kansion, sen koko sisältö kopioidaan RAM-levylle sitä luodessa,#mukaan lukien määritteet ja pääsyoikeudet (tiedostojärjestelmäkohtainen).##Levykuvan tulee olla raaka ja osittamaton, mutta sisältää oikea tiedostojärjestelmä.#Sellaisen voi luoda esimerkiksi napsauttamalla oikealla painikkeella aseman kirjainta#resurssienhallinnasta ja valitsemalla "Tallenna levyn sisältö levykuvaan".
+Oletus: pois.##Kopioi RAM-levyn tiedot takaisin kansioon tai levykuvaan,#kun järjestelmä sammutetaan. Riippuu alla olevista parametreista.
+Yksi kansio riviä kohden.#Kansioiden polut ovat suhteessa RAM-levyn juureen#(aseman kirjain tai liitoskohta): älä lisää sitä.
+Synkronoi kaikki rekisteröidyt RAM-levyt heti.
+
+AWE:n käyttö dynaamisilla RAM-levyillä vaatii oikeuden lukita muistisivuja paikallisessa ryhmäkäytännössä.#Jos jatkat, tämä oikeus myönnetään järjestelmänvalvojien ryhmälle.##Haluatko jatkaa?
+Oikeus myönnettiin onnistuneesti.#Uloskirjautuminen vaaditaan, jotta muutos tulee voimaan.#Kirjataanko nyt ulos?
+Virhe: oikeutta ei voitu myöntää.
+
+Valmiina
+Aloitetaan käsittely...
+Virhe: koon on oltava vähintään %d kt.
+Virhe: koko ei voi olla yli %d %ct.
+Virhe: virheellinen koko.
+Virhe: tyhjää kansiota ei valita.
+Valittu liitoskohta irrotetaan.#Tallentamaton tieto menetetään.#Jatketaanko?
+Irrotetaan liitoskohtaa...
+Tämä taltio irrotetaan.#Tallentamaton tieto menetetään.#Jatketaanko?
+Irrotetaan taltiota...
+Virhe: taltiota ei voitu irrottaa.
+Liitetään uutta RAM-levyä...
+Virhe: liitoskohdan kohdetta ei voitu hakea.
+Virhe: tiedosto ei sisällä tuettua tiedostojärjestelmää.
+Virhe: taltiota ei voitu alustaa.
+Virhe: taltiota ei voitu liittää.
+Kopioidaan tiedostoja...
+Näytetään uutta asemaa...
+Tallennetaan parametreja...
+Varoitus: liian monta liitoskohtaa.#Tätä kohtaa ei rekisteröidä.
+Virhe: ei voitu luoda palvelua.
+Valmista.
+Irrotetaan taltiota...
+Synkronoidaan...
+
+ TEMP-ympäristömuuttujat 
+ Käyttäjä 
+ Järjestelmä 
+Aseta kaikkiin:
+Palauta oletukset
+OK
+Peruuta
+
+Muistin vapautus:
+Automaattinen
+TRIM-komennot
+Vapaan tilan tyhjennys
+ Vapaan tilan tyhjennyksen parametrit 
+Nämä parametrit eivät tee mitään, jos TRIM-komentoja käytetään.
+Tyhjennettävän tilan minimimäärä:
+Minimiaika tyhjennysten välillä:
+Maksimitoiminta ennen tyhjennystä:
+sek
+Mt/s
+Varattujen muistilohkojen koko:
+OK
+Peruuta
+"Automaattinen" käyttää TRIM-komentoja, jos ne on saatavilla. Ne ovat#paljon tehokkaampia, mutta vaativat NTFS:n ja Windows 7:n (tai uudemman).##Muussa tapauksessa tyhjennys tapahtuu tarvittaessa alla olevan kolmen#parametrin perusteella, ja tyhjä tila tyhjennetään väliaikaistiedostolla,#joka täytetään nollilla (sillä nollat vapautetaan automaattisesti).
+Oletus: 20.##Muistilohkoon varattavien tavujen määrä 2:n potenssina.##Minimiarvo on 12 (4 kt), 13 on 8 kt, 14 on 16 kt, ja#niin edelleen, 30:een (1 Gt) asti.##Pienempi koko voi vähentää muistin käyttöä ja parantaa#tyhjennysten tehokkuutta, jos tiedostot ovat merkittävästi#pirstaloituneita, mutta vähentää yleistä suorituskykyä.
+Oletus: 10.##Tyhjennys suoritetaan vain, jos tämä määrä muistia voidaan vapauttaa.#Arvo esitetään suhdelukuna koko tilaan verrattuna (esimerkiksi#10/1000 4 Gt:n levystä = 40 Mt). Tämä on vain arviotieto: oikea#vapautetun muistin määrä voi olla hieman korkeampi tai alhaisempi.
+Oletus: 10.##Alhaisella arvolla tyhjennys tehoaa nopeammin. Se voi kuitenkin olla huono#vaihtoehto, jos tiedostoja poistetaan säännöllisesti eikä niitä luoda uudelleen.
+Oletus: 10.##Odottaa, että luku- ja kirjoitusoperaatiot alittavat tämän luvun ennen tyhjennystä.
+
+Varoitus: Windowsin nopea käynnistys on käytössä. Tämä voi johtaa seuraaviin ongelmiin:##● Järjestelmä kirjoittaa RAM-levyn sisällön kiintolevylle sammutettaessa ja palauttaa sen käynnistettäessä.#● ImDisk Toolkitin synkronointitoiminnallisuus ei toimi, kun järjestelmä sammutetaan.##Avaa sammutusasetukset ja poista nopea käynnistys käytöstä.
+Sammutusasetukset
+Älä näytä tätä varoitusta uudelleen
+Sulje
+
+
+[MountImg]
+ Liitä uusi virtuaalilevy 
+Levykuva:
+Aseman kirjain
+Liitoskohta
+Irrota
+Laitetyyppi:
+Kiintolevy
+CD/DVD
+Levyke
+Vain luku
+Siirrettävä
+Osio:
+Liitä, kun Windows käynnistetään
+Vaihda ajurin käyttöliittymään
+OK
+Peruuta
+Liitetään...
+ImDisk - Liitoskohta
+Koko
+Tiedostojärjestelmä
+Nimi
+Poistaa valitun kuvatiedoston rekisteröinnin#sekä irrottaa valitun aseman tai liitoskohdan.
+Syötä levykuvan tiedostonimi, valitse "..."-painikkeella#tai vedä ja pudota.#Jos tiedostopääte on väärä, liittäminen voi epäonnistua!##Jos tiedostoa ei ole olemassa, sinua kehotetaan#luomaan uusi raakatiedosto.##Avattava luettelo näyttää Windowsin käynnistyksen#yhteyteen rekisteröidyt tiedostot.
+Liitoskohdan tulee olla tyhjä kansio NTFS-taltiolla.##Jos vedät ja pudotat kansion, se valitaan liitoskohdaksi.
+ISO-, BIN- ja NRG-tiedostoille suositellaan "CD/DVD"-asetusta,#VFD-tiedostoille "Levyke"-asetusta ja muille "Kiintolevy"-asetusta.
+Syötä 1, jos levykuvassa on korkeintaan yksi osio.#0 tarkoittaa koko levykuvaa: jos siinä on osiotaulu, sen päälle kirjoitetaan.
+Estää kirjoittamisen levykuvaan.
+Tämä yleensä poistaa kirjoitusvälimuistin käytöstä:#tiedot kirjoitetaan levykuvaan välittömästi,#mikä voi heikentää suorituskykyä.
+Rekisteröi levykuvan ja parametrit, jolloin#se liitetään Windowsin käynnistyessä.#Levykuvia voi rekisteröidä korkeintaan 64 000.
+
+Liitettäessä tapahtui virhe.#Tarkista parametrit.
+Virhe: valitun liitoskohdan tiedostojärjestelmä ei tue uudelleenjäsennyskohtia.
+Valittu hakemisto on jo liitoskohta.#Jos jatkat, menetät pääsyn edelliseen tätä liitoskohtaa käyttävään taltioon.##Jatketaanko silti?
+Virhe: valittu liitoskohta ei ole tyhjä hakemisto.
+Virhe: valittu aseman kirjain on jo käytössä.
+Virhe: palvelua ei voitu luoda.
+
+Virheellinen tiedostojärjestelmä
+Taltio ei sisällä tuettua tiedostojärjestelmää.##Miten toimia?
+Irrota
+Alusta
+Poistu
+
+Luo uusi levykuva
+Tiedostoa ei löytynyt.#Haluatko luoda uuden raa’an levykuvan?
+  Tiedostokoko:#  (minimi: 65 kt)
+Liitä
+Luo
+Peruuta
+Virhe: tiedostoa ei voitu luoda.
+Virhe: valitun kokoista tiedostoa ei voi luoda.
+
+tavua
+kt
+Mt
+Gt
+Tt
+Pt
+
+
+[ImDisk-Dlg]
+Varoitus: sinulla ei ole oikeuksia irrottaa tätä taltiota oikein.#Kirjoituspuskurit jäävät tyhjentämättä, joten tietoja saatetaan menettää.##Haluatko siltl jatkaa?
+Jokin toinen prosessi käyttää taltiota, eikä sitä voida lukita.##Jos tietosi ovat tallella, voit jatkaa ja taltio irrotetaan oikein.##Haluatko jatkaa?
+Virtuaalista levyä on muokattu.##Haluatko tallentaa sen levykuvaan ennen irrotusta?
+Älä näytä tätä varoitusta uudelleen
+Älä kysy uudelleen
+OK
+Peruuta
+Kyllä
+Ei
+Avataan laitetta...
+Ilmoitetaan sovelluksille aseman irrotuksesta...
+Tyhjennetään puskureita...
+Lukitaan taltiota...
+Irrotetaan tiedostojärjestelmää...
+Tallennetaan levykuvaa...
+Poistetaan laitetta...
+Vapautetaan aseman kirjain...
+Ei voitu avata laitetta.
+%s ei ole ImDisk-virtuaalilevy.
+Ei voitu poistaa laitetta.
+Ei voitu poistaa liitoskohtaa.
+
+ Tallenna levykuva 
+Tiedosto:
+Alkukohta tiedostossa:
+Kirjoita MBR tiedoston alkuun
+OK
+Peruuta
+Levykuvat
+ISO-kuvat
+Kaikki tiedostot
+%s on lukittu ja valmiina.
+%s on toisen prosessin käytöstä, eikä sitä voi lukita.#Sitä voi muokata kopioitaessa.
+Taltiota %s tallennetaan... %u%%
+Taltio %s tallennettiin tiedostoon %s.
+Aseman tyyppiä ei tueta.
+Taltion määrityksiä ei voitu hakea.
+Levykuvaa ei voitu avata.
+Muistia ei voitu varata.
+Uuden MBR:n luonti epäonnistui.
+MBR:n kirjoittaminen epäonnistui.
+Tiedosto-osoittimen asettaminen epäonnistui.
+Lukuvirhe.
+Kirjoitusvirhe.

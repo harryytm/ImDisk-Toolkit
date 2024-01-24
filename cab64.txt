@@ -26,6 +26,7 @@ files\RamDyn.exe
 .Set DestinationDir=lang
 install\lang\brazilian-portuguese.txt
 install\lang\english.txt
+install\lang\finnish.txt
 install\lang\french.txt
 install\lang\german.txt
 install\lang\italian.txt

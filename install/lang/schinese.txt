@@ -36,14 +36,15 @@ ImDisk - 贡献者/鸣谢
 ● v77: RamDisk 配置工具、依赖于DiscUtils的图形界面程序、本程序包的安装程序
 ● Kenneth Bell: DiscUtils .NET 库
 翻译人员:
-- Français: v77
-- Español: alacran
-- Svenska: Åke Engelbrektson / Olof Lagerkvist
-- Deutsch: Bodo Thevissen
+- français: v77
+- español: alacran
+- svenska: Åke Engelbrektson / Olof Lagerkvist
+- deutsch: Bodo Thevissen
 - русский: 0x00ffh / Strani
 - 简体中文: Arne Sacnussem
-- Italiano: Ajeje Brazorf
-- Português Brasileiro: Rodolfo Bendinelli
+- italiano: Ajeje Brazorf
+- português brasileiro: Rodolfo Bendinelli
+- suomi: Sampo Hippeläinen
 
 一般设置
 卸载

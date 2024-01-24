@@ -1,3 +1,6 @@
+Version 20210125
+- added finnish language
+
 Version 20201120
 - updated russian language
 - fix in the uninstaller: some files were not removed (regression from 20200402)

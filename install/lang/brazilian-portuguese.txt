@@ -36,14 +36,15 @@ ImDisk - Créditos
 ● v77: RamDisk Configuration Tool, caixa de diálogo usando o DiscUtils e o instalador deste pacote
 ● Kenneth Bell: biblioteca DiscUtils .NET
 Traduções:
-- Français: v77
-- Español: alacran
-- Svenska: Åke Engelbrektson / Olof Lagerkvist
-- Deutsch: Bodo Thevissen
+- français: v77
+- español: alacran
+- svenska: Åke Engelbrektson / Olof Lagerkvist
+- deutsch: Bodo Thevissen
 - русский: 0x00ffh / Strani
-- 中文 中文: Arne Sacnussem
-- Italiano: Ajeje Brazorf
-- Português Brasileiro: Rodolfo Bendinelli
+- 简体中文: Arne Sacnussem
+- italiano: Ajeje Brazorf
+- português brasileiro: Rodolfo Bendinelli
+- suomi: Sampo Hippeläinen
 
 Configurações Gerais
 Desinstalar

@@ -669,6 +669,23 @@ int __stdcall wWinMain(HINSTANCE hinstance, HINSTANCE hPrevInstance, LPWSTR lpCm
 	SECURITY_ATTRIBUTES sa = {sizeof(SECURITY_ATTRIBUTES), &sd, FALSE};
 	unsigned int eax, edx;
 
+/*	int i;
+	__int64 t;
+	void *p = NULL;
+	alloc_size = DEF_BUFFER_SIZE;
+	NtAllocateVirtualMemory(NtCurrentProcess(), &p, 0, &alloc_size, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+#ifndef _WIN64
+	t = _rdtsc();
+	for (i = 0; i < 10000; i++) data_search_std(p, DEF_BUFFER_SIZE);
+	printf("%I64d\n", _rdtsc() - t);
+#endif
+	t = _rdtsc();
+	for (i = 0; i < 10000; i++) data_search_sse2(p, DEF_BUFFER_SIZE);
+	printf("%I64d\n", _rdtsc() - t);
+	t = _rdtsc();
+	for (i = 0; i < 10000; i++) data_search_avx(p, DEF_BUFFER_SIZE);
+	printf("%I64d\n", _rdtsc() - t);*/
+
 	__wgetmainargs(&argc, &argv, &env, 0, &si);
 	if (argc < 3) {
 syntax_help:

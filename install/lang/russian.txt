@@ -36,14 +36,15 @@ ImDisk - Создатели
 ● v77: Утилита конфигурирования RAM-дисков, диалоговые окна, используемые DiscUtils и программой установки
 ● Kenneth Bell: .NET библиотека DiscUtils
 Локализация:
-- Français: v77
-- Español: alacran
-- Svenska: Åke Engelbrektson / Olof Lagerkvist
-- Deutsch: Bodo Thevissen
+- français: v77
+- español: alacran
+- svenska: Åke Engelbrektson / Olof Lagerkvist
+- deutsch: Bodo Thevissen
 - русский: 0x00ffh / Strani
 - 简体中文: Arne Sacnussem
-- Italiano: Ajeje Brazorf
-- Português Brasileiro: Rodolfo Bendinelli
+- italiano: Ajeje Brazorf
+- português brasileiro: Rodolfo Bendinelli
+- suomi: Sampo Hippeläinen
 
 Основные настройки
 Удаление
