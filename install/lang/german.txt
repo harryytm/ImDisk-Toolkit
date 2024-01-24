@@ -62,6 +62,7 @@ ImDisk Virtual Disk trennen
 ImDisk - Setup
 Treiber deinstallieren (kein Neustart benötigt)
 Einstellungen entfernen
+TEMP-Variablen zurücksetzen
 Deinstallieren
 Abbrechen
 ImDisk Virtual Disk erkannt.#Alle existierenden ImDisk Virtual Disks werden getrennt!
@@ -117,6 +118,7 @@ Physischen AWE-Speicher verwenden
 Parameter der dynamischen RAM-Disk
 Bereitstellungspunkt verwenden:
 Trennen
+Nach Einbinden starten:
 Zusätzliche Parameter:
 Standard
 0,5 KB
@@ -135,6 +137,7 @@ Voreinstellung: abgeschaltet##Speicher über AWE reservieren.#Dies gewährleiste
 Voreinstellung: abgeschaltet##Verwende ein Verzeichnis anstatt eines Laufwerksbuchstaben, um die RAM-Disk zu einzubinden.
 Den gewählten ImDisk Bereitstellungspunkt trennen und deregistrieren.
 Der Bereitstellungspunkt muss ein leeres Verzeichnis auf einem NTFS-Volume sein.#Bis zu zehn Bereitstellungspunkte können registriert und beim Start von Windows eingebunden werden.
+Sobald das Volumen bereit ist (formatiert und Daten kopiert), startet#die genannte Datei. Sie kann eine ausführbare Datei oder eine#Befehlsdatei sein. Die Datei startet in Session 0 (User "System"),#sodass kein Fenster geöffnet wird.
 Hier kannst du jegliche Parameter einfügen, die noch nicht von der GUI verwendet werden.#Zum Beispiel: "-o rem" fügt dem Laufwerk das Wechseldatenträger-Attribut hinzu.#Klicke auf den "..."-Knopf, um alle Parameter aufzulisten.
 
 Daten
@@ -171,6 +174,8 @@ Fehler: Das Laufwerk kann nicht formatiert werden.
 Fehler: Das Laufwerk kann nicht eingebunden werden.
 Kopiere Dateien ...
 Fehler: Dateien können nicht kopiert werden.
+Nutzerbefehl starten ...
+Fehler: Nutzerbefehl kann nicht gestartet werden.
 Zeige neues Laufwerk an ...
 Speichere Parameter ...
 Warnung: Zu viele Bereitstellungspunkte.#Dieser kann nicht registriert werden.

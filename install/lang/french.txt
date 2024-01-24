@@ -62,6 +62,7 @@ Démonter le disque virtuel ImDisk
 ImDisk - Installation
 Désinstaller le pilote (pas de redémarrage)
 Supprimer les réglages
+Réinitialiser les variables TEMP
 Désinstaller
 Annuler
 Disque virtuel ImDisk détecté.#Tous les disques virtuels ImDisk seront démontés !
@@ -117,6 +118,7 @@ Utiliser la mémoire physique AWE
 Paramètres de RamDisk Dynamique...
 Utiliser le Point de Montage :
 Démonter
+Exécuter après montage :
 Paramètres Additionnels :
 Par défaut
 0,5 Ko
@@ -135,6 +137,7 @@ Par défaut : désactivé.##Allouer la mémoire avec AWE.#Ceci garantit que la m
 Par défaut : désactivé.##Utilise un dossier au lieu d'une lettre de lecteur pour monter le ramdisk.
 Démonte le point de montage ImDisk sélectionné et supprime son enregistrement.
 Le point de montage doit être un dossier vide situé sur un volume NTFS.#Jusqu'à 10 points de montage peuvent être enregistrés pour être montés#au démarrage de Windows.
+Une fois que le volume est prêt (formaté et données copiées), exécute le fichier spécifié.#Ça peut être un exécutable ou un fichier de commandes.#Le fichier s'exécute en session 0 (utilisateur "Système"), ce qui signifie qu'aucune fenêtre#ne sera affichée.
 Vous pouvez ajouter ici tout paramètre qui n'est pas déjà utilisé par l'interface graphique.#Par exemple, "-o rem" ajoutera l'attribut amovible au lecteur.#Cliquer sur le bouton "..." pour afficher tous les paramètres.
 
 Données
@@ -171,6 +174,8 @@ Erreur : le volume ne peut pas être formaté.
 Erreur : le volume ne peut pas être monté.
 Copie des fichiers...
 Erreur : les fichiers ne peuvent pas être copiés.
+Exécute la commande utilisateur...
+Erreur : impossible d'exécuter la commande utilisateur.
 Affichage du nouveau lecteur...
 Sauvegarde des paramètres...
 Attention: points de montage trop nombreux.#Celui-ci ne sera pas enregistré.

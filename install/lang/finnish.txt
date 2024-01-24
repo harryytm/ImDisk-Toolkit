@@ -62,6 +62,7 @@ Irrota ImDisk-virtuaalilevy
 ImDisk - Määrittelyt
 Poista ajuri (uudelleenkäynnistystä ei vaadita)
 Poista asetukset
+Reset TEMP variables
 Poista
 Peruuta
 ImDisk-virtuaalilevy havaittu.#Kaikki virtuaalilevyt irrotetaan!
@@ -117,6 +118,7 @@ Käytä AWE:n fyysistä muistia
 Dynaamisen RAM-levyn parametrit...
 Käytä liitoskohtaa:
 Irrota
+Run after mounting:
 Muut parametrit:
 Oletus
 0,5 kt
@@ -135,6 +137,7 @@ Oletus: pois.##Varaa muistin AWE:n avulla.#Näin varmistetaan, ettei muistia kos
 Oletus: pois.##Käyttää kansiota aseman sijasta RAM-levyn liittämiseen.
 Irrottaa aseman valitusta ImDisk-liitoskohdasta ja poistaa rekisteröinnin.
 Liitoskohdan tulee olla tyhjä kansio NTFS-taltiolla.#Korkeintaan 10 liitoskohtaa voidaan rekisteröidä Windowsin käynnistyksen yhteyteen.
+Once the volume is ready (formatted and data copied), run the specified file.#It can be an executable or a command file.#The file runs in session 0 ("System" user), which means that no window will#be displayed.
 Voit lisätä tähän parametreja, joita käyttöliittymä ei tue.#Esimerkiksi "-o rem" merkitsee aseman siirrettäväksi.#Napsauta "...".painiketta nähdäksesi kaikki parametrit.
 
 Tiedot
@@ -171,6 +174,8 @@ Virhe: taltiota ei voitu alustaa.
 Virhe: taltiota ei voitu liittää.
 Kopioidaan tiedostoja...
 Virhe: tiedostoja ei voitu kopioida.
+Run user command...
+Error: cannot run user command.
 Näytetään uutta asemaa...
 Tallennetaan parametreja...
 Varoitus: liian monta liitoskohtaa.#Tätä kohtaa ei rekisteröidä.

@@ -19,7 +19,7 @@ static RECT icon_coord = {};
 static DWORD flag_to_set = 0, flags = 0;
 static BOOL no_reg_write = FALSE;
 static volatile BOOL stop_lock = FALSE;
-static LONGLONG offset, offset_no_mbr;
+static LONGLONG img_offset, offset_no_mbr;
 static BOOL write_mbr, cdrom = FALSE;
 static struct {IMDISK_CREATE_DATA icd; WCHAR buff[MAX_PATH + 15];} create_data = {};
 static WCHAR *mount_point, *file_name = create_data.icd.FileName;
@@ -217,7 +217,7 @@ static DWORD __stdcall write_img(LPVOID lpParam)
 	}
 
 	if (write_mbr) {
-		partition_info.StartingOffset.QuadPart = offset;
+		partition_info.StartingOffset.QuadPart = img_offset;
 		partition_info.PartitionLength.QuadPart = vol_size;
 		partition_info.PartitionType = 0x06;
 		partition_info.BootIndicator = TRUE;
@@ -231,7 +231,7 @@ static DWORD __stdcall write_img(LPVOID lpParam)
 		}
 	}
 
-	if (!SetFilePointerEx(h_file, (LARGE_INTEGER)offset, NULL, FILE_BEGIN)) {
+	if (!SetFilePointerEx(h_file, (LARGE_INTEGER)img_offset, NULL, FILE_BEGIN)) {
 		error(save_hdlg, t[CP_ERR_7] ? t[CP_ERR_7] : L"Error setting file pointer.");
 		goto err_save;
 	}
@@ -327,7 +327,7 @@ static INT_PTR __stdcall SaveProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPa
 			GetProcAddress(h_cpl, "ImDiskNativePathToWin32")(&file_name);
 			SetDlgItemText(hDlg, ID_EDIT1, file_name);
 
-			_i64tow(offset = create_data.icd.ImageOffset.QuadPart, text, 10);
+			_i64tow(img_offset = create_data.icd.ImageOffset.QuadPart, text, 10);
 			SetDlgItemText(hDlg, ID_EDIT2, text);
 			EnableWindow(GetDlgItem(hDlg, ID_CHECK1), !cdrom);
 
@@ -371,11 +371,11 @@ static INT_PTR __stdcall SaveProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPa
 
 				case ID_CHECK1:
 					if ((write_mbr = IsDlgButtonChecked(hDlg, ID_CHECK1))) {
-						offset_no_mbr = offset;
-						offset = (LONGLONG)create_data.icd.DiskGeometry.BytesPerSector * create_data.icd.DiskGeometry.SectorsPerTrack;
+						offset_no_mbr = img_offset;
+						img_offset = (LONGLONG)create_data.icd.DiskGeometry.BytesPerSector * create_data.icd.DiskGeometry.SectorsPerTrack;
 					} else
-						offset = offset_no_mbr;
-					_i64tow(offset, text, 10);
+						img_offset = offset_no_mbr;
+					_i64tow(img_offset, text, 10);
 					SetDlgItemText(hDlg, ID_EDIT2, text);
 					EnableWindow(GetDlgItem(hDlg, ID_TEXT2), !write_mbr);
 					EnableWindow(GetDlgItem(hDlg, ID_EDIT2), !write_mbr);
@@ -384,7 +384,7 @@ static INT_PTR __stdcall SaveProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPa
 				case IDOK:
 					stop_lock = TRUE;
 					GetDlgItemText(hDlg, ID_EDIT2, text, _countof(text));
-					offset = _wtoi64(text);
+					img_offset = _wtoi64(text);
 					EnableWindow(GetDlgItem(hDlg, IDOK), FALSE);
 					EnableWindow(GetDlgItem(hDlg, ID_EDIT1), FALSE);
 					EnableWindow(GetDlgItem(hDlg, ID_PBUTTON1), FALSE);

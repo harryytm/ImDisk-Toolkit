@@ -1,41 +1,41 @@
 [Setup]
-ImDisk - 설치
-ImDisk Toolkit 설치 프로그램을 시작합니다.
-ImDisk Toolkit (빌드 %S)이 설치됩니다.
-설치 폴더:
- 구성 요소 
-ImDisk 가상 디스크 드라이버 (필수)
-DiscUtils 라이브러리 (.NET Framework 4 사용)
-RamDisk 구성 도구
- 옵션 
-상황에 맞는 메뉴에서 항목 사용
-바탕 화면에 바로 가기 만들기
-모든 사용자에 대한 바로 가기
-언어:
-자세한 내용을 보려면 마우스를 항목 위에 놓으십시오.
-드라이버를 설치합니다. 여기에는 제어판 애플릿, 명령줄 도구, imdisk.exe 및 탐색기의 상황에 맞는 메뉴에서 볼륨을 관리하는 인터페이스가 포함됩니다.##자세한 내용을 보려면 명령 프롬프트에 "imdisk"를 입력하십시오.
-VHD, VDI, VMDK 등과 같은 고급 이미지 파일 형식을 마운트하는 데 필요합니다.##또한 설치 폴더인 DiscUtilsDevio에 명령줄 도구를 추가합니다.또한 탐색기의 파일 상황에 맞는 메뉴에서 라이브러리를 사용할 수 있는 전용 대화 상자도 있습니다.
-이 도구를 사용하면 다양한 설정으로 하나 이상의 RamDisk를 쉽게 구성할 수 있습니다.
-드라이브 상황에 맞는 메뉴와 파일 상황에 맞는 메뉴에 항목을 추가하여 탐색기에서 직접 ImDisk 볼륨 및 이미지 파일을 관리할 수 있습니다.##이 옵션은 나중에 Windows 시작 메뉴에서 설정할 수 있습니다.
-바탕 화면에 바로 가기를 만듭니다.##모든 바로 가기는 항상 Windows 시작 메뉴에 만들어집니다.
-현재 사용자 대신 모든 사용자에 대한 바로 가기를 만듭니다.
-크레딧
-설치
-취소
-설치 중...
-파일 복사 오류입니다.
-경로가 잘못되었습니다.
-오류: 서비스를 만들 수 없습니다.
-이전 설치는 다른 폴더에 있습니다.#제거하시겠습니까?
-설치가 완료되었습니다.
-설치가 완료되었습니다.##하지만.NET Framework 4가 시스템에 없습니다.#그렇지 않으면 일부 이미지 파일 형식을 마운트할 수 없습니다.##설치 프로그램을 다운로드하려면 <a href="https://www.microsoft.com/en-us/download/details.aspx?id=17113">Microsoft 다운로드 센터</a> 를 방문하십시오.
-확인
+ImDisk - Setup
+Welcome to the installer for ImDisk Toolkit.
+This will install the ImDisk Toolkit (build %S).
+Installation folder:
+ Components 
+ImDisk Virtual Disk Driver (required)
+DiscUtils library (uses .NET Framework 4)
+RamDisk Configuration Tool
+ Options 
+Enable entries in context menus
+Create shortcuts on desktop
+Shortcuts for all users
+Language:
+Please keep your mouse over an item to get details.
+Install driver. This includes a Control Panel applet, a command line tool, imdisk.exe, and interfaces to manage volumes from Explorer context menus.##Please type "imdisk" in a command prompt for details.
+Required to mount advanced image file formats like VHD, VDI, VMDK and some others.##Also adds a command line tool in the installation folder, DiscUtilsDevio.exe, and a dedicated dialog box to use the library from file context menu in Explorer.
+This tool will allow you to easily configure one or several RamDisks with various settings.
+Add entries in the drive context menu and the file context menu to manage ImDisk volumes and image files directly from Explorer.##This option can be set later in the Windows Start Menu.
+Create shortcuts on desktop.##All shortcuts are always created in the Windows Start Menu.
+Create shortcuts for all users instead of current user.
+Credits
+Install
+Cancel
+Installing...
+File copy error.
+Invalid path.
+Error: cannot create service.
+The previous installation is in another folder.#Do you want to remove it?
+Installation finished.
+Installation finished.##However, .NET Framework 4 is not present on your system.#Without it, you will not be able to mount some image file formats.##Please visit the <a href="https://www.microsoft.com/en-us/download/details.aspx?id=17113">Microsoft Download Center</a> to download installer.
+OK
 
-ImDisk - 크레딧
-● Olof Lagerkvist: ImDisk 가상 디스크 드라이버 및 DiscUtils 라이브러리를 사용하기 위한 여러 도구
-● v77: RamDisk 구성 도구, DiscUtils 및 이 패키지의 설치 프로그램을 사용하는 대화 상자
-● Kenneth Bell: 디스크 유틸리티.NET 라이브러리
-번역:
+ImDisk - Credits
+● Olof Lagerkvist: ImDisk Virtual Disk Driver, and several tools to use the DiscUtils library
+● v77: RamDisk Configuration Tool, dialog box using DiscUtils and installer of this package
+● Kenneth Bell: DiscUtils .NET library
+Translations:
 - français: v77
 - español: alacran
 - svenska: Åke Engelbrektson / Olof Lagerkvist
@@ -46,78 +46,80 @@ ImDisk - 크레딧
 - português brasileiro: Rodolfo Bendinelli
 - suomi: Sampo Hippeläinen
 - magyar: I. Horváth Ferenc
+- 한국어: 비너스걸💋 (VenusGirl)
 
-일반 설정
-설치 제거
-홈페이지
-Ram 디스크 구성
-이미지 파일 마운트
+General Settings
+Uninstall
+Home page
+RamDisk Configuration
+Mount Image File
 
-ImDisk 가상 디스크로 마운트
-디스크 내용을 이미지 파일로 저장
-ImDisk 가상 디스크 마운트 해제
-
-
-ImDisk - 설치
-드라이버 제거 (재부팅 필요 없음)
-설정 제거
-설치 제거
-취소
-ImDisk 가상 디스크가 탐지되었습니다.#기존 ImDisk 가상 디스크가 모두 마운트 해제됩니다!
-ImDisk 볼륨을 마운트 해제하는 중...
-%s을(를) 중지하는 중...
-나머지 구성 요소를 제거하는 중...
+Mount as ImDisk Virtual Disk
+Save disk contents as image file
+Unmount ImDisk Virtual Disk
 
 
-ImDisk - 설치
- 일반 설정
-상황에 맞는 메뉴에서 항목 사용
-볼륨 마운트 후 탐색기 표시 안 함
-숨겨진 대화 상자 복원
- 탐색기에서 다음 드라이브를 숨기기: 
-매개 변수 저장...
-TEMP 환경 변수 포함
-확인
-취소
-이러한 변경 사항은 Windows를 다시 시작한 후에만 # 적용됩니다!
+ImDisk - Setup
+Uninstall driver (no reboot required)
+Remove settings
+Reset TEMP variables
+Uninstall
+Cancel
+ImDisk virtual disk detected.#All existing ImDisk virtual disks will be unmounted!
+Unmounting ImDisk volumes...
+Stopping %s...
+Removing remaining components...
+
+
+ImDisk - Setup
+ General Settings 
+Enable entries in context menus
+Don't show Explorer after volume mounting
+Restore hidden dialog boxes
+ Hide the following drives in Explorer: 
+Save Parameters...
+with TEMP Environment Variables
+OK
+Cancel
+These changes will take effect#only after restarting Windows!
 
 
 [RamDiskUI]
- RamDisk 구성 도구 
-확인
-종료
+ RamDisk Configuration Tool 
+OK
+Exit
 
-기본
-    크기:
+Basic
+    Size:
 KB
 MB
 GB
-메모리 동적 할당
-    드라이브 문자:
-마운트 해제
-    파일 시스템:
-Windows 시작 시 실행
-TEMP 폴더 만들기
-TEMP 변수 설정...
-최소: %d %s
-최대: %d %s
-전체 크기를 할당하는 대신 메모리가 실제로 사용될 때만 #할당됩니다.#이것은 더 느리지만 #ramdisk의 작은 부분만 사용하는 경우 많은 메모리를 절약할 수 있습니다.
-선택한 ImDisk 드라이브를 마운트 해제하고 등록을 취소합니다.
-기본값: NTFS입니다.##*FAT* 파일 시스템은 일반적으로 더 빠르지만 기능은 더 적습니다.#FAT 및 FAT32는 또한 최대 볼륨 크기에 제한이 있습니다.
-생성된 ramdisk는 Windows에서 시작할 수 있도록 등록합니다.#여러 개의 램 디스크를 등록할 수 있습니다.
-볼륨의 루트에 Temp 폴더를 생성합니다.##다른 폴더를 만들려면 하드 드라이브의 # 폴더에서 원하는 항목을 정의하고 데이터 탭에서 지정합니다.
+Allocate Memory Dynamically
+    Drive Letter:
+Unmount
+    File System:
+Launch at Windows Startup
+Create TEMP Folder
+Set TEMP Variables...
+Min: %d %s
+Max: %d %s
+Instead of allocating the whole size, memory is#allocated only when it is actually used.#This is slower but can save a lot of memory if#you are using only a small part of the ramdisk.
+Unmount the selected ImDisk drive and unregister it.
+Default: NTFS.##*FAT* file systems are usually faster but with less features.#FAT and FAT32 also have limitations in the maximal volume size.
+Once created, register the ramdisk to be started with Windows.#Several ramdisks can be registered.
+Create a Temp folder at the root of the volume.##To create other folders, define what you want in a#folder of your hard drive, and specify it in the Data tab.
 
-고급
-클러스터 크기:
-드라이브 레이블:
-빠른 포맷
-NTFS 압축 사용
-AWE 물리적 메모리 사용
-동적 RamDisk 매개 변수...
-마운트 지점 사용:
-마운트 해제
-추가 매개 변수:
-기본값
+Advanced
+Cluster Size:
+Drive Label:
+Quick Format
+Enable NTFS Compression
+Use AWE physical memory
+Dynamic RamDisk Parameters...
+Use Mount Point:
+Unmount
+Additional Parameters:
+Default
 0.5 KB
 1 KB
 2 KB
@@ -126,150 +128,150 @@ AWE 물리적 메모리 사용
 16 KB
 32 KB
 64 KB
-클러스터가 클수록 일반적으로 더 빠르지만 특히 파일 수가 많은 경우 더 많은 #디스크 공간을 사용할 수 있습니다.
-레이블 크기는 파일 시스템에 의해 제한됩니다.#NTFS의 경우 32자, *FAT*의 경우 11자입니다.
-기본값: 사용 불가능합니다.##빠른 포맷을 합니다. RamDisk 구축 속도를 높일 수 있지만 할당된 #메모리가 Windows 작업 관리자에서 사용된 것처럼 바로 나타나지 않습니다.
-기본값: 사용 불가능합니다.##ramdisk에 쓰기 전에 파일을 압축할 수 있습니다.#NTFS 파일 시스템에서만 작동합니다.#속도에 신경을 쓴다면 사용하지 마세요!##메모리#이 제대로 해제되지 않을 수 있으므로 동적 RAM 디스크에는 사용하지 않는 것이 좋습니다.
-기본값: 사용 불가능합니다.##AWE를 통해 메모리를 할당합니다.#이렇게 하면 메모리가 페이지 파일에 기록되지 않습니다.##32비트 시스템에서는 # 프로세스당 2GB 및 4GB 제한을 무시하고 시스템#이 관리하는 만큼의 메모리를 할당할 수 있습니다 (관리되지 않거나 보이지 않는 메모리 제외).
-기본값: 사용 불가능합니다.##드라이브 문자 대신 폴더를 사용하여 ramdisk를 마운트합니다.
-선택한 ImDisk 마운트 지점을 마운트 해제하고 등록을 취소합니다.
-마운트 지점은 NTFS 볼륨에 있는 빈 디렉터리여야 합니다.#Windows 시작 시 마운트되도록 최대 10개의 마운트 지점을 등록할 수 있습니다.
-GUI에서 아직 사용하지 않는 매개 변수를 여기에 추가할 수 있습니다.#예를 들어, "-o rem"은 드라이브에 이동식 속성을 추가합니다.#모든 파라미터를 나열하려면 "..." 버튼을 클릭합니다.
+Bigger clusters are usually faster but can use more#disk space, especially with a large number of files.
+Label size is limited by the file system:#32 characters with NTFS, 11 with *FAT*.
+Default: disabled.##Do a quick format. It can speed up the RamDisk building but the allocated#memory does not immediately appear as used in the Windows Task Manager.
+Default: disabled.##Allows files to be compressed before being written to the ramdisk.#Only works with the NTFS file system.#Do not use it if you care about speed!##Not recommended with dynamic ramdisks, because memory#may not be released properly.
+Default: disabled.##Allocate memory through AWE.#This guarantees that the memory is never written to the pagefile.##On 32-bit systems, this also bypasses the 2GB and 4GB limits per#process and allows to allocate as much memory as the system#manages (but not the unmanaged or invisible memory).
+Default: disabled.##Use a folder instead of a drive letter to mount the ramdisk.
+Unmount selected ImDisk mount point and unregister it.
+The mount point must be an empty directory located on a NTFS volume.#Up to 10 mount points can be registered to be mounted at Windows startup.
+You can add here any parameter that is not already used by the GUI.#For example, "-o rem" will add removable attribute to the drive.#Click on the "..." button to list all parameters.
 
-데이터
-이미지 파일 또는 폴더에서 내용 불러오기:
-시스템 종료 시 동기화
-보관 속성이 있는 파일만 복사
-RamDisk에서 제거된 데이터 삭제
-제외된 폴더:
-지금 동기화
-폴더를 선택하는 경우, 파일 시스템에 따라 파일 특성 및 ACL과 함께 ramdisk#이 생성되면 해당 폴더의 전체 내용이 복사됩니다.##이미지 파일은 파티션이 없고 유효한 파일 시스템이 있는 원시 파일이어야 합니다.#예를 들어 탐색기에서 드라이브 문자 #("디스크 내용을 이미지 파일로 저장")를 마우스 오른쪽 버튼으로 클릭하면 이러한 이미지를 생성할 수 있습니다.
-기본값: 사용 불가능합니다.##아래 매개변수에 따라 #system 종료 시 ramdisk에서 폴더 또는 이미지 파일로 데이터를 복사합니다.
-한 줄에 폴더 하나씩입니다.#폴더는 ramdisk# (드라이브 문자 또는 마운트 지점)의 루트에 상대적입니다. 추가하지 마십시오.
-등록된 모든 램 디스크를 지금 동기화합니다.
+Data
+Load Content from Image File or Folder:
+Synchronize at System Shutdown
+Copy only files with Archive attribute
+Delete data removed from the RamDisk
+Excluded Folders:
+Synchronize now
+If you select a folder, its entire content will be copied once the ramdisk#created, with file attributes and ACL, depending on the file system.##An image file must be raw, without partition, and with a valid file system.#Such image can be created for instance with a right click on a drive letter#in Explorer: "Save disk contents as image file".
+Default: disabled.##Copy data from the ramdisk to the folder or image file at#system shutdown, depending on the parameters below.
+One folder per line.#Folders are relative to the root of the ramdisk#(drive letter or mount point): do not add it.
+Synchronize all the registered ramdisks now.
 
-동적 RAM 디스크와 함께 AWE를 사용하려면 로컬 그룹 정책의 메모리에 있는 페이지를 잠글 수 있는 권한이 필요합니다.#계속하도록 선택하면 관리자 그룹에 이 권한이 부여됩니다.##계속하시겠습니까?
+Using AWE with dynamic ramdisks requires the privilege to lock pages in memory in the local group policy.#If you choose to continue, this privilege will be granted for the Administrators group.##Do you want to continue?
 Privilege granted successfully.#A logout is required for this change to take effect.#Logout now?
-오류: 권한을 부여할 수 없습니다.
+Error: cannot grant the privilege.
 
-준비
-처리를 시작하는 중...
-오류: 크기는 %dKB 이상이어야 합니다.
-오류: 크기는 %d %cB를 초과할 수 없습니다.
-오류: 크기가 잘못되었습니다.
-오류: 빈 폴더를 선택하지 않았습니다.
-선택한 마운트 지점이 마운트 해제됩니다.#저장되지 않은 데이터는 손실됩니다.#계속하시겠습니까?
-선택한 마운트 지점을 마운트 해제하는 중...
-이 볼륨이 마운트 해제됩니다.#저장되지 않은 데이터는 손실됩니다.#계속하시겠습니까?
-현재 볼륨을 마운트 해제하는 중...
-오류: 볼륨을 마운트 해제할 수 없습니다.
-새 RamDisk 탑재 중...
-오류: 마운트 지점 대상을 검색할 수 없습니다.
-오류: 파일에 올바른 파일 시스템이 없습니다.
-오류: 볼륨을 포맷할 수 없습니다.
-오류: 볼륨을 마운트할 수 없습니다.
-파일 복사 중...
-오류: 파일을 복사할 수 없습니다.
-새 드라이브 표시 중...
-매개 변수를 저장하는 중...
-경고: 마운트 지점이 너무 많습니다.#등록되지 않습니다.
-오류: 서비스를 만들 수 없습니다.
-완료.
-볼륨을 마운트 해제하는 중...
-동기화 중...
+Ready
+Starting processing...
+Error: size must be at least %d KB.
+Error: size must not exceed %d %cB.
+Error: incorrect size.
+Error: no empty folder selected.
+The selected mount point will be unmounted.#Any unsaved data will be lost.#Continue?
+Unmounting selected mount point...
+This volume will be unmounted.#Any unsaved data will be lost.#Continue?
+Unmounting current volume...
+Error: the volume cannot be unmounted.
+Mounting new RamDisk...
+Error: cannot retrieve mount point target.
+Error: the file does not contain a valid file system.
+Error: the volume cannot be formatted.
+Error: the volume cannot be mounted.
+Copying files...
+Error: files cannot be copied.
+Displaying new drive...
+Saving parameters...
+Warning: too many mount points.#This one will not be registered.
+Error: cannot create service.
+Done.
+Unmounting volume...
+Synchronizing...
 
-Temp 변수 사용
-사용자:
-시스템:
-모두 설정 대상:
-접합점 사용
-다음에서:
-다음으로:
-기본값 설정
-확인
-취소
-오류: 생성 불가.
+Use Temp Variables
+User:
+System:
+Set All To:
+Use a Junction
+from:
+to:
+Set Defaults
+OK
+Cancel
+Error: cannot create junction.
 
-메모리 릴리스 방법:
-자동
-TRIM 명령
-사용 가능한 공간 지우기
-사용 가능한 공간 지우기 매개 변수
-이러한 파라미터는 TRIM 명령을 사용할 때 무시됩니다.
-지우기 최소 데이터 양:
-두 지우기 사이의 최소 시간:
-지우기 전 최대 활동:
-초
+Memory Release Method:
+Automatic
+TRIM Commands
+Free Space Wiping
+ Free Space Wiping Parameters 
+These parameters are ignored when TRIM commands are used.
+Minimal Amount of Data to Clean:
+Minimal Time between 2 Cleanups:
+Maximal Activity before Cleanup:
+Seconds
 MB/s
-할당된 메모리 블록 크기:
-확인
-취소
-"자동"은 사용 가능한 경우 TRIM 명령을 사용합니다. 훨씬 더 효율적이지만 NTFS 및 Windows 7 이상이 필요합니다.##필요한 경우 아래 3개의 파라미터에 따라 #지우기 기능은 0으로 채워진 임시 파일 #로 전체 빈 공간을 지웁니다 (0으로 채워진 데이터 블록은 자동으로 해제되기 때문입니다).
-기본값: 20입니다.##할당된 메모리 블록당 바이트 수, 2의 거듭제곱입니다.#최소값은 12 (4KB)입니다. 8KB의 경우 13, 16KB의 경우 14, # 등을 최대 30 (1GB)까지 사용합니다.##값이 낮을수록 메모리 사용량이 줄어들고 #파편성이 높은 파일의 경우 지우기 기능의 #효율성이 향상될 수 있지만 성능도 저하됩니다.
-기본값: 10입니다.##지우기 기능은 이 양의 메모리를 사용할 수 있는 경우에만 실행됩니다. 값은 전체 드라이브 공간의 비율입니다 (4GB 드라이브의 #10/1000 = 40MB). 이는 추정치일 뿐이며 실제로 해제된 메모리 양은 약간 더 많거나 더 적을 수 있습니다.
-기본값: 10입니다.##값이 낮으면 지우기의 응답성이 높아질 수 있지만 파일을 재생성하지 않고 정기적으로 삭제하는 경우에는 #이 적절하지 않을 수 있습니다.
-기본값: 10입니다.##정리를 처리하기 전에 읽기 및 쓰기가 이 값보다 낮을 때까지 기다립니다.
+Size of Allocated Memory Blocks:
+OK
+Cancel
+"Automatic" uses TRIM commands when available. They are much#more efficient but they require NTFS and Windows 7 or later.##Otherwise, when required, depending on the 3 parameters below, a#cleanup function wipes the whole empty space with a temporary file#filled with 0 (because data blocks filled with 0 are automatically freed).
+Default: 20.##Number of bytes per allocated memory block, in power of 2.#The minimal value is 12 (4 KB). Use 13 for 8 KB, 14 for 16 KB,#and so on, up to 30 (1 GB).##A lower value can reduce the memory use and improve#efficiency of the cleanup function in case of highly#fragmented files, but it also reduces the performances.
+Default: 10.##The cleanup function runs only if this amount of memory can#be freed. The value is a ratio of the total drive space (e.g.:#10/1000 of a 4 GB drive = 40 MB). This is only an estimate: the#memory amount actually freed can be slightly higher or lower.
+Default: 10.##A low value can make the cleanup more responsive but may be inappropriate#in case where files are regularly deleted without being recreated.
+Default: 10.##Wait until reads and writes are below this value before processing the cleanup.
 
-경고: Windows의 빠른 시작 기능을 사용할 수 있습니다. 이로 인해 다음과 같은 문제가 발생할 수 있습니다##● 시스템은 종료 시 Ramdisk 내용을 하드 드라이브에 기록하고 시작할 때 복원합니다.#● ImDisk Toolkit의 데이터 동기화 기능은 시스템 종료 시 작동하지 않습니다.##시스템 종료 설정을 열어 빠른 시작을 비활성화합니다.
-종료 설정
-이 경고를 다시 표시 안 함
-닫기
+Warning: the fast startup feature of Windows is enabled. This can lead to some issues:##● The system writes the ramdisk content onto the hard drive at shutdown, and restores it at startup.#● The data synchronization feature of ImDisk Toolkit does not work at system shutdown.##Open the Shutdown settings to disable the fast startup.
+Shutdown settings
+Do not show this warning again
+Close
 
 
 [MountImg]
- 새 가상 디스크 마운트 
-이미지 파일:
-드라이브 문자
-마운트 포인트
-마운트 해제
-장치 유형:
-하드 디스크
+ Mount New Virtual Disk 
+Image File:
+Drive Letter
+Mount Point
+Unmount
+Device Type:
+Hard Disk
 CD/DVD
-플로피
-읽기 전용
-이동식
-파티션:
-Windows 시작 시 마운트
-드라이버 인터페이스로 전환
-확인
-취소
-마운트 중...
-ImDisk - 장착 지점
-크기
-파일 시스템
-레이블
-Windows 시작에서 선택한 이미지 파일의 등록을 취소한 다음 #을(를) 선택한 드라이브 또는 마운트 지점을 마운트 지점을 마운트 해제합니다.
-영상 파일 이름을 입력하고 "..." 버튼#으로 선택하거나 끌어서 놓습니다.#잘못된 연장은 입마개를 실패할 수 있습니다!##파일이 없는 경우 새 원시 파일을 #생성하라는 메시지가 표시됩니다.##드롭다운 목록에는 Windows 시작 시 #be mounted에 등록된 파일이 표시됩니다.
-마운트 지점은 NTFS 볼륨에 있는 빈 디렉터리여야 합니다.##폴더를 끌어서 놓으면 마운트 지점으로 선택됩니다.
-"CD/DVD"는 ISO, BIN 및 NRG 파일에 권장됩니다.#"Floppy"는 VFD 파일의 "Floppy", "하드 디스크"다른 형식의 경우 권장됩니다.
-이미지 파일에 파티션이 없거나 파티션이 하나만 포함된 경우 1을 입력합니다.#0은 전체 이미지를 의미합니다. 파티션 테이블이 있는 경우 덮어씁니다.
-이미지 파일에 쓰지 못하도록 합니다.
-이렇게 하면 일반적으로 쓰기 캐싱이 비활성화됩니다. 데이터 #은 이미지 파일에 즉시 기록되지만 #이렇게 하면 성능이 저하될 수 있습니다.
-Windows 시작 시 마운트할 이미지 파일 및 매개 변수#을 등록합니다.#최대 64000개의 이미지 파일을 등록할 수 있습니다.
+Floppy
+Read-only
+Removable
+Partition:
+Mount at Windows Startup
+Switch to Driver Interface
+OK
+Cancel
+Mounting...
+ImDisk - Mount Point
+Size
+File System
+Label
+Unregisters the selected image file from Windows startup,#and then unmounts the selected drive or mount point.
+Enter image file name, select it with the "..." button#or drag and drop it.#A wrong extension can make the mouting fail!##If the file does not exist, you will be prompted to#create a new raw file.##The drop-down list displays the files registered to#be mounted at Windows startup.
+The mount point must be an empty directory located on a NTFS volume.##If you drag and drop a folder, it will be selected as mount point.
+"CD/DVD" is recommended for ISO, BIN and NRG files,#"Floppy" for VFD files, "Hard Disk" for other formats.
+Enter 1 if the image file contains no partition or only one.#0 means the entire image: the partition table, if any, will be overwritten.
+Prevent writing to the image file.
+This usually disables the write caching: the data#are immediately written to the image file but#this can decrease the performances.
+Registers the image file and parameters#to be mounted at Windows startup.#Up to 64000 image files can be registered.
 
-마운트하는 동안 오류가 발생했습니다.#매개변수를 확인해주세요.
-오류: 선택한 마운트 지점의 파일 시스템이 재분석 지점을 지원하지 않습니다.
-선택한 디렉터리가 이미 마운트 지점입니다.#계속하도록 선택하면 이전에 마운트된 볼륨에 이 마운트 지점을 통해 연결할 수 없게 됩니다.##계속하시겠습니까?
-오류: 선택한 마운트 지점이 빈 디렉터리가 아닙니다.
-오류: 선택한 드라이브 문자가 이미 사용 중입니다.
-오류: 서비스를 만들 수 없습니다.
+An error occurred while the mounting.#Please check the parameters.
+Error: file system of the selected mount point does not support reparse points.
+The selected directory is already a mount point.#If you choose to continue, the previously mounted volume will become unreachable via this mount point.##Do you still want to continue?
+Error: the selected mount point is not an empty directory.
+Error: the selected drive letter is already in use.
+Error: cannot create service.
 
-잘못된 파일 시스템
-볼륨에 올바른 파일 시스템이 없습니다.##무엇을 하고 싶습니까?
-마운트 해제
-형식
-종료
+Invalid File System
+The volume does not contain a valid file system.##What do you want to do?
+Unmount
+Format
+Exit
 
-새 이미지 파일 생성
-파일이 없습니다.#새 RAW 이미지 파일을 생성하시겠습니까?
-        파일 크기:#        (Min 65KB)
-마운트
-생성
-취소
-오류: 파일을 만들 수 없습니다.
-오류: 지정한 크기의 파일을 만들 수 없습니다.
+Create New Image File
+The file does not exist.#Do you want to create a new RAW image file?
+        File Size:#        (Min 65KB)
+Mount
+Create
+Cancel
+Error: file cannot be created.
+Error: cannot create a file of the specified size.
 
-바이트
+Bytes
 KB
 MB
 GB
@@ -278,47 +280,47 @@ PB
 
 
 [ImDisk-Dlg]
-경고: 권한이 부족하여 이 볼륨을 제대로 분리할 수 없습니다.#쓰기 버퍼가 플러시되지 않을 수 있으므로 데이터가 손실될 위험이 있습니다.##계속하시겠습니까?
-볼륨이 다른 프로세스에서 사용 중이므로 잠글 수 없습니다.##모든 데이터가 저장되면 안전하게 계속할 수 있으며 볼륨이 올바르게 분리됩니다.##계속하시겠습니까?
-가상 디스크가 수정되었습니다.##삭제하기 전에 이미지 파일로 저장하시겠습니까?
-이 경고를 다시 표시 안 함
-다시 묻지 않음
-확인
-취소
-예
-아니오
-장치를 여는 중...
-장치 제거를 응용 프로그램에 알리는 중...
-파일 버퍼 플러시 중...
-볼륨 잠금...
-파일 시스템을 분리하는 중...
-이미지 파일 저장 중...
-장치를 제거하는 중...
-드라이브 문자를 제거하는 중...
-장치를 열 수 없습니다.
-%s은(는) ImDisk 가상 디스크가 아닙니다.
-장치를 제거할 수 없습니다.
-마운트 지점을 제거할 수 없습니다.
+Warning: you don't have enough rights to properly dismount this volume.#The write buffers might not be flushed and therefore there is a risk of data loss.##Do you still want to continue?
+The volume is in use by another process and cannot be locked.##If all your data are saved, you can safely continue and the volume will be properly dismounted.##Do you want to continue?
+The virtual disk has been modified.##Do you want to save it as an image file before removing it?
+Do not show this warning again
+Do not ask again
+OK
+Cancel
+Yes
+No
+Opening device...
+Notifying applications about device removal...
+Flushing file buffers...
+Locking volume...
+Dismounting file system...
+Saving image file...
+Removing device...
+Removing drive letter...
+Cannot open device.
+%s is not an ImDisk virtual disk.
+Cannot remove device.
+Cannot remove mount point.
 
- 디스크 이미지 저장
-이미지 파일:
-이미지 파일에서 오프셋:
-파일 시작 부분에 MBR 쓰기
-확인
-취소
-이미지 파일
-ISO 이미지
-모든 파일
-%s이(가) 잠겨있고 준비되었습니다.
-%s이(가) 다른 프로세스에서 사용 중이므로 잠글 수 없습니다.#따라서 복사하는 동안 수정할 수 있습니다.
-%s 저장 진행 중... %u%%
-%s 볼륨이 %s에 저장되었습니다.
-지원되지 않는 드라이브 유형입니다.
-볼륨 속성을 검색하는 중 오류가 발생했습니다.
-이미지 파일을 열 수 없습니다.
-메모리를 할당할 수 없습니다.
-새 MBR을 만드는 중 오류가 발생했습니다.
-MBR을 쓰는 중 오류가 발생했습니다.
-파일 포인터를 설정하는 중 오류가 발생했습니다.
-읽기 오류입니다.
-쓰기 오류입니다.
+ Save Disk Image 
+Image File:
+Offset in Image File:
+Write a MBR at the beginning of the file
+OK
+Cancel
+Image Files
+ISO Images
+All Files
+%s locked and ready.
+%s is in use by another process and cannot be locked.#Therefore, it can be modified while copying.
+Save of %s in progress... %u%%
+Volume %s successfully saved into %s.
+Unsupported drive type.
+Error retrieving volume properties.
+Cannot open image file.
+Cannot allocate memory.
+Error creating new MBR.
+Error writing MBR.
+Error setting file pointer.
+Read error.
+Write error.

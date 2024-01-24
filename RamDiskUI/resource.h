@@ -9,6 +9,7 @@
 #define ID_TEXT7 107
 #define ID_TEXT8 108
 #define ID_TEXT9 109
+#define ID_TEXT10 110
 
 #define ID_EDIT1 201
 #define ID_EDIT2 202

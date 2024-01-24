@@ -45,11 +45,11 @@ static char *fileawe_list[] = {"-t vm", "-o awe"};
 static WCHAR *param_list[] = {L"DriveSize", L"Unit", L"Dynamic", L"FileSystem", L"TempFolder", L"Cluster", L"Label", L"QuickFormat", L"Awealloc",
 							  L"DynMethod", L"CleanRatio", L"CleanTimer", L"MaxActivity", L"BlockSize", L"RDMountPoint", L"AddParam", L"ImageFile"};
 static WCHAR *param_list_sync[] = {L"ImageFile", L"SyncFlags", L"SyncExcluded", L"RDMountPoint", L"VolumeID"};
-static FS_DATA fs = {};
+static FS_DATA fsys = {};
 static DWORD drive_size = 64, unit = 1, dynamic = FALSE, wanted_drive = 'R', win_boot = TRUE, temp_folder = TRUE;
 static DWORD cluster = 0, quick_format = FALSE, awealloc = FALSE, use_mount_point = 0, mount_current = FALSE, sync_flags = 0x6, volume_id;
 static DWORD dyn_method = 0, clean_ratio = 10, clean_timer = 10, max_activity = 10, block_size = 20;
-static WCHAR label[33], mount_point[MAX_PATH] = {}, image_file[MAX_PATH + 1] = {}, add_param[255] = {}, sync_excluded[500];
+static WCHAR label[33], mount_point[MAX_PATH] = {}, image_file[MAX_PATH + 1] = {}, run_object[MAX_PATH] = {}, add_param[255] = {}, sync_excluded[500];
 static DWORD reg_dynamic, reg_win_boot, reg_awealloc, reg_use_MP, reg_image_file, reg_sync_flags;
 static BOOL mount_file, mount_dir;
 static WCHAR drive_list[26][4] = {}, drive_select[3];
@@ -59,7 +59,7 @@ static DWORD mask0, show_explorer = 1;
 static WCHAR svc_cmd_line[MAX_PATH + 16], hlp_svc_path[MAX_PATH + 4], key_name[16];
 static HWND hwnd[4];
 static BOOL item_enable;
-static HWND hwnd_edit1, hwnd_edit2, hwnd_edit3, hwnd_edit4, hwnd_edit5, hwnd_check1, hwnd_check2, hwnd_check3, hwnd_check4, hwnd_check5, hwnd_check6, hwnd_check7, hwnd_check8;
+static HWND hwnd_edit1, hwnd_edit2, hwnd_edit3, hwnd_edit4, hwnd_edit5, hwnd_edit6, hwnd_check1, hwnd_check2, hwnd_check3, hwnd_check4, hwnd_check5, hwnd_check6, hwnd_check7, hwnd_check8;
 static HWND hwnd_combo2, hwnd_combo3, hwnd_combo5, hwnd_pbutton2, hwnd_pbutton3, hwnd_pbutton7, hwnd_edit11, hwnd_edit12, hwnd_edit13, hwnd_edit14;
 static COMBOBOXINFO combo4;
 
@@ -74,13 +74,13 @@ enum {
 	TITLE, PS_OK, PS_EXIT,
 	TAB1_0, TAB1_1, TAB1_2, TAB1_3, TAB1_4, TAB1_5, TAB1_6, TAB1_7, TAB1_8, TAB1_9, TAB1_10, TAB1_11,
 	TTIP1_1, TTIP1_2, TTIP1_3, TTIP1_4, TTIP1_5, TTIP1_6, TTIP1_7,
-	TAB2_0, TAB2_1, TAB2_2, TAB2_3, TAB2_4, TAB2_5, TAB2_6, TAB2_7, TAB2_8, TAB2_9,
+	TAB2_0, TAB2_1, TAB2_2, TAB2_3, TAB2_4, TAB2_5, TAB2_6, TAB2_7, TAB2_8, TAB2_9, TAB2_10,
 	CLUST_0, CLUST_1, CLUST_2, CLUST_3, CLUST_4, CLUST_5, CLUST_6, CLUST_7, CLUST_8,
-	TTIP2_1, TTIP2_2, TTIP2_3, TTIP2_4, TTIP2_5, TTIP2_6, TTIP2_7, TTIP2_8, TTIP2_9,
+	TTIP2_1, TTIP2_2, TTIP2_3, TTIP2_4, TTIP2_5, TTIP2_6, TTIP2_7, TTIP2_8, TTIP2_9, TTIP2_10,
 	TAB3_0, TAB3_1, TAB3_2, TAB3_3, TAB3_4, TAB3_5, TAB3_6,
 	TTIP3_1, TTIP3_2, TTIP3_3, TTIP3_4,
 	DYNAWE_1, DYNAWE_2, DYNAWE_3,
-	MSG_0, MSG_1, MSG_2, MSG_3, MSG_4, MSG_5, MSG_6, MSG_7, MSG_8, MSG_9, MSG_10, MSG_11, MSG_12, MSG_13, MSG_14, MSG_15, MSG_16, MSG_17, MSG_18, MSG_19, MSG_20, MSG_21, MSG_22, MSG_23, MSG_24,
+	MSG_0, MSG_1, MSG_2, MSG_3, MSG_4, MSG_5, MSG_6, MSG_7, MSG_8, MSG_9, MSG_10, MSG_11, MSG_12, MSG_13, MSG_14, MSG_15, MSG_16, MSG_17, MSG_18, MSG_19, MSG_20, MSG_21, MSG_22, MSG_23, MSG_24, MSG_25, MSG_26,
 	TEMP_1, TEMP_2, TEMP_3, TEMP_4, TEMP_5, TEMP_6, TEMP_7, TEMP_8, TEMP_9, TEMP_10, TEMP_11,
 	DYN_1, DYN_2, DYN_3, DYN_4, DYN_5, DYN_6, DYN_7, DYN_8, DYN_9, DYN_10, DYN_11, DYN_12, DYN_13, DYN_14,
 	DYNTT_1, DYNTT_2, DYNTT_3, DYNTT_4, DYNTT_5,
@@ -315,7 +315,7 @@ __declspec(noreturn) static void configure_services_and_exit()
 					ChangeServiceConfig2(h_svc, SERVICE_CONFIG_PRESHUTDOWN_INFO, &svc_preshutdown_info);
 				}
 			} else
-				MessageBox(NULL, t[MSG_21], L"ImDisk", MB_ICONERROR);
+				MessageBox(NULL, t[MSG_23], L"ImDisk", MB_ICONERROR);
 		}
 		StartService(h_svc, 0, NULL);
 	} else {
@@ -378,7 +378,7 @@ static DWORD __stdcall UnmountDrive(LPVOID lpParam)
 {
 	WCHAR cmd_line[24];
 
-	notif(RGB(255, 255, 0), t[MSG_23]);
+	notif(RGB(255, 255, 0), t[MSG_25]);
 	_snwprintf(cmd_line, _countof(cmd_line), L"ImDisk-Dlg RM %s", drive_select);
 	start_process(cmd_line, TRUE);
 	if (!PathFileExists(drive_select)) {
@@ -391,18 +391,18 @@ static DWORD __stdcall UnmountDrive(LPVOID lpParam)
 		remove_reg_param(drive_select[0]);
 	}
 	init1_ok = apply_ok = TRUE;
-	notif(RGB(0, 255, 0), t[MSG_22]);
+	notif(RGB(0, 255, 0), t[MSG_24]);
 	return 0;
 }
 
 static DWORD __stdcall UnmountMP(LPVOID lpParam)
 {
-	notif(RGB(255, 255, 0), t[MSG_23]);
+	notif(RGB(255, 255, 0), t[MSG_25]);
 	remove_mount_point();
 	load_mount_point();
 	SetFocus(hwnd[2]);
 	init2_ok = apply_ok = TRUE;
-	notif(RGB(0, 255, 0), t[MSG_22]);
+	notif(RGB(0, 255, 0), t[MSG_24]);
 	return 0;
 }
 
@@ -446,10 +446,10 @@ static DWORD __stdcall SyncThread(LPVOID lpParam)
 {
 	WCHAR cmd_line[] = L"ImDiskTk-svc SYNC";
 
-	notif(RGB(255, 255, 0), t[MSG_24]);
+	notif(RGB(255, 255, 0), t[MSG_26]);
 	start_process(cmd_line, TRUE);
 	init1_ok = init2_ok = init3_ok = apply_ok = TRUE;
-	notif(RGB(0, 255, 0), t[MSG_22]);
+	notif(RGB(0, 255, 0), t[MSG_24]);
 	return 0;
 }
 
@@ -784,16 +784,16 @@ static DWORD __stdcall ApplyParameters(LPVOID lpParam)
 	// check size parameter
 	size_kb = min(drive_size, UINT_MAX >> (unit * 10)) << (unit * 10);
 	if (!mount_file) {
-		if (size_kb < min_size[fs.filesystem][cluster]) {
-			_snwprintf(cmd_line, _countof(cmd_line), t[MSG_2], min_size[fs.filesystem][cluster]);
+		if (size_kb < min_size[fsys.filesystem][cluster]) {
+			_snwprintf(cmd_line, _countof(cmd_line), t[MSG_2], min_size[fsys.filesystem][cluster]);
 size_error:
 			MessageBox(hwnd[0], cmd_line, L"ImDisk", MB_ICONERROR);
 			notif(RGB(255, 0, 0), t[MSG_4]);
 			apply_ok = TRUE;
 			return 0;
 		}
-		if ((fs.filesystem == 1 || fs.filesystem == 2) && size_kb > max_size[fs.filesystem - 1][cluster]) {
-			_snwprintf(cmd_line, _countof(cmd_line), t[MSG_3], max_size[fs.filesystem - 1][cluster] >> (unit * 10), unit_list[unit]);
+		if ((fsys.filesystem == 1 || fsys.filesystem == 2) && size_kb > max_size[fsys.filesystem - 1][cluster]) {
+			_snwprintf(cmd_line, _countof(cmd_line), t[MSG_3], max_size[fsys.filesystem - 1][cluster] >> (unit * 10), unit_list[unit]);
 			goto size_error;
 		}
 	}
@@ -850,7 +850,7 @@ size_error:
 	if (dynamic) {
 		if (mount_file) i = _snwprintf(cmd_line, MAX_PATH, L"\"%s\" ", image_file);
 		else i = _snwprintf(cmd_line, 21, L"%I64u ", (ULONGLONG)drive_size << (unit * 10));
-		if (dyn_method == 1 || (!dyn_method && !fs.filesystem && is_trim_enabled())) i += _snwprintf(&cmd_line[i], 4, L"-1 ");
+		if (dyn_method == 1 || (!dyn_method && !fsys.filesystem && is_trim_enabled())) i += _snwprintf(&cmd_line[i], 4, L"-1 ");
 		else i += _snwprintf(&cmd_line[i], 34, L"%u %u %u ", clean_ratio, clean_timer, max_activity);
 		_snwprintf(&cmd_line[i], 280, L"%u %u \"%s\"", awealloc, block_size, add_param);
 		svc_arg[0] = current_MP;
@@ -892,10 +892,10 @@ size_error:
 		}
 
 		if (!PathFileExists(drive) && GetLastError() == ERROR_UNRECOGNIZED_VOLUME) {
-			_snwprintf(cmd_line, _countof(cmd_line), L"format.com %s /fs:%s %S%S%S /y", drive, filesystem_list[fs.filesystem], compress_list[fs.l == 0x100], quickf_list[quick_format | dynamic], cluster_list[cluster]);
+			_snwprintf(cmd_line, _countof(cmd_line), L"format.com %s /fs:%s %S%S%S /y", drive, filesystem_list[fsys.filesystem], compress_list[fsys.l == 0x100], quickf_list[quick_format | dynamic], cluster_list[cluster]);
 			start_process(cmd_line, TRUE);
 			wcscpy(label_tmp, label);
-			if (fs.filesystem) label_tmp[11] = 0;
+			if (fsys.filesystem) label_tmp[11] = 0;
 			drive[2] = L'\\';
 			drive[3] = 0;
 			SetVolumeLabel(drive, label_tmp);
@@ -932,7 +932,7 @@ err_cannot_mount:
 		notif(RGB(255, 255, 0), t[MSG_16]);
 		PathAddBackslash(image_file);
 		_snwprintf(cmd_line, _countof(cmd_line), L"xcopy \"%s*\" \"%s\" /e /c /q /h /k /y", image_file, current_MP);
-		if (!fs.filesystem) wcscat(cmd_line, L" /x");
+		if (!fsys.filesystem) wcscat(cmd_line, L" /x");
 		if (os_ver.dwMajorVersion >= 6) wcscat(cmd_line, L" /b");
 		if (start_process(cmd_line, TRUE))
 			MessageBox(hwnd[0], t[MSG_17], L"ImDisk", MB_ICONERROR);
@@ -945,9 +945,23 @@ err_cannot_mount:
 		}
 	}
 
+	// run user command
+	if (run_object[0]) {
+		notif(RGB(255, 255, 0), t[MSG_18]);
+		svc_arg[0] = run_object;
+		for (i = 0;; i++) {
+			if (StartService(h_svc, 1, (void*)svc_arg)) break;
+			if (i == 39 || GetLastError() != ERROR_SERVICE_ALREADY_RUNNING) {
+				MessageBox(hwnd[0], t[MSG_19], L"ImDisk", MB_ICONERROR);
+				break;
+			}
+			Sleep(100);
+		}
+	}
+
 	// show the mounted drive
 	if (!use_mount_point && show_explorer) {
-		notif(RGB(255, 255, 0), t[MSG_18]);
+		notif(RGB(255, 255, 0), t[MSG_20]);
 		ShExInf.fMask = SEE_MASK_INVOKEIDLIST;
 		ShExInf.lpVerb = L"properties";
 		ShExInf.lpFile = drive_select;
@@ -956,7 +970,7 @@ err_cannot_mount:
 	}
 
 	// save parameters
-	notif(RGB(255, 255, 0), t[MSG_19]);
+	notif(RGB(255, 255, 0), t[MSG_21]);
 	param_name[0] = wanted_drive;
 	param_name[1] = '_';
 	if (mount_current)
@@ -977,7 +991,7 @@ err_cannot_mount:
 	reg_set_dword(L"Unit", &unit);
 	reg_set_dword(L"Dynamic", &dynamic);
 	reg_set_dword(L"WantedDrive", &wanted_drive);
-	reg_set_dword(L"FileSystem", (DWORD*)&fs);
+	reg_set_dword(L"FileSystem", (DWORD*)&fsys);
 	reg_set_dword(L"WinBoot", &win_boot);
 	reg_set_dword(L"TempFolder", &temp_folder);
 	reg_set_dword(L"Cluster", &cluster);
@@ -991,8 +1005,9 @@ err_cannot_mount:
 	reg_set_dword(L"BlockSize", &block_size);
 	reg_set_dword(L"RDUseMP", &use_mount_point);
 	RegSetValueEx(registry_key, L"RDMountPoint", 0, REG_SZ, (void*)&mount_point, (wcslen(mount_point) + 1) * sizeof(WCHAR));
-	RegSetValueEx(registry_key, L"ImageFile", 0, REG_SZ, (void*)&image_file, (wcslen(image_file) + 1) * sizeof(WCHAR));
+	RegSetValueEx(registry_key, L"RunObject", 0, REG_SZ, (void*)&run_object, (wcslen(run_object) + 1) * sizeof(WCHAR));
 	RegSetValueEx(registry_key, L"AddParam", 0, REG_SZ, (void*)&add_param, (wcslen(add_param) + 1) * sizeof(WCHAR));
+	RegSetValueEx(registry_key, L"ImageFile", 0, REG_SZ, (void*)&image_file, (wcslen(image_file) + 1) * sizeof(WCHAR));
 	reg_set_dword(L"SyncFlags", &sync_flags);
 	RegSetValueEx(registry_key, L"SyncExcluded", 0, REG_SZ, (void*)&sync_excluded, (wcslen(sync_excluded) + 1) * sizeof(WCHAR));
 	reg_set_dword(L"VolumeID", &volume_id);
@@ -1007,7 +1022,7 @@ err_cannot_mount:
 		for (param_name[0] = '0'; param_name[0] <= '9'; param_name[0]++)
 			if (reg_query_dword(param_name, &dw) == ERROR_FILE_NOT_FOUND) break;
 		if (param_name[0] > '9' && (win_boot || (sync_flags & 1 && image_file[0])))
-			MessageBox(hwnd[0], t[MSG_20], L"ImDisk", MB_ICONWARNING);
+			MessageBox(hwnd[0], t[MSG_22], L"ImDisk", MB_ICONWARNING);
 		else {
 			if (win_boot)
 				copy_list_param(param_name, FALSE);
@@ -1017,7 +1032,7 @@ err_cannot_mount:
 		load_mount_point();
 	}
 
-	notif(RGB(0, 255, 0), t[MSG_22]);
+	notif(RGB(0, 255, 0), t[MSG_24]);
 
 	apply_ok = TRUE;
 	return 0;
@@ -1106,7 +1121,7 @@ static INT_PTR __stdcall Tab1Proc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPa
 				SendMessage(hwnd_combo2, CB_ADDSTRING, 0, (LPARAM)filesystem_list[3]);
 				RegCloseKey(reg_key);
 			}
-			SendMessage(hwnd_combo2, CB_SETCURSEL, fs.filesystem, 0);
+			SendMessage(hwnd_combo2, CB_SETCURSEL, fsys.filesystem, 0);
 
 			item_enable = !mount_file;
 
@@ -1124,11 +1139,11 @@ static INT_PTR __stdcall Tab1Proc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPa
 		case WM_NOTIFY:
 			if (((NMHDR*)lParam)->code == TTN_GETDISPINFO) {
 				if (((NMHDR*)lParam)->idFrom == (UINT_PTR)hwnd_edit1 || ((NMHDR*)lParam)->idFrom == ID_EDIT1) {
-					_snwprintf(TTip_txt, 99, t[TTIP1_1], (min_size[fs.filesystem][cluster] + (1 << (unit * 10)) - 1) >> (unit * 10), t[TAB1_2 + unit]);
+					_snwprintf(TTip_txt, 99, t[TTIP1_1], (min_size[fsys.filesystem][cluster] + (1 << (unit * 10)) - 1) >> (unit * 10), t[TAB1_2 + unit]);
 					TTip_txt[99] = 0;
-					if (fs.filesystem == 1 || fs.filesystem == 2) {
+					if (fsys.filesystem == 1 || fsys.filesystem == 2) {
 						TTip_txt[i = wcslen(TTip_txt)] = '\n';
-						_snwprintf(&TTip_txt[i + 1], 99, t[TTIP1_2], max_size[fs.filesystem - 1][cluster] >> (unit * 10), t[TAB1_2 + unit]);
+						_snwprintf(&TTip_txt[i + 1], 99, t[TTIP1_2], max_size[fsys.filesystem - 1][cluster] >> (unit * 10), t[TAB1_2 + unit]);
 					}
 					((NMTTDISPINFO*)lParam)->lpszText = TTip_txt;
 				}
@@ -1165,7 +1180,7 @@ static INT_PTR __stdcall Tab1Proc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPa
 				if (IsDlgButtonChecked(hDlg, ID_RB1 + i)) unit = i;
 			dynamic = IsDlgButtonChecked(hDlg, ID_CHECK1);
 			wcscpy(drive_select, drive_list[SendDlgItemMessage(hDlg, ID_COMBO1, CB_GETCURSEL, 0, 0)]);
-			fs.filesystem = SendMessage(hwnd_combo2, CB_GETCURSEL, 0, 0);
+			fsys.filesystem = SendMessage(hwnd_combo2, CB_GETCURSEL, 0, 0);
 			win_boot = IsDlgButtonChecked(hDlg, ID_CHECK2);
 			temp_folder = IsDlgButtonChecked(hDlg, ID_CHECK3);
 
@@ -1203,6 +1218,7 @@ static INT_PTR __stdcall Tab1Proc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPa
 
 static INT_PTR __stdcall Tab2Proc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lParam)
 {
+	OPENFILENAME ofn = {sizeof ofn};
 	BROWSEINFO bi;
 	LPITEMIDLIST pid_folder; // PIDLIST_ABSOLUTE on MSDN
 	WCHAR text[4 * MAX_PATH + 100], sys_dir[MAX_PATH], temp_str[MAX_PATH + 10];;
@@ -1237,6 +1253,8 @@ static INT_PTR __stdcall Tab2Proc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPa
 			ti.uId = ID_COMBO4;
 			add_tooltip(&ti);
 
+			ti.uId = ID_EDIT6;
+			hwnd_edit6 = add_tooltip(&ti);
 			ti.uId = ID_EDIT4;
 			hwnd_edit4 = add_tooltip(&ti);
 
@@ -1252,6 +1270,7 @@ static INT_PTR __stdcall Tab2Proc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPa
 				SetDlgItemText(hDlg, ID_CHECK7, t[TAB2_7]);
 				SetDlgItemText(hDlg, ID_PBUTTON7, t[TAB2_8]);
 				SetDlgItemText(hDlg, ID_TEXT9, t[TAB2_9]);
+				SetDlgItemText(hDlg, ID_TEXT10, t[TAB2_10]);
 				SetDlgItemText(hDlg, ID_TEXT1, t[MSG_0]);
 				for (i = CLUST_0; i <= CLUST_8; i++)
 					SendMessage(hwnd_combo3, CB_ADDSTRING, 0, (LPARAM)t[i]);
@@ -1270,13 +1289,15 @@ static INT_PTR __stdcall Tab2Proc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPa
 			SetDlgItemText(hDlg, ID_EDIT2, label);
 
 			CheckDlgButton(hDlg, ID_CHECK4, quick_format);
-			CheckDlgButton(hDlg, ID_CHECK5, fs.compress);
+			CheckDlgButton(hDlg, ID_CHECK5, fsys.compress);
 			CheckDlgButton(hDlg, ID_CHECK6, awealloc);
 
 			CheckDlgButton(hDlg, ID_CHECK7, use_mount_point);
 			SendMessage(combo4.hwndCombo, CB_LIMITTEXT, _countof(mount_point) - 1, 0);
 			load_mount_point();
 
+			SendMessage(hwnd_edit6, EM_SETLIMITTEXT, _countof(run_object) - 1, 0);
+			SetDlgItemText(hDlg, ID_EDIT6, run_object);
 			SendMessage(hwnd_edit4, EM_SETLIMITTEXT, _countof(add_param) - 1, 0);
 			SetDlgItemText(hDlg, ID_EDIT4, add_param);
 
@@ -1305,8 +1326,10 @@ static INT_PTR __stdcall Tab2Proc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPa
 					((NMTTDISPINFO*)lParam)->lpszText = t[TTIP2_7];
 				if (((NMHDR*)lParam)->idFrom == (UINT_PTR)combo4.hwndItem)
 					((NMTTDISPINFO*)lParam)->lpszText = t[TTIP2_8];
-				if (((NMHDR*)lParam)->idFrom == (UINT_PTR)hwnd_edit4)
+				if (((NMHDR*)lParam)->idFrom == (UINT_PTR)hwnd_edit6)
 					((NMTTDISPINFO*)lParam)->lpszText = t[TTIP2_9];
+				if (((NMHDR*)lParam)->idFrom == (UINT_PTR)hwnd_edit4)
+					((NMTTDISPINFO*)lParam)->lpszText = t[TTIP2_10];
 			}
 			if (((NMHDR*)lParam)->code != PSN_SETACTIVE) return TRUE;
 			wParam = 0;
@@ -1316,17 +1339,18 @@ static INT_PTR __stdcall Tab2Proc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPa
 
 			// update parameters
 			cluster = SendMessage(hwnd_combo3, CB_GETCURSEL, 0, 0);
-			SendMessage(hwnd_edit2, EM_SETLIMITTEXT, fs.filesystem ? 11 : 32, 0);
-			if (fs.filesystem && wcslen(label) > 11) {
+			SendMessage(hwnd_edit2, EM_SETLIMITTEXT, fsys.filesystem ? 11 : 32, 0);
+			if (fsys.filesystem && wcslen(label) > 11) {
 				label[11] = 0;
 				SetDlgItemText(hDlg, ID_EDIT2, label);
 			} else
 				GetDlgItemText(hDlg, ID_EDIT2, label, 33);
 			quick_format = IsDlgButtonChecked(hDlg, ID_CHECK4);
-			fs.compress = IsDlgButtonChecked(hDlg, ID_CHECK5);
+			fsys.compress = IsDlgButtonChecked(hDlg, ID_CHECK5);
 			awealloc = IsDlgButtonChecked(hDlg, ID_CHECK6);
 			use_mount_point = IsDlgButtonChecked(hDlg, ID_CHECK7);
 			GetDlgItemText(hDlg, ID_COMBO4, mount_point, _countof(mount_point));
+			GetDlgItemText(hDlg, ID_EDIT6, run_object, _countof(run_object));
 			GetDlgItemText(hDlg, ID_EDIT4, add_param, _countof(add_param));
 
 			// manage controls activation
@@ -1340,11 +1364,21 @@ static INT_PTR __stdcall Tab2Proc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPa
 				EnableWindow(hwnd_pbutton7, is_MP_imdisk_device());
 			}
 			EnableWindow(hwnd_check4, item_enable & !dynamic);
-			EnableWindow(hwnd_check5, item_enable & !fs.filesystem);
+			EnableWindow(hwnd_check5, item_enable & !fsys.filesystem);
 			EnableWindow(GetDlgItem(hDlg, ID_PBUTTON9), dynamic);
 
 			if (LOWORD(wParam) == ID_CHECK6 && SeLockMemoryPrivilege_required())
 				CheckDlgButton(hDlg, ID_CHECK6, awealloc = FALSE);
+
+			if (LOWORD(wParam) == ID_PBUTTON5) {
+				ofn.hwndOwner = hDlg;
+				ofn.lpstrFile = run_object;
+				ofn.nMaxFile = _countof(run_object);
+				ofn.Flags = OFN_PATHMUSTEXIST;
+				GetOpenFileName(&ofn);
+				if (run_object[0])
+					SetDlgItemText(hDlg, ID_EDIT6, run_object);
+			}
 
 			if (LOWORD(wParam) == ID_PBUTTON2) {
 				GetSystemDirectory(sys_dir, _countof(sys_dir));
@@ -1534,13 +1568,14 @@ static void __stdcall SvcMain(DWORD dwArgc, LPTSTR *lpszArgv)
 	WCHAR cmd_line[2 * MAX_PATH + 400];
 	WCHAR drive[4];
 	DWORD exit_code, drive_mask, id, attrib, data_size;
-	FS_DATA reg_fs;
+	FS_DATA reg_fsys;
 	DWORD reg_drive_size, reg_unit, reg_dynamic, reg_wanted_drive, reg_temp_folder, reg_cluster, reg_quick_format;
 	DWORD reg_dyn_method, reg_clean_ratio, reg_clean_timer, reg_max_activity, reg_block_size;
-	WCHAR reg_label[33], reg_mount_point[MAX_PATH], reg_image_file[MAX_PATH + 1], reg_add_param[255];
+	WCHAR reg_label[33], reg_mount_point[MAX_PATH], reg_image_file[MAX_PATH + 1], reg_run_object[MAX_PATH], reg_add_param[255];
 	WCHAR *current_MP, *key_name_ptr, *cmd_line_ptr;
 	BOOL reg_mount_file, reg_mount_dir, trim_ok;
 	HANDLE h;
+	SHELLEXECUTEINFO ShExInf = {sizeof ShExInf};
 	STARTUPINFO si = {sizeof si};
 	PROCESS_INFORMATION pi;
 	int i;
@@ -1548,210 +1583,233 @@ static void __stdcall SvcMain(DWORD dwArgc, LPTSTR *lpszArgv)
 	SvcStatusHandle = RegisterServiceCtrlHandlerEx(L"", HandlerEx, NULL);
 	SetServiceStatus(SvcStatusHandle, &SvcStatus);
 
-	if (dwArgc >= 3) {
-		_snwprintf(cmd_line, _countof(cmd_line) - 1, L"RamDyn \"%s\" %s", lpszArgv[1], lpszArgv[2]);
-		cmd_line[_countof(cmd_line) - 1] = 0;
-		if (CreateProcess(NULL, cmd_line, NULL, NULL, FALSE, CREATE_NO_WINDOW, NULL, NULL, &si, &pi)) {
-			for (;;) {
-				Sleep(100);
-				GetExitCodeProcess(pi.hProcess, &exit_code);
-				if (exit_code != STILL_ACTIVE) break;
-				if ((h = (HANDLE)ImDisk_OpenDeviceByMountPoint(lpszArgv[1], 0)) != INVALID_HANDLE_VALUE) {
-					CloseHandle(h);
-					break;
-				}
-			}
-			CloseHandle(pi.hProcess);
-			CloseHandle(pi.hThread);
-		}
-		h = OpenEventA(EVENT_MODIFY_STATE, FALSE, "Global\\RamDynSvcEvent");
-		SetEvent(h);
-		CloseHandle(h);
-	}
-	else
-	{
-		reg_unit = 1;
-		reg_dynamic = FALSE;
-		reg_fs.l = 0;
-		reg_temp_folder = TRUE;
-		reg_cluster = 0;
-		wcscpy(reg_label, L"RamDisk");
-		reg_quick_format = FALSE;
-		reg_awealloc = FALSE;
-		reg_dyn_method = 0;
-		reg_clean_ratio = 10;
-		reg_clean_timer = 10;
-		reg_max_activity = 10;
-		reg_block_size = 20;
-		reg_mount_point[0] = 0;
-		reg_image_file[0] = 0;
-		reg_add_param[0] = 0;
-		trim_ok = is_trim_enabled();
-
-		wcscat(svc_cmd_line, L" NOTIF  :");
-		cmd_line_ptr = svc_cmd_line + wcslen(svc_cmd_line) - 2;
-
-		key_name[1] = '_';
-		for (key_name[0] = '0'; key_name[0] <= 'Z'; key_name[0] == '9' ? key_name[0] = 'A' : key_name[0]++) {
-			if (param_reg_query_dword(L"DriveSize", &reg_drive_size) == ERROR_SUCCESS) {
-				reg_wanted_drive = key_name[0];
-				param_reg_query_dword(L"Unit", &reg_unit);
-				param_reg_query_dword(L"Dynamic", &reg_dynamic);
-				param_reg_query_dword(L"FileSystem", (DWORD*)&reg_fs);
-				param_reg_query_dword(L"TempFolder", &reg_temp_folder);
-				param_reg_query_dword(L"Cluster", &reg_cluster);
-				wcscpy(&key_name[2], L"Label");
-				data_size = sizeof reg_label;
-				RegQueryValueEx(registry_key, key_name, NULL, NULL, (void*)&reg_label, &data_size);
-				param_reg_query_dword(L"QuickFormat", &reg_quick_format);
-				param_reg_query_dword(L"Awealloc", &reg_awealloc);
-				param_reg_query_dword(L"DynMethod", &reg_dyn_method);
-				param_reg_query_dword(L"CleanRatio", &reg_clean_ratio);
-				param_reg_query_dword(L"CleanTimer", &reg_clean_timer);
-				param_reg_query_dword(L"MaxActivity", &reg_max_activity);
-				param_reg_query_dword(L"BlockSize", &reg_block_size);
-				wcscpy(&key_name[2], L"RDMountPoint");
-				data_size = sizeof reg_mount_point;
-				RegQueryValueEx(registry_key, key_name, NULL, NULL, (void*)&reg_mount_point, &data_size);
-				wcscpy(&key_name[2], L"ImageFile");
-				data_size = sizeof reg_image_file;
-				RegQueryValueEx(registry_key, key_name, NULL, NULL, (void*)&reg_image_file, &data_size);
-				wcscpy(&key_name[2], L"AddParam");
-				data_size = sizeof reg_add_param;
-				RegQueryValueEx(registry_key, key_name, NULL, NULL, (void*)&reg_add_param, &data_size);
-				param_reg_query_dword(L"SyncFlags", &reg_sync_flags);
-				key_name_ptr = key_name;
-			} else if (key_name[0] == wanted_drive && mount_current) {
-				reg_drive_size = drive_size;
-				reg_unit = unit;
-				reg_dynamic = dynamic;
-				reg_wanted_drive = wanted_drive;
-				reg_fs.l = fs.l;
-				reg_temp_folder = temp_folder;
-				reg_cluster = cluster;
-				wcscpy(reg_label, label);
-				reg_quick_format = quick_format;
-				reg_awealloc = awealloc;
-				reg_dyn_method = dyn_method;
-				reg_clean_ratio = clean_ratio;
-				reg_clean_timer = clean_timer;
-				reg_max_activity = max_activity;
-				reg_block_size = block_size;
-				wcscpy(reg_image_file, image_file);
-				wcscpy(reg_add_param, add_param);
-				reg_sync_flags = sync_flags;
-				key_name_ptr = &key_name[2];
-				wcscpy(&key_name[2], L"SyncFlags");
-			} else continue;
-
-			// prevent data from being deleted in source if xcopy has not finished
-			reg_sync_flags &= ~8;
-			reg_set_dword(key_name_ptr, &reg_sync_flags);
-
-			attrib = GetFileAttributes(reg_image_file);
-			reg_mount_dir = attrib != INVALID_FILE_ATTRIBUTES && attrib & FILE_ATTRIBUTE_DIRECTORY;
-			reg_mount_file = !(attrib & FILE_ATTRIBUTE_DIRECTORY);
-
-			drive[1] = L':';
-			drive[2] = 0;
-			if (key_name[0] <= '9')
-				current_MP = reg_mount_point;
-			else {
-				drive[0] = reg_wanted_drive;
-				current_MP = drive;
-				if (PathFileExists(drive) || GetLastError() != ERROR_PATH_NOT_FOUND) continue;
-			}
-
-			if (reg_dynamic) {
-				i = _snwprintf(cmd_line, MAX_PATH + 11, L"RamDyn \"%s\" ", current_MP);
-				if (reg_mount_file) i += _snwprintf(&cmd_line[i], MAX_PATH, L"\"%s\" ", reg_image_file);
-				else i += _snwprintf(&cmd_line[i], 21, L"%I64u ", (ULONGLONG)reg_drive_size << (reg_unit * 10));
-				if (reg_dyn_method == 1 || (!reg_dyn_method && !reg_fs.filesystem && trim_ok)) i += _snwprintf(&cmd_line[i], 4, L"-1 ");
-				else i += _snwprintf(&cmd_line[i], 34, L"%u %u %u ", reg_clean_ratio, reg_clean_timer, reg_max_activity);
-				_snwprintf(&cmd_line[i], 280, L"%u %u \"%s\"", reg_awealloc, reg_block_size, reg_add_param);
-				if (CreateProcess(NULL, cmd_line, NULL, NULL, FALSE, CREATE_NO_WINDOW, NULL, NULL, &si, &pi)) {
-					for (;;) {
-						Sleep(100);
-						GetExitCodeProcess(pi.hProcess, &data_size);
-						if (data_size != STILL_ACTIVE) break;
-						if ((h = (HANDLE)ImDisk_OpenDeviceByMountPoint(current_MP, 0)) != INVALID_HANDLE_VALUE) {
-							CloseHandle(h);
-							break;
-						}
+	switch (dwArgc) {
+		case 3:
+			_snwprintf(cmd_line, _countof(cmd_line) - 1, L"RamDyn \"%s\" %s", lpszArgv[1], lpszArgv[2]);
+			cmd_line[_countof(cmd_line) - 1] = 0;
+			if (CreateProcess(NULL, cmd_line, NULL, NULL, FALSE, CREATE_NO_WINDOW, NULL, NULL, &si, &pi)) {
+				for (;;) {
+					Sleep(100);
+					GetExitCodeProcess(pi.hProcess, &exit_code);
+					if (exit_code != STILL_ACTIVE) break;
+					if ((h = (HANDLE)ImDisk_OpenDeviceByMountPoint(lpszArgv[1], 0)) != INVALID_HANDLE_VALUE) {
+						CloseHandle(h);
+						break;
 					}
-					CloseHandle(pi.hProcess);
-					CloseHandle(pi.hThread);
 				}
-			} else if (reg_mount_file) {
-				_snwprintf(cmd_line, _countof(cmd_line), L"imdisk -a %S -m \"%s\" %s -f \"%s\"", fileawe_list[reg_awealloc], current_MP, reg_add_param, reg_image_file);
-				start_process(cmd_line, TRUE);
-				goto drive_letter_notify;
-			} else {
-				_snwprintf(cmd_line, _countof(cmd_line), L"imdisk -a -m \"%s\" %S%s -s %d%C", current_MP, awe_list[reg_awealloc], reg_add_param, reg_drive_size, unit_list[reg_unit]);
-				start_process(cmd_line, TRUE);
+				CloseHandle(pi.hProcess);
+				CloseHandle(pi.hThread);
 			}
+			h = OpenEventA(EVENT_MODIFY_STATE, FALSE, "Global\\RamDynSvcEvent");
+			SetEvent(h);
+			CloseHandle(h);
+			break;
 
-			if (key_name[0] <= '9') {
-				((REPARSE_DATA_BUFFER*)cmd_line)->MountPointReparseBuffer.PathBuffer[0] = 0;
-				h = CreateFile(reg_mount_point, 0, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS | FILE_FLAG_OPEN_REPARSE_POINT, NULL);
-				DeviceIoControl(h, FSCTL_GET_REPARSE_POINT, NULL, 0, cmd_line, sizeof cmd_line, &data_size, NULL);
-				CloseHandle(h);
-				if (wcsncmp(((REPARSE_DATA_BUFFER*)cmd_line)->MountPointReparseBuffer.PathBuffer, L"\\Device\\ImDisk", 14)) continue;
-				PathRemoveBackslash(((REPARSE_DATA_BUFFER*)cmd_line)->MountPointReparseBuffer.PathBuffer);
-				if (!(drive_mask = 0x3ffffff ^ GetLogicalDrives())) continue;
-				drive[0] = _bit_scan_reverse(drive_mask) + 'A';
-				DefineDosDevice(DDD_RAW_TARGET_PATH | DDD_NO_BROADCAST_SYSTEM, drive, ((REPARSE_DATA_BUFFER*)cmd_line)->MountPointReparseBuffer.PathBuffer);
-			}
+		case 2:
+			ShExInf.fMask = SEE_MASK_NOASYNC;
+			ShExInf.lpVerb = NULL;
+			ShExInf.lpFile = lpszArgv[1];
+			ShExInf.nShow = SW_SHOWNORMAL;
+			ShellExecuteEx(&ShExInf);
+			break;
 
-			if (!PathFileExists(drive) && GetLastError() == ERROR_UNRECOGNIZED_VOLUME) {
-				_snwprintf(cmd_line, _countof(cmd_line), L"format.com %s /fs:%s %S%S%S /y", drive, filesystem_list[reg_fs.filesystem], compress_list[reg_fs.l == 0x100],
-						 quickf_list[reg_quick_format | reg_dynamic], cluster_list[reg_cluster]);
-				start_process(cmd_line, TRUE);
-				if (reg_fs.filesystem) reg_label[11] = 0;
-				drive[2] = '\\';
-				drive[3] = 0;
-				SetVolumeLabel(drive, reg_label);
-				GetVolumeInformation(drive, NULL, 0, &id, NULL, NULL, NULL, 0);
-				wcscpy(&key_name[2], L"VolumeID");
-				reg_set_dword(key_name_ptr, &id);
+		default:
+			reg_unit = 1;
+			reg_dynamic = FALSE;
+			reg_fsys.l = 0;
+			reg_temp_folder = TRUE;
+			reg_cluster = 0;
+			wcscpy(reg_label, L"RamDisk");
+			reg_quick_format = FALSE;
+			reg_awealloc = FALSE;
+			reg_dyn_method = 0;
+			reg_clean_ratio = 10;
+			reg_clean_timer = 10;
+			reg_max_activity = 10;
+			reg_block_size = 20;
+			reg_mount_point[0] = 0;
+			reg_image_file[0] = 0;
+			reg_run_object[0] = 0;
+			reg_add_param[0] = 0;
+			trim_ok = is_trim_enabled();
+
+			wcscat(svc_cmd_line, L" NOTIF  :");
+			cmd_line_ptr = svc_cmd_line + wcslen(svc_cmd_line) - 2;
+
+			key_name[1] = '_';
+			for (key_name[0] = '0'; key_name[0] <= 'Z'; key_name[0] == '9' ? key_name[0] = 'A' : key_name[0]++) {
+				if (param_reg_query_dword(L"DriveSize", &reg_drive_size) == ERROR_SUCCESS) {
+					reg_wanted_drive = key_name[0];
+					param_reg_query_dword(L"Unit", &reg_unit);
+					param_reg_query_dword(L"Dynamic", &reg_dynamic);
+					param_reg_query_dword(L"FileSystem", (DWORD*)&reg_fsys);
+					param_reg_query_dword(L"TempFolder", &reg_temp_folder);
+					param_reg_query_dword(L"Cluster", &reg_cluster);
+					wcscpy(&key_name[2], L"Label");
+					data_size = sizeof reg_label;
+					RegQueryValueEx(registry_key, key_name, NULL, NULL, (void*)&reg_label, &data_size);
+					param_reg_query_dword(L"QuickFormat", &reg_quick_format);
+					param_reg_query_dword(L"Awealloc", &reg_awealloc);
+					param_reg_query_dword(L"DynMethod", &reg_dyn_method);
+					param_reg_query_dword(L"CleanRatio", &reg_clean_ratio);
+					param_reg_query_dword(L"CleanTimer", &reg_clean_timer);
+					param_reg_query_dword(L"MaxActivity", &reg_max_activity);
+					param_reg_query_dword(L"BlockSize", &reg_block_size);
+					wcscpy(&key_name[2], L"RDMountPoint");
+					data_size = sizeof reg_mount_point;
+					RegQueryValueEx(registry_key, key_name, NULL, NULL, (void*)&reg_mount_point, &data_size);
+					wcscpy(&key_name[2], L"ImageFile");
+					data_size = sizeof reg_image_file;
+					RegQueryValueEx(registry_key, key_name, NULL, NULL, (void*)&reg_image_file, &data_size);
+					wcscpy(&key_name[2], L"RunObject");
+					data_size = sizeof reg_run_object;
+					RegQueryValueEx(registry_key, key_name, NULL, NULL, (void*)&reg_run_object, &data_size);
+					wcscpy(&key_name[2], L"AddParam");
+					data_size = sizeof reg_add_param;
+					RegQueryValueEx(registry_key, key_name, NULL, NULL, (void*)&reg_add_param, &data_size);
+					param_reg_query_dword(L"SyncFlags", &reg_sync_flags);
+					key_name_ptr = key_name;
+				} else if (key_name[0] == wanted_drive && mount_current) {
+					reg_drive_size = drive_size;
+					reg_unit = unit;
+					reg_dynamic = dynamic;
+					reg_wanted_drive = wanted_drive;
+					reg_fsys.l = fsys.l;
+					reg_temp_folder = temp_folder;
+					reg_cluster = cluster;
+					wcscpy(reg_label, label);
+					reg_quick_format = quick_format;
+					reg_awealloc = awealloc;
+					reg_dyn_method = dyn_method;
+					reg_clean_ratio = clean_ratio;
+					reg_clean_timer = clean_timer;
+					reg_max_activity = max_activity;
+					reg_block_size = block_size;
+					wcscpy(reg_image_file, image_file);
+					wcscpy(reg_run_object, run_object);
+					wcscpy(reg_add_param, add_param);
+					reg_sync_flags = sync_flags;
+					key_name_ptr = &key_name[2];
+					wcscpy(&key_name[2], L"SyncFlags");
+				} else continue;
+
+				// prevent data from being deleted in source if xcopy has not finished
+				reg_sync_flags &= ~8;
+				reg_set_dword(key_name_ptr, &reg_sync_flags);
+
+				attrib = GetFileAttributes(reg_image_file);
+				reg_mount_dir = attrib != INVALID_FILE_ATTRIBUTES && attrib & FILE_ATTRIBUTE_DIRECTORY;
+				reg_mount_file = !(attrib & FILE_ATTRIBUTE_DIRECTORY);
+
+				drive[1] = L':';
 				drive[2] = 0;
-			} else {
+				if (key_name[0] <= '9')
+					current_MP = reg_mount_point;
+				else {
+					drive[0] = reg_wanted_drive;
+					current_MP = drive;
+					if (PathFileExists(drive) || GetLastError() != ERROR_PATH_NOT_FOUND) continue;
+				}
+
+				if (reg_dynamic) {
+					i = _snwprintf(cmd_line, MAX_PATH + 11, L"RamDyn \"%s\" ", current_MP);
+					if (reg_mount_file) i += _snwprintf(&cmd_line[i], MAX_PATH, L"\"%s\" ", reg_image_file);
+					else i += _snwprintf(&cmd_line[i], 21, L"%I64u ", (ULONGLONG)reg_drive_size << (reg_unit * 10));
+					if (reg_dyn_method == 1 || (!reg_dyn_method && !reg_fsys.filesystem && trim_ok)) i += _snwprintf(&cmd_line[i], 4, L"-1 ");
+					else i += _snwprintf(&cmd_line[i], 34, L"%u %u %u ", reg_clean_ratio, reg_clean_timer, reg_max_activity);
+					_snwprintf(&cmd_line[i], 280, L"%u %u \"%s\"", reg_awealloc, reg_block_size, reg_add_param);
+					if (CreateProcess(NULL, cmd_line, NULL, NULL, FALSE, CREATE_NO_WINDOW, NULL, NULL, &si, &pi)) {
+						for (;;) {
+							Sleep(100);
+							GetExitCodeProcess(pi.hProcess, &data_size);
+							if (data_size != STILL_ACTIVE) break;
+							if ((h = (HANDLE)ImDisk_OpenDeviceByMountPoint(current_MP, 0)) != INVALID_HANDLE_VALUE) {
+								CloseHandle(h);
+								break;
+							}
+						}
+						CloseHandle(pi.hProcess);
+						CloseHandle(pi.hThread);
+					}
+				} else if (reg_mount_file) {
+					_snwprintf(cmd_line, _countof(cmd_line), L"imdisk -a %S -m \"%s\" %s -f \"%s\"", fileawe_list[reg_awealloc], current_MP, reg_add_param, reg_image_file);
+					start_process(cmd_line, TRUE);
+					goto run_user_object;
+				} else {
+					_snwprintf(cmd_line, _countof(cmd_line), L"imdisk -a -m \"%s\" %S%s -s %d%C", current_MP, awe_list[reg_awealloc], reg_add_param, reg_drive_size, unit_list[reg_unit]);
+					start_process(cmd_line, TRUE);
+				}
+
+				if (key_name[0] <= '9') {
+					((REPARSE_DATA_BUFFER*)cmd_line)->MountPointReparseBuffer.PathBuffer[0] = 0;
+					h = CreateFile(reg_mount_point, 0, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS | FILE_FLAG_OPEN_REPARSE_POINT, NULL);
+					DeviceIoControl(h, FSCTL_GET_REPARSE_POINT, NULL, 0, cmd_line, sizeof cmd_line, &data_size, NULL);
+					CloseHandle(h);
+					if (wcsncmp(((REPARSE_DATA_BUFFER*)cmd_line)->MountPointReparseBuffer.PathBuffer, L"\\Device\\ImDisk", 14)) continue;
+					PathRemoveBackslash(((REPARSE_DATA_BUFFER*)cmd_line)->MountPointReparseBuffer.PathBuffer);
+					if (!(drive_mask = 0x3ffffff ^ GetLogicalDrives())) continue;
+					drive[0] = _bit_scan_reverse(drive_mask) + 'A';
+					DefineDosDevice(DDD_RAW_TARGET_PATH | DDD_NO_BROADCAST_SYSTEM, drive, ((REPARSE_DATA_BUFFER*)cmd_line)->MountPointReparseBuffer.PathBuffer);
+				}
+
+				if (!PathFileExists(drive) && GetLastError() == ERROR_UNRECOGNIZED_VOLUME) {
+					_snwprintf(cmd_line, _countof(cmd_line), L"format.com %s /fs:%s %S%S%S /y", drive, filesystem_list[reg_fsys.filesystem], compress_list[reg_fsys.l == 0x100],
+							 quickf_list[reg_quick_format | reg_dynamic], cluster_list[reg_cluster]);
+					start_process(cmd_line, TRUE);
+					if (reg_fsys.filesystem) reg_label[11] = 0;
+					drive[2] = '\\';
+					drive[3] = 0;
+					SetVolumeLabel(drive, reg_label);
+					GetVolumeInformation(drive, NULL, 0, &id, NULL, NULL, NULL, 0);
+					wcscpy(&key_name[2], L"VolumeID");
+					reg_set_dword(key_name_ptr, &id);
+					drive[2] = 0;
+				} else {
+					if (key_name[0] <= '9')
+						DefineDosDevice(DDD_REMOVE_DEFINITION | DDD_NO_BROADCAST_SYSTEM, drive, NULL);
+					continue;
+				}
+
 				if (key_name[0] <= '9')
 					DefineDosDevice(DDD_REMOVE_DEFINITION | DDD_NO_BROADCAST_SYSTEM, drive, NULL);
-				continue;
-			}
 
-			if (key_name[0] <= '9')
-				DefineDosDevice(DDD_REMOVE_DEFINITION | DDD_NO_BROADCAST_SYSTEM, drive, NULL);
-
-			if (reg_temp_folder) {
-				_snwprintf(cmd_line, _countof(cmd_line), L"%s\\Temp", current_MP);
-				CreateDirectory(cmd_line, &sa);
-			}
-
-			if (reg_mount_dir) {
-				PathAddBackslash(reg_image_file);
-				_snwprintf(cmd_line, _countof(cmd_line), L"xcopy \"%s*\" \"%s\" /e /c /q /h /k /y", reg_image_file, current_MP);
-				if (!reg_fs.filesystem) wcscat(cmd_line, L" /x");
-				if (os_ver.dwMajorVersion >= 6) wcscat(cmd_line, L" /b");
-				if (!start_process(cmd_line, TRUE)) {
-					wcscpy(&key_name[2], L"SyncFlags");
-					reg_sync_flags |= 8;
-					reg_set_dword(key_name_ptr, &reg_sync_flags);
+				if (reg_temp_folder) {
+					_snwprintf(cmd_line, _countof(cmd_line), L"%s\\Temp", current_MP);
+					CreateDirectory(cmd_line, &sa);
 				}
-				if ((reg_sync_flags & 3) == 3 && reg_image_file[0]) {
-					_snwprintf(cmd_line, _countof(cmd_line), L"attrib -a \"%s\\*\" /s", current_MP);
-					if (os_ver.dwMajorVersion >= 6) wcscat(cmd_line, L" /l");
-					start_process(cmd_line, FALSE);
+
+				if (reg_mount_dir) {
+					PathAddBackslash(reg_image_file);
+					_snwprintf(cmd_line, _countof(cmd_line), L"xcopy \"%s*\" \"%s\" /e /c /q /h /k /y", reg_image_file, current_MP);
+					if (!reg_fsys.filesystem) wcscat(cmd_line, L" /x");
+					if (os_ver.dwMajorVersion >= 6) wcscat(cmd_line, L" /b");
+					if (!start_process(cmd_line, TRUE)) {
+						wcscpy(&key_name[2], L"SyncFlags");
+						reg_sync_flags |= 8;
+						reg_set_dword(key_name_ptr, &reg_sync_flags);
+					}
+					if ((reg_sync_flags & 3) == 3 && reg_image_file[0]) {
+						_snwprintf(cmd_line, _countof(cmd_line), L"attrib -a \"%s\\*\" /s", current_MP);
+						if (os_ver.dwMajorVersion >= 6) wcscat(cmd_line, L" /l");
+						start_process(cmd_line, FALSE);
+					}
+				}
+
+run_user_object:
+				if (reg_run_object[0]) {
+					ShExInf.fMask = SEE_MASK_NOASYNC;
+					ShExInf.lpVerb = NULL;
+					ShExInf.lpFile = reg_run_object;
+					ShExInf.nShow = SW_SHOWNORMAL;
+					ShellExecuteEx(&ShExInf);
+				}
+
+				// drive letter notification
+				if (key_name[0] >= 'A') {
+					*cmd_line_ptr = key_name[0];
+					start_process(svc_cmd_line, 2);
 				}
 			}
-
-drive_letter_notify:
-			if (key_name[0] >= 'A') {
-				*cmd_line_ptr = key_name[0];
-				start_process(svc_cmd_line, 2);
-			}
-		}
 	}
 
 	SvcStatus.dwCurrentState = SERVICE_STOPPED;
@@ -1797,7 +1855,7 @@ int __stdcall wWinMain(HINSTANCE hinstance, HINSTANCE hPrevInstance, LPWSTR lpCm
 	reg_query_dword(L"Unit", &unit);
 	reg_query_dword(L"Dynamic", &dynamic);
 	reg_query_dword(L"WantedDrive", &wanted_drive);
-	reg_query_dword(L"FileSystem", (DWORD*)&fs);
+	reg_query_dword(L"FileSystem", (DWORD*)&fsys);
 	if (reg_query_dword(L"WinBoot", &win_boot) == ERROR_SUCCESS) mount_current = win_boot;
 	reg_query_dword(L"TempFolder", &temp_folder);
 	reg_query_dword(L"Cluster", &cluster);
@@ -1813,6 +1871,8 @@ int __stdcall wWinMain(HINSTANCE hinstance, HINSTANCE hPrevInstance, LPWSTR lpCm
 	reg_query_dword(L"RDUseMP", &use_mount_point);
 	data_size = sizeof mount_point;
 	RegQueryValueEx(registry_key, L"RDMountPoint", NULL, NULL, (void*)&mount_point, &data_size);
+	data_size = sizeof run_object;
+	RegQueryValueEx(registry_key, L"RunObject", NULL, NULL, (void*)&run_object, &data_size);
 	data_size = sizeof add_param;
 	RegQueryValueEx(registry_key, L"AddParam", NULL, NULL, (void*)&add_param, &data_size);
 	data_size = sizeof image_file;
@@ -1887,7 +1947,7 @@ int __stdcall wWinMain(HINSTANCE hinstance, HINSTANCE hPrevInstance, LPWSTR lpCm
 			svc_description.lpDescription = L"Mounts a RamDisk at system startup.";
 			ChangeServiceConfig2(h_svc, SERVICE_CONFIG_DESCRIPTION, &svc_description);
 		} else
-			MessageBox(NULL, t[MSG_21], L"ImDisk", MB_ICONERROR);
+			MessageBox(NULL, t[MSG_23], L"ImDisk", MB_ICONERROR);
 	}
 
 	// set up the property sheet

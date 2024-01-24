@@ -62,6 +62,7 @@ Desmontar disco virtual ImDisk
 ImDisk - Instalación
 Desinstalar controlador (no requiere reinicio)
 Remover ajustes
+Reset TEMP variables
 Desinstalar
 Cancelar
 Disco virtual ImDisk detectado.#¡Todos los discos virtuales ImDisk existentes serán desmontados!
@@ -117,6 +118,7 @@ Usar la memoria física AWE
 Parámetros RAMDISK dinámicos...
 Usar Punto de montaje:
 Desmontar
+Run after mounting:
 Parámetros adicionales:
 Por defecto
 0.5 KB
@@ -135,6 +137,7 @@ Por defecto: deshabilitado.##Asignar memoria a través de AWE.#Esto garantiza qu
 Por defecto: deshabilitado.##Use una carpeta en ligar de una letra de drive para montar el ramdisk.
 Desmontar punto de montaje ImDisk seleccionado y anular el registro de la misma.
 El punto de montaje debe ser un directorio vacío situado en un volumen NTFS.#Hasta 10 puntos de montaje se pueden registrar para ser montados en el#arranque de Windows.
+Once the volume is ready (formatted and data copied), run the specified file.#It can be an executable or a command file.#The file runs in session 0 ("System" user), which means that no window will#be displayed.
 Usted puede agregar aquí cualquier parámetro que aún no se usa por la GUI.#Por ejemplo, "-o rem" agregará atributo extraíble para la unidad.#Haga clic en el botón "..." para listar todos los parámetros.
 
 Data
@@ -171,6 +174,8 @@ Error: el volumen no se puede formatear.
 Error: el volumen no se puede montar.
 Copiando archivos...
 Error: los archivos no se pueden copiar.
+Run user command...
+Error: cannot run user command.
 Viendo nueva unidad...
 Guardando Parámetros...
 Advertencia:. Demasiados puntos de montaje#Este no será registrado.

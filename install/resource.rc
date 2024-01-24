@@ -63,17 +63,18 @@ BEGIN
 	GROUPBOX "", IDC_STATIC, -5, 72, 280, 40
 END
 
-UNINSTALLBOX DIALOGEX 0, 0, 180, 100
+UNINSTALLBOX DIALOGEX 0, 0, 180, 110
 			 FONT 9, "MS Shell Dlg", 0, 0, 0
 			 STYLE WS_SYSMENU | DS_SHELLFONT | DS_CENTER
 			 CAPTION "ImDisk - Setup"
 BEGIN
-	LTEXT "", ID_TEXT1, 20, 40, 160, 10
-	DEFPUSHBUTTON "Uninstall", IDOK, 86, 81, 43, 13
-	PUSHBUTTON "Cancel", IDCANCEL, 133, 81, 43, 13
-	GROUPBOX "", ID_STATIC1, -5, 70, 190, 40
-	AUTOCHECKBOX "Uninstall driver (no reboot required)", ID_CHECK1, 15, 22, 160, 10
-	AUTOCHECKBOX "Remove settings", ID_CHECK2, 15, 40, 160, 10
+	LTEXT "", ID_TEXT1, 20, 36, 160, 10
+	DEFPUSHBUTTON "Uninstall", IDOK, 86, 91, 43, 13
+	PUSHBUTTON "Cancel", IDCANCEL, 133, 91, 43, 13
+	GROUPBOX "", ID_STATIC1, -5, 80, 190, 40
+	AUTOCHECKBOX "Uninstall driver (no reboot required)", ID_CHECK1, 15, 18, 160, 10
+	AUTOCHECKBOX "Remove settings", ID_CHECK2, 15, 36, 160, 10
+	AUTOCHECKBOX "Reset TEMP variables", ID_CHECK3, 15, 54, 160, 10
 END
 
 SETTINGSBOX DIALOGEX 0, 0, 240, 200
@@ -100,7 +101,7 @@ END
 
 
 1 VERSIONINFO
-FILEVERSION 9,2,0,0
+FILEVERSION 10,0,0,0
 BEGIN
 BLOCK "StringFileInfo"
 	BEGIN
@@ -108,7 +109,7 @@ BLOCK "StringFileInfo"
 		BEGIN
 			VALUE "FileDescription", "ImDisk Toolkit Configuration"
 			VALUE "ProductName", "imdisk"
-			VALUE "ProductVersion", "9.2.0.0"
+			VALUE "ProductVersion", "10.0.0.0"
 		END
 	END
 BLOCK "VarFileInfo"

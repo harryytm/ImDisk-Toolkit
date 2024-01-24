@@ -62,6 +62,7 @@ Avmontera ImDisk virtuell disk
 ImDisk - Avinstallation
 Avinstallera drivrutin (kräver ej omstart)
 Ta bort inställningar
+Återställ TEMP-variabler
 Avinstallera
 Avbryt
 ImDisk virtuell disk upptäckt.#Alla befintliga ImDisk virtuella diskar avmonteras!
@@ -117,6 +118,7 @@ Använd AWE
 Dynamiska RamDisk-parametrar...
 Använd monteringspunkt:
 Avmontera
+Kör efter montering:
 Tilläggsparametrar:
 Standard
 0.5 KB
@@ -135,6 +137,8 @@ Standard: Inaktiverad.##Allokerar minnet genom AWE.#Detta garanterar att minnet 
 Standard: Inaktiverad.##Använd en mapp istället för en enhetsbokstav för att montera ramdisken.
 Avmontera markerad ImDisk-monteringspunkt och avregistrera den.
 Monteringspunkten måste vara en tom mapp, placerad på en NTFS-volym.#Upp till 10 monteringspunkter kan registreras för automatisk montering vid systemstart.
+Kör specificerad fil när volymen är redo (formatterad och data kopierade).#Det kan vara en exekverbar fil eller batchfil.#Filen körs i session 0 ('System'-användare), vilket innebär att inga#fönster kommer att visas.
+
 Här kan du lägga till valfri parameter som inte redan används av GUI.#Exempelvis, så lägger "-o rem" till borttagningsattribut till enheten.#Klicka på "..." för att se en lista över alla parametrar.
 
 Data
@@ -171,6 +175,8 @@ Fel: Volymen kan inte formateras.
 Fel: Volymen kan inte monteras.
 Kopierar filer...
 Fel: Filerna kunde inte kopieras.
+Kör användarkommando...
+Fel: kan inte köra användarkommandot.
 Visar ny enhet...
 Sparar parametrar...
 Varning: för många monteringspunkter.#Denna kommer inte att registreras.

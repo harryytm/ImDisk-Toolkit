@@ -72,7 +72,7 @@ enum {
 	CONTEXT_1, CONTEXT_2, CONTEXT_3,
 
 	U_TITLE,
-	U_CTRL_1, U_CTRL_2, U_CTRL_3, U_CTRL_4,
+	U_CTRL_1, U_CTRL_2, U_CTRL_3, U_CTRL_4, U_CTRL_5,
 	U_MSG_1, U_MSG_2, U_MSG_3, U_MSG_4,
 
 	S_TITLE,
@@ -966,7 +966,7 @@ static DWORD __stdcall uninstall(LPVOID lpParam)
 {
 	DWORD data_size;
 	SC_HANDLE scman_handle, svc_handle;
-	HKEY h_key;
+	HKEY h_key, h_key2;
 	WCHAR dir[MAX_PATH + 20];
 	HMODULE h_cpl;
 	FARPROC ImDiskGetDeviceListEx;
@@ -996,6 +996,22 @@ static DWORD __stdcall uninstall(LPVOID lpParam)
 	else {
 		wcscpy(cmd, L"reg copy HKLM\\SYSTEM\\CurrentControlSet\\Services\\ImDisk\\Parameters HKLM\\SOFTWARE\\ImDisk\\DriverBackup /f");
 		start_process(TRUE);
+	}
+	if (silent_uninstall || IsDlgButtonChecked(hwnd_uninst, ID_CHECK3)) {
+		RegOpenKeyExA(HKEY_USERS, ".DEFAULT\\Environment", 0, KEY_QUERY_VALUE, &h_key);
+		data_size = sizeof dir;
+		if (RegQueryValueEx(h_key, L"TMP", NULL, NULL, (void*)&dir, &data_size) == ERROR_SUCCESS) {
+			RegOpenKeyExA(HKEY_CURRENT_USER, "Environment", 0, KEY_SET_VALUE, &h_key2);
+			RegSetValueEx(h_key2, L"TEMP", 0, REG_EXPAND_SZ, (void*)&dir, (wcslen(dir) + 1) * sizeof(WCHAR));
+			RegSetValueEx(h_key2, L"TMP", 0, REG_EXPAND_SZ, (void*)&dir, (wcslen(dir) + 1) * sizeof(WCHAR));
+			RegCloseKey(h_key2);
+		}
+		RegCloseKey(h_key);
+		wcscpy(dir, L"%SystemRoot%\\TEMP");
+		RegOpenKeyEx(HKEY_LOCAL_MACHINE, L"SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment", 0, KEY_SET_VALUE, &h_key);
+		RegSetValueEx(h_key, L"TEMP", 0, REG_EXPAND_SZ, (void*)&dir, (wcslen(dir) + 1) * sizeof(WCHAR));
+		RegSetValueEx(h_key, L"TMP", 0, REG_EXPAND_SZ, (void*)&dir, (wcslen(dir) + 1) * sizeof(WCHAR));
+		RegCloseKey(h_key);
 	}
 
 	// driver
@@ -1086,6 +1102,8 @@ static DWORD __stdcall uninstall(LPVOID lpParam)
 
 static INT_PTR __stdcall UninstallProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lParam)
 {
+	int i;
+
 	switch (Msg)
 	{
 		case WM_INITDIALOG:
@@ -1096,12 +1114,13 @@ static INT_PTR __stdcall UninstallProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARA
 				SetWindowText(hDlg, t[U_TITLE]);
 				SetDlgItemText(hDlg, ID_CHECK1, t[U_CTRL_1]);
 				SetDlgItemText(hDlg, ID_CHECK2, t[U_CTRL_2]);
-				SetDlgItemText(hDlg, IDOK, t[U_CTRL_3]);
-				SetDlgItemText(hDlg, IDCANCEL, t[U_CTRL_4]);
+				SetDlgItemText(hDlg, ID_CHECK3, t[U_CTRL_3]);
+				SetDlgItemText(hDlg, IDOK, t[U_CTRL_4]);
+				SetDlgItemText(hDlg, IDCANCEL, t[U_CTRL_5]);
 			}
 
-			CheckDlgButton(hDlg, ID_CHECK1, BST_CHECKED);
-			CheckDlgButton(hDlg, ID_CHECK2, BST_CHECKED);
+			for (i = ID_CHECK1; i <= ID_CHECK3; i++)
+				CheckDlgButton(hDlg, i, BST_CHECKED);
 
 			hwnd_uninst = hDlg;
 
@@ -1112,8 +1131,8 @@ static INT_PTR __stdcall UninstallProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARA
 
 			if (LOWORD(wParam) == IDOK) {
 				process_uninst = TRUE;
-				ShowWindow(GetDlgItem(hDlg, ID_CHECK1), SW_HIDE);
-				ShowWindow(GetDlgItem(hDlg, ID_CHECK2), SW_HIDE);
+				for (i = ID_CHECK1; i <= ID_CHECK3; i++)
+					ShowWindow(GetDlgItem(hDlg, i), SW_HIDE);
 				ShowWindow(GetDlgItem(hDlg, ID_STATIC1), SW_HIDE);
 				ShowWindow(GetDlgItem(hDlg, IDOK), SW_HIDE);
 				ShowWindow(GetDlgItem(hDlg, IDCANCEL), SW_HIDE);

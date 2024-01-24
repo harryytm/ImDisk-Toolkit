@@ -72,7 +72,11 @@ static void scan_dir_copy(int index_source, int index_dest)
 			switch (attrib = GetFileAttributes(path_dest)) {
 				default:
 					if (attrib & FILE_ATTRIBUTE_DIRECTORY) {
-						if (!(attrib & FILE_ATTRIBUTE_REPARSE_POINT) && entry.dwFileAttributes & FILE_ATTRIBUTE_REPARSE_POINT) copy_file(TRUE);
+						if (entry.dwFileAttributes & FILE_ATTRIBUTE_REPARSE_POINT) {
+							RemoveDirectory(path_dest);
+							CreateDirectory(path_dest, NULL);
+							copy_file(TRUE);
+						}
 						break;
 					}
 					if (attrib & FILE_ATTRIBUTE_READONLY) SetFileAttributes(path_dest, FILE_ATTRIBUTE_NORMAL);

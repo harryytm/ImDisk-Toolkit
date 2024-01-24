@@ -62,6 +62,7 @@ Smonta ImDisk Virtual Disk
 ImDisk - Setup
 Disinstalla il driver (non è necessario il riavvio)
 Rimuovi le impostazioni
+Ripristina le variabili TEMP
 Disinstalla
 Cancella
 Disco virtuale ImDisk rilevato.#Tutti i dischi virtuali ImDisk esistenti saranno smontati!
@@ -117,6 +118,7 @@ Usa la memoria fisica AWE
 Parametri del RamDisk Dinamico...
 Usa Punto di Montaggio:
 Smonta
+Esegui dopo il montaggio:
 Parametri Aggiuntivi:
 Predefinita
 0.5 KB
@@ -135,6 +137,7 @@ Predefinito: disabilitato.##Alloca memoria tramite AWE.#Ciò garantisce che la m
 Predefinito: disabilitato.##Utilizza una cartella anziché una lettera di unità per montare il ramdisk.
 Smonta il punto di montaggio ImDisk selezionato e annulla la registrazione.
 Il punto di montaggio deve essere una directory vuota situata su un volume NTFS.#È possibile registrare fino a 10 punti di montaggio da montare all'avvio di Windows.
+Una volta che il volume è pronto (formattato e con dati copiati),#esegui il file specificato.#Può essere un eseguibile o un file di comandi.#Il file esegue in sessione 0 (utente "Sistema"), che significa che#nessuna finestra sarà mostrata.
 Puoi aggiungere qui qualsiasi parametro che non sia già utilizzato dalla GUI.#Per esempio, "-o rem" aggiungerà l'attributo rimovibile all'unità.#Clicca sul bottone "..." per elencare tutti i parametri.
 
 Dati
@@ -171,6 +174,8 @@ Errore: impossibile formattare il volume.
 Errore: impossibile montare il volume.
 Copia dei file...
 Errore: i file non possono essere copiati.
+Esegui i comandi utente...
+Errore: i comandi utente non possono essere eseguiti.
 Visualizzazione di una nuova unità...
 Salvataggio parametri...
 Attenzione: troppi punti di montaggio.#Questo non sarà registrato.

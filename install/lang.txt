@@ -10,7 +10,7 @@ RamDisk Configuration Tool
  Options 
 Enable entries in context menus
 Create shortcuts on desktop
-Load ImDskSvc automatically
+Shortcuts for all users
 Language:
 Please keep your mouse over an item to get details.
 Install driver. This includes a Control Panel applet, a command line tool, imdisk.exe, and interfaces to manage volumes from Explorer context menus.##Please type "imdisk" in a command prompt for details.
@@ -18,7 +18,7 @@ Required to mount advanced image file formats like VHD, VDI, VMDK and some other
 This tool will allow you to easily configure one or several RamDisks with various settings.
 Add entries in the drive context menu and the file context menu to manage ImDisk volumes and image files directly from Explorer.##This option can be set later in the Windows Start Menu.
 Create shortcuts on desktop.##All shortcuts are always created in the Windows Start Menu.
-Start ImDskSvc automatically at system startup.##No tool in this package uses this service, so you can safely uncheck this option.##It is installed by the driver to initiate TCP/IP or serial port connections with proxy softwares.
+Create shortcuts for all users instead of current user.
 Credits
 Install
 Cancel
@@ -36,14 +36,17 @@ ImDisk - Credits
 ● v77: RamDisk Configuration Tool, dialog box using DiscUtils and installer of this package
 ● Kenneth Bell: DiscUtils .NET library
 Translations:
-- Français: v77
-- Español: alacran
-- Svenska: Åke Engelbrektson / Olof Lagerkvist
-- Deutsch: Bodo Thevissen
-- русский: 0x00ffh
+- français: v77
+- español: alacran
+- svenska: Åke Engelbrektson / Olof Lagerkvist
+- deutsch: Bodo Thevissen
+- русский: 0x00ffh / Strani
 - 简体中文: Arne Sacnussem
-- Italiano: Ajeje Brazorf
-- Português Brasileiro: Rodolfo Bendinelli
+- italiano: Ajeje Brazorf
+- português brasileiro: Rodolfo Bendinelli
+- suomi: Sampo Hippeläinen
+- magyar: I. Horváth Ferenc
+- 한국어: 비너스걸💋 (VenusGirl)
 
 General Settings
 Uninstall
@@ -59,6 +62,7 @@ Unmount ImDisk Virtual Disk
 ImDisk - Setup
 Uninstall driver (no reboot required)
 Remove settings
+Reset TEMP variables
 Uninstall
 Cancel
 ImDisk virtual disk detected.#All existing ImDisk virtual disks will be unmounted!
@@ -114,6 +118,7 @@ Use AWE physical memory
 Dynamic RamDisk Parameters...
 Use Mount Point:
 Unmount
+Run after mounting:
 Additional Parameters:
 Default
 0.5 KB
@@ -132,6 +137,7 @@ Default: disabled.##Allocate memory through AWE.#This guarantees that the memory
 Default: disabled.##Use a folder instead of a drive letter to mount the ramdisk.
 Unmount selected ImDisk mount point and unregister it.
 The mount point must be an empty directory located on a NTFS volume.#Up to 10 mount points can be registered to be mounted at Windows startup.
+Once the volume is ready (formatted and data copied), run the specified file.#It can be an executable or a command file.#The file runs in session 0 ("System" user), which means that no window will#be displayed.
 You can add here any parameter that is not already used by the GUI.#For example, "-o rem" will add removable attribute to the drive.#Click on the "..." button to list all parameters.
 
 Data
@@ -167,6 +173,9 @@ Error: the file does not contain a valid file system.
 Error: the volume cannot be formatted.
 Error: the volume cannot be mounted.
 Copying files...
+Error: files cannot be copied.
+Run user command...
+Error: cannot run user command.
 Displaying new drive...
 Saving parameters...
 Warning: too many mount points.#This one will not be registered.
@@ -175,13 +184,17 @@ Done.
 Unmounting volume...
 Synchronizing...
 
- TEMP Environment Variables 
- User 
- System 
+Use Temp Variables
+User:
+System:
 Set All To:
+Use a Junction
+from:
+to:
 Set Defaults
 OK
 Cancel
+Error: cannot create junction.
 
 Memory Release Method:
 Automatic

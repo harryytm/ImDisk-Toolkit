@@ -62,6 +62,7 @@ Unmount ImDisk Virtual Disk
 ImDisk - Setup
 Uninstall driver (no reboot required)
 Remove settings
+Reset TEMP variables
 Uninstall
 Cancel
 ImDisk virtual disk detected.#All existing ImDisk virtual disks will be unmounted!
@@ -117,6 +118,7 @@ Use AWE physical memory
 Dynamic RamDisk Parameters...
 Use Mount Point:
 Unmount
+Run after mounting:
 Additional Parameters:
 Default
 0.5 KB
@@ -135,6 +137,7 @@ Default: disabled.##Allocate memory through AWE.#This guarantees that the memory
 Default: disabled.##Use a folder instead of a drive letter to mount the ramdisk.
 Unmount selected ImDisk mount point and unregister it.
 The mount point must be an empty directory located on a NTFS volume.#Up to 10 mount points can be registered to be mounted at Windows startup.
+Once the volume is ready (formatted and data copied), run the specified file.#It can be an executable or a command file.#The file runs in session 0 ("System" user), which means that no window will#be displayed.
 You can add here any parameter that is not already used by the GUI.#For example, "-o rem" will add removable attribute to the drive.#Click on the "..." button to list all parameters.
 
 Data
@@ -171,6 +174,8 @@ Error: the volume cannot be formatted.
 Error: the volume cannot be mounted.
 Copying files...
 Error: files cannot be copied.
+Run user command...
+Error: cannot run user command.
 Displaying new drive...
 Saving parameters...
 Warning: too many mount points.#This one will not be registered.

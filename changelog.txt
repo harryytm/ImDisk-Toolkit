@@ -1,3 +1,10 @@
+Version 20231231
+- RamDiskUI.exe: an executable or a script can now be specified to be run after volume creation
+- uninstaller: added an option to reset the TEMP variables
+- fix in ImDiskTk-svc.exe: data synchronization did not update directory reparse points
+- install.bat: check of the TEMP folder
+- executables are now compiled with MinGW 13.2.1 (instead of 12.2.1)
+
 Version 20220826
 - added korean language
 - installer: added command line switches to force installation settings

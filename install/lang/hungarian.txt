@@ -62,6 +62,7 @@ ImDisk képfájl leválasztása
 ImDisk - telepítő
 Illesztő program eltávolítása (újraindításra nem szükséges)
 Beállítások eltávolítása
+TEMP változó visszaállítása
 Eltávolítás
 Mégsem
 ImDisk virtuális lemezt észlelek.#Az összes csatolt ImDisk virtuális lemez le lesz választva!
@@ -117,6 +118,7 @@ AWE fizikai memória használata
 Dinamikus Ram Lemez Paraméterek...
 Csatolási pont használata:
 Leválasztás
+Futtasd le a csatolás után:
 Kiegészítő paraméterek:
 Alapértelmezett
 0.5 kB
@@ -135,6 +137,7 @@ Alapértelmezett: letiltva.##Memória lefoglalás az AWE-n keresztül.#Ez garant
 Alapértelmezett: letiltva.##Használjon mappát a meghajtó betűjel helyett a ram lemez csatlakoztatásához.
 Kiválasztott ImDisk leválasztása és regisztrációjának törlése.
 A csatolási pontnak egy NTFS-köteten lévő üres könyvtárnak kell lennie.#Legfeljebb 10 csatolási pontot lehet regisztrálni az op. indításakor történő automatikus csatlakoztatáshoz.
+Amint a kötet készen áll (formázva és az adatok átmásolva), indítsd#el a megadott fájlt. Ez lehet exe vagy bat.#A fájl emelt szinten fut (rendszer szintű felhasználóként), ablak nem#jelenik meg a futás közben.
 Ide bármilyen paramétert hozzáadhatsz, amelyet a grafikus felhasználói felület még nem használ.#Például a "-o rem" eltávolíthatónak jelöli a meghajtót.#Kattints a "..." gombra az összes paraméter listázásához.
 
 Adat
@@ -171,6 +174,8 @@ Hiba: a kötet nem formázható.
 Hiba: a kötet nem csatolható.
 Fájlok másolása...
 Hiba: fájlmásolás sikertelen.
+Futtasd a parancsot...
+Hiba: nem lehet futtatni a parancsot.
 Új meghajtó megjelenítése...
 Paraméterek mentése...
 Figyelem: túl sok csatolás.#Ezt már nem regisztrálom.
