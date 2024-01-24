@@ -11,7 +11,6 @@ RamDisk-määritystyökalu
 Valinnat kontekstivalikoissa
 Luo pikakuvakkeet työpöydälle
 Pikakuvake kaikille käyttäjille
-Lataa ImDskSvc automaattisesti
 Kieli:
 Pidä hiirtä kohteen päällä nähdäksesi lisätiedot.
 Asentaa ajurin. Sisältää ohjauspaneelisovelman, komentorivityökalun, imdisk.exe-ohjelman sekä käyttöliittymän taltioiden hallintaan resurssienhallinnan kontekstivalikoista.##Kirjoita "imdisk" komentoriville saadaksesi lisätietoja.
@@ -20,7 +19,6 @@ Tällä työkalulla voit helposti määritellä yden tai useampia RAM-levyjä (R
 Lisää kohdat levyjen ja tiedostojen kontekstivalikkoon ImDisk-taltioiden ja levykuvien hallintaan suoraan resurssienhallinnasta.##Tämän voi myös myöhemmin valita käynnistysvalikosta.
 Luo pikakuvakkeet työpöydälle.##Pikakuvakkeet luodaan Windowsin käynnistysvalikkoon aina.
 Luo pikakuvakkeet kaikille käyttäjille, ei vain nykyiselle.
-Käynnistää ImDskSvc:n automaattisesti järjestelmän mukana.##Mikään työkalu ei käytä tätä palvelua, joten tämän voi turvallisesti jättää pois.##Ajuri asentaa sen käyttääkseen TCP/IP- ja sarjaporttiyhteyksiä määritettyjen välityspalvelinten kautta.
 Tekijät
 Asenna
 Peruuta
@@ -183,7 +181,7 @@ Käytä TEMP-ympäristömuuttujia
 Käyttäjä:
 Järjestelmä:
 Aseta kaikkiin:
-Käytä liitoskohtaa (suositeltu)
+Käytä liitoskohtaa
 liitä:
 kohde:
 Palauta oletukset

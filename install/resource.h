@@ -21,7 +21,6 @@
 #define ID_CHECK4 404
 #define ID_CHECK5 405
 #define ID_CHECK6 406
-#define ID_CHECK7 407
 #define ID_CHECK_A 500
 
 #define ID_PBUTTON1 601

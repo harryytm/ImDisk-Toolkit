@@ -11,7 +11,6 @@ Strumento di Configurazione RamDisk
 Abilita voci nei menu di scelta rapida
 Crea collegamenti sul desktop
 Scorciatoie per tutti gli utenti
-Carica ImDskSvc automaticamente
 Lingua:
 Tieni il mouse sopra un oggetto per ottenere i dettagli.
 Installa il driver. Questo include un'applet del Pannello di controllo, uno strumento da riga di comando, imdisk.exe, e interfacce per gestire i volumi dai menu di scelta rapida di Explorer.##Per maggiori dettagli, digitare "imdisk" in un prompt dei comandi.
@@ -20,7 +19,6 @@ Questo strumento ti permetterà di configurare facilmente uno o più RamDisk con
 Aggiungi voci nel menu contestuale dell'unità e nel menu contestuale dei file per gestire i volumi ImDisk e i file immagine direttamente da Esplora risorse.##Questa opzione può essere impostata in un secondo momento nel menu Start di Windows.
 Crea collegamenti sul desktop.##Tutti i collegamenti vengono sempre creati nel menu Start di Windows.
 Crea scorciatoie per tutti gli utenti invece dell'utente corrente.
-Avvia ImDskSvc automaticamente all'avvio del sistema.##Nessuno strumento in questo pacchetto utilizza questo servizio, quindi puoi deselezionare in sicurezza questa opzione.##Viene installato dal driver per avviare connessioni TCP/IP o connessioni alla porta seriale con software proxy.
 Crediti
 Installa
 Cancella
@@ -183,7 +181,7 @@ Usa Variabili Temporanee
 Utente:
 Sistema:
 Imposta Tutto Su:
-Usa una Junction (consigliato)
+Usa una Junction
 da:
 a:
 Ripristina Predefiniti

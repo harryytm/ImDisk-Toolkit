@@ -11,7 +11,6 @@ RAM-Disk Konfigurator
 Einträge in Kontextmenüs aktivieren
 Verknüpfungen auf Desktop anlegen
 Verknüpfungen für alle Benutzer
-ImDskSvc automatisch laden
 Sprache:
 Zeige mit der Maus auf einen Eintrag, um mehr zu erfahren.
 Treiber installieren. Dies enthält ein Systemsteuerungs-Applet, ein Befehlszeilen-Tool, imdisk.exe und Oberflächen, um Volumes über Kontextmenüs des Explorer zu bedienen.##Bitte tippe "imdisk" in einem Kommandozeilenfenster für weitere Details.
@@ -20,7 +19,6 @@ Dieses Programm ermöglicht die einfache Konfiguration von einer oder mehrerer R
 Füge Einträge zum Kontextmenü des Laufwerks und das Datei-Kontextmenü hinzu, um die ImDisk-Volumes und Abbilder direkt vom Explorer aus zu verwalten.##Diese Option kann später vom Windows-Startmenü aus gesetzt werden.
 Verknüpfungen auf dem Desktop anlegen.##Windows-Startmenü werden stets alle Verknüpfungen angelegt.
 Verknüpfungen für alle Benutzer anlegen anstatt nur für den aktuellen Nutzer.
-ImDskSvc beim Systemstart automatisch starten.##Kein Teil dieses Pakets nutzt diesen Dienst, sodass diese Option sicher abgeschaltet werden kann.##Er wird vom Treiber installiert, um Verbindungen per TCP/IP oder serieller Schnittstelle über Proxy-Software zu ermöglichen.
 Mitwirkende
 Installieren
 Abbrechen
@@ -183,7 +181,7 @@ Temp-Variablen verwenden
 Benutzer:
 System:
 Alle setzen auf:
-Verknüpfung/Junction verwenden (empfohlen)
+Verknüpfung/Junction verwenden
 von:
 nach:
 Zurücksetzen

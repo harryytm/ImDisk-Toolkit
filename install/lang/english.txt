@@ -11,7 +11,6 @@ RamDisk Configuration Tool
 Enable entries in context menus
 Create shortcuts on desktop
 Shortcuts for all users
-Load ImDskSvc automatically
 Language:
 Please keep your mouse over an item to get details.
 Install driver. This includes a Control Panel applet, a command line tool, imdisk.exe, and interfaces to manage volumes from Explorer context menus.##Please type "imdisk" in a command prompt for details.
@@ -20,7 +19,6 @@ This tool will allow you to easily configure one or several RamDisks with variou
 Add entries in the drive context menu and the file context menu to manage ImDisk volumes and image files directly from Explorer.##This option can be set later in the Windows Start Menu.
 Create shortcuts on desktop.##All shortcuts are always created in the Windows Start Menu.
 Create shortcuts for all users instead of current user.
-Start ImDskSvc automatically at system startup.##No tool in this package uses this service, so you can safely uncheck this option.##It is installed by the driver to initiate TCP/IP or serial port connections with proxy softwares.
 Credits
 Install
 Cancel
@@ -183,7 +181,7 @@ Use Temp Variables
 User:
 System:
 Set All To:
-Use a Junction (recommended)
+Use a Junction
 from:
 to:
 Set Defaults

@@ -18,14 +18,13 @@ static HINSTANCE hinst;
 static HICON hIcon, hIconWarn;
 static HBRUSH hBrush;
 static RECT icon_coord, iconwarn_coord;
-static HWND hwnd_check[7], hwnd_text1, hwnd_static1, hwnd_static2, hwnd_static3, hwnd_uninst;
+static HWND hwnd_check[6], hwnd_text1, hwnd_static1, hwnd_static2, hwnd_static3, hwnd_uninst;
 static WPARAM prev_wparam = 0;
 static int prev_mark = 0;
 static _Bool copy_error = FALSE, reboot = FALSE, process_uninst = FALSE;
 static DWORD hid_drive_ini;
 static HANDLE h_file;
 static HKEY reg_key;
-static DWORD ImDskSvc_starttype = SERVICE_DEMAND_START;
 static int silent = 0;
 static _Bool silent_uninstall = FALSE;
 
@@ -43,7 +42,7 @@ static WCHAR version_str[] = L"ImDisk Toolkit\n" APP_VERSION;
 static char reg_disp_name_tk[] = "ImDisk Toolkit";
 static char reg_disp_name_drv[] = "ImDisk Virtual Disk Driver";
 static DWORD EstimatedSize = 1813;
-static WCHAR *driver_svc_list[] = {L"ImDskSvc", L"AWEAlloc", L"ImDisk"};
+static WCHAR *driver_svc_list[] = {L"ImDskSvc", L"DevIoDrv", L"AWEAlloc", L"ImDisk"};
 static WCHAR *tk_svc_list[] = {L"ImDiskRD", L"ImDiskTk-svc", L"ImDiskImg"};
 
 static WCHAR *lang_list[] = {L"english", L"deutsch", L"español", L"français", L"italiano", L"português brasileiro", L"русский", L"suomi", L"svenska", L"简体中文"};
@@ -59,9 +58,9 @@ enum {
 	TITLE,
 	TXT_1, TXT_2, TXT_3,
 	COMP_0, COMP_1, COMP_2, COMP_3,
-	OPT_0, OPT_1, OPT_2, OPT_3, OPT_4,
+	OPT_0, OPT_1, OPT_2, OPT_3,
 	LANG_TXT,
-	DESC_0, DESC_1, DESC_2, DESC_3, DESC_4, DESC_5, DESC_6, DESC_7,
+	DESC_0, DESC_1, DESC_2, DESC_3, DESC_4, DESC_5, DESC_6,
 	CTRL_1, CTRL_2, CTRL_3, CTRL_4,
 	ERR_1, ERR_2, ERR_3,
 	PREV_TXT,
@@ -320,6 +319,7 @@ static void install(HWND hDlg)
 	SERVICE_DESCRIPTION svc_description;
 	SERVICE_PRESHUTDOWN_INFO svc_preshutdown_info;
 	SC_HANDLE scman_handle, svc_handle;
+	QUERY_SERVICE_CONFIG *qsc;
 	HKEY h_key;
 	WCHAR image_file[MAX_PATH], *param_name_ptr;
 	BOOL driver_ok, desk_lnk, show_dotnet = FALSE, priv_req, sync;
@@ -335,7 +335,7 @@ static void install(HWND hDlg)
 	GUID IID_IUniformResourceLocatorA, IID_IPersistFile;
 	IUniformResourceLocatorA *purl;
 	IPersistFile *ppf;
-	int i, j, max;
+	int i, max;
 
 	GetDlgItemText(hDlg, ID_EDIT1, path, MAX_PATH);
 	if (!CreateDirectory(path, NULL) && (GetLastError() != ERROR_ALREADY_EXISTS)) {
@@ -428,6 +428,11 @@ static void install(HWND hDlg)
 			reboot = TRUE;
 			CloseServiceHandle(svc_handle);
 		}
+		if (os_ver.dwMajorVersion >= 6 && !GetProcAddress(LoadLibraryA("wintrust.dll"), "CryptCATAdminAcquireContext2")) {
+			MoveFileEx(L"209awealloc.sys", L"driver\\awealloc\\amd64\\awealloc.sys", MOVEFILE_REPLACE_EXISTING);
+			MoveFileEx(L"209imdisk.sys", L"driver\\sys\\amd64\\imdisk.sys", MOVEFILE_REPLACE_EXISTING);
+			MoveFileEx(L"209imdisk.inf", L"driver\\imdisk.inf", MOVEFILE_REPLACE_EXISTING);
+		}
 		wcscpy(cmd, L"rundll32 setupapi.dll,InstallHinfSection DefaultInstall 128 driver\\imdisk.inf");
 		start_process(TRUE);
 	}
@@ -449,13 +454,16 @@ static void install(HWND hDlg)
 		wcscpy(cmd, L"reg copy HKLM\\SOFTWARE\\ImDisk\\DriverBackup HKLM\\SYSTEM\\CurrentControlSet\\Services\\ImDisk\\Parameters /f");
 		start_process(TRUE);
 		del_key(HKEY_LOCAL_MACHINE, "SOFTWARE\\ImDisk\\DriverBackup");
-		j = IsDlgButtonChecked(hDlg, ID_CHECK7);
+		qsc = (QUERY_SERVICE_CONFIG*)&cmd;
 		for (i = 0; i < _countof(driver_svc_list); i++) {
-			svc_handle = OpenService(scman_handle, driver_svc_list[i], SERVICE_CHANGE_CONFIG | SERVICE_START);
-			if (!i && (j || ImDskSvc_starttype != SERVICE_DISABLED))
-				ChangeServiceConfig(svc_handle, SERVICE_NO_CHANGE, SERVICE_DEMAND_START - j, SERVICE_NO_CHANGE, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
-			if (i || j) StartService(svc_handle, 0, NULL);
-			CloseServiceHandle(svc_handle);
+			if ((svc_handle = OpenService(scman_handle, driver_svc_list[i], SERVICE_QUERY_CONFIG | SERVICE_CHANGE_CONFIG | SERVICE_START))) {
+				if (i < _countof(driver_svc_list) - 1) {
+					if (QueryServiceConfig(svc_handle, qsc, 8192, &data_size) && qsc->dwStartType == SERVICE_AUTO_START)
+						ChangeServiceConfig(svc_handle, SERVICE_NO_CHANGE, SERVICE_DEMAND_START, SERVICE_NO_CHANGE, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+				} else
+					StartService(svc_handle, 0, NULL);
+				CloseServiceHandle(svc_handle);
+			}
 		}
 		CheckDlgButton(hDlg, ID_CHECK1, BST_UNCHECKED);
 		RegDeleteValueA(h_key, "DisplayName");
@@ -703,7 +711,6 @@ static void load_lang_install(HWND hDlg)
 		SetDlgItemText(hDlg, ID_CHECK4, t[OPT_1]);
 		SetDlgItemText(hDlg, ID_CHECK5, t[OPT_2]);
 		SetDlgItemText(hDlg, ID_CHECK6, t[OPT_3]);
-		SetDlgItemText(hDlg, ID_CHECK7, t[OPT_4]);
 		SetDlgItemText(hDlg, ID_TEXT11, t[LANG_TXT]);
 		SetDlgItemText(hDlg, ID_TEXT2, t[DESC_0]);
 		SetDlgItemText(hDlg, ID_PBUTTON2, t[CTRL_1]);
@@ -725,8 +732,6 @@ static INT_PTR __stdcall InstallProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM 
 	VS_FIXEDFILEINFO *v1, *v2;
 	DWORD size_ver, data_size;
 	HKEY h_key;
-	SC_HANDLE scman_handle, svc_handle;
-	QUERY_SERVICE_CONFIG *qsc;
 	int i;
 
 	switch (Msg)
@@ -808,16 +813,6 @@ static INT_PTR __stdcall InstallProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM 
 			} else
 				for (i = ID_CHECK4; i >= ID_CHECK2; i--)
 					CheckDlgButton(hDlg, i, BST_CHECKED);
-
-			// ImDskSvc
-			scman_handle = OpenSCManager(NULL, NULL, SC_MANAGER_CONNECT);
-			if ((svc_handle = OpenService(scman_handle, driver_svc_list[0], SERVICE_QUERY_CONFIG))) {
-				qsc = (QUERY_SERVICE_CONFIG*)&cmd;
-				if (QueryServiceConfig(svc_handle, qsc, 8192, &data_size))
-					CheckDlgButton(hDlg, ID_CHECK7, (ImDskSvc_starttype = qsc->dwStartType) == SERVICE_AUTO_START);
-				CloseServiceHandle(svc_handle);
-			}
-			CloseServiceHandle(scman_handle);
 
 			if (!path[0]) {
 				SHGetFolderPath(NULL, CSIDL_PROGRAM_FILES, NULL, SHGFP_TYPE_CURRENT, path);

@@ -11,7 +11,6 @@ Ferramenta de Configuração RamDisk
 Ativar entradas nos menus de contexto
 Crie atalhos na área de trabalho
 Atalhos para todos usuários
-Carregar ImDskSvc automaticamente
 Língua:
 Mantenha o mouse sobre um item para obter detalhes.
 Instale o driver. Isso inclui um miniaplicativo do Painel de Controle, uma ferramenta de linha de comando, imdisk.exe e interfaces para gerenciar volumes nos menus de contexto do Explorer.##Digite "imdisk" em um prompt de comando para obter detalhes.
@@ -20,7 +19,6 @@ Esta ferramenta permitirá que você configure facilmente um ou vários RamDisks
 Adicione entradas no menu de contexto da unidade e no menu de contexto do arquivo para gerenciar os volumes do ImDisk e os arquivos de imagem diretamente do Explorer.##Esta opção pode ser definida posteriormente no menu Iniciar do Windows.
 Crie atalhos na área de trabalho.##Todos os atalhos são sempre criados no menu Iniciar do Windows.
 Cria atalhos para todos usuários em vez de apenas o atual.
-Inicie o ImDskSvc automaticamente na inicialização do sistema.##Nenhuma ferramenta deste pacote usa este serviço, portanto você pode desmarcar essa opção com segurança.##Ela é instalada pelo driver para iniciar conexões de porta serial / TCP / IP com softwares de proxy.
 Créditos
 Instalar
 Cancelar
@@ -183,7 +181,7 @@ Usar Variáveis Temporárias
 Usuário:
 Sistema:
 Definir tudo como:
-Usar Junções (recomendado)
+Usar Junções
 de:
 para:
 Definir padrões

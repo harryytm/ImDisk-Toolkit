@@ -1,3 +1,8 @@
+Version 20220301
+- updated to driver 2.1.1 (2.0.9 kept on x64 systems without SHA256 signature support)
+- installer: removed the option to disable automatic loading of ImDskSvc
+- installer: startup type of ImDskSvc, DevIoDrv and AWEAlloc is now set to manual
+
 Version 20211103
 - RamDiskUI.exe: new dialog box for TEMP variables that allows creating junctions (fix for some MSI installers)
 - installer: added an option to create shortcuts for all users instead of current user

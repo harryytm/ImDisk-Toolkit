@@ -24,6 +24,9 @@ files\ImDiskTk-svc64.exe
 files\RamDiskUI.exe
 files\RamDyn32.exe
 files\RamDyn64.exe
+files\209awealloc.sys
+files\209imdisk.sys
+files\209imdisk.inf
 
 .Set DestinationDir=lang
 install\lang\brazilian-portuguese.txt
@@ -60,6 +63,11 @@ files\driver\cli\i386\imdisk.exe
 files\driver\cpl\amd64\imdisk.cpl
 .Set DestinationDir=driver\cpl\i386
 files\driver\cpl\i386\imdisk.cpl
+
+.Set DestinationDir=driver\deviodrv\amd64
+files\driver\deviodrv\amd64\deviodrv.sys
+.Set DestinationDir=driver\deviodrv\i386
+files\driver\deviodrv\i386\deviodrv.sys
 
 .Set DestinationDir=driver\svc\amd64
 files\driver\svc\amd64\imdsksvc.exe

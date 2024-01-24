@@ -11,7 +11,6 @@ Outil de Configuration de RamDisk
 Entrées dans les menus contextuels
 Créer des raccourcis sur le bureau
 Raccourcis pour tous les utilisateurs
-Charger ImDskSvc automatiquement
 Langue :
 Laisser la souris sur un élément pour obtenir des informations.
 Installer le pilote. Ceci inclut un composant du Panneau de Configuration, un outil en ligne de commande, imdisk.exe, et des interfaces pour gérer les volumes depuis les menus contextuels de l'Explorateur.##Tapez "imdisk" dans une invite de commande pour plus d'informations.
@@ -20,7 +19,6 @@ Cet outil vous permettra de configurer facilement un ou plusieurs RamDisks avec 
 Ajouter des entrées dans le menu contextuel de lecteur et le menu contextuel de fichier pour gérer les volumes ImDisk et les fichiers images depuis l'Explorateur.##Cette option peut être définie plus tard dans le Menu Démarrer de Windows.
 Créer des raccourcis sur le bureau.##Tous les raccourcis sont toujours créés dans le Menu Démarrer de Windows.
 Créer des raccourcis pour tous les utilisateurs au lieu de l'utilisateur actuel.
-Lance ImDskSvc automatiquement au démarrage du système.##Aucun outil dans ce paquet utilise ce service, vous pouvez donc sans risque décocher cette option.##Il est installé par le pilote pour initier des connexions TCP/IP ou port série avec des logiciels proxy.
 Crédits
 Installer
 Annuler
@@ -183,7 +181,7 @@ Utiliser les variables Temp
 Utilisateur :
 Système :
 Tout définir à :
-Utiliser une jonction (recommandé) :
+Utiliser une jonction :
 de :
 vers :
 Réglages par défaut
@@ -280,7 +278,7 @@ Po
 
 [ImDisk-Dlg]
 Attention : vous n'avez pas les droits suffisants pour démonter correctement ce volume.#Les caches en écritures pourraient ne pas être vidés et par conséquent, il y a un risque de perte de données.##Voulez-vous toujours continuer ?
-Le volume est utilisé par un autre processus et ne peut pas être verrouillé.##Si toutes vos données sont sauvegardées, vous pouvez continuer en toute sécurité et le volume sera correctment démonté.##Voulez-vous continuer ?
+Le volume est utilisé par un autre processus et ne peut pas être verrouillé.##Si toutes vos données sont sauvegardées, vous pouvez continuer en toute sécurité et le volume sera correctement démonté.##Voulez-vous continuer ?
 Le disque virtuel a été modifié.##Voulez-vous le sauvegarder dans un fichier image avant de le retirer ?
 Ne plus afficher cet avertissement
 Ne plus demander

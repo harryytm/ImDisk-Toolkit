@@ -7,7 +7,7 @@
 
 1 ICON "..\\VD.ico"
 
-INSTALLBOX DIALOGEX 0, 0, 300, 239
+INSTALLBOX DIALOGEX 0, 0, 300, 228
 		   FONT 9, "MS Shell Dlg", 0, 0, 0
 		   STYLE WS_SYSMENU | DS_SHELLFONT | DS_CENTER
 		   CAPTION "ImDisk - Setup"
@@ -23,26 +23,24 @@ BEGIN
 	AUTOCHECKBOX "ImDisk Virtual Disk Driver (required)", ID_CHECK1, 121, 82, 165, 10
 	AUTOCHECKBOX "DiscUtils library (uses .NET Framework 4)", ID_CHECK2, 121, 93, 165, 10
 	AUTOCHECKBOX "RamDisk Configuration Tool", ID_CHECK3, 121, 104, 165, 10
-	GROUPBOX " Options ", ID_GROUP2, 116, 122, 172, 56
+	GROUPBOX " Options ", ID_GROUP2, 116, 122, 172, 45
 	AUTOCHECKBOX "Enable entries in context menus", ID_CHECK4, 121, 132, 165, 10
 	AUTOCHECKBOX "Create shortcuts on desktop", ID_CHECK5, 121, 143, 165, 10
 	AUTOCHECKBOX "Shortcuts for all users", ID_CHECK6, 121, 154, 165, 10
-	AUTOCHECKBOX "Load ImDskSvc automatically", ID_CHECK7, 121, 165, 165, 10
-	LTEXT "Language:", ID_TEXT11, 116, 189, 50, 10
-	COMBOBOX ID_COMBO1, 166, 187, 80, 24, CBS_DROPDOWNLIST | WS_TABSTOP
-	GROUPBOX "", IDC_STATIC, 10, 70, 93, 132
-	LTEXT "Please keep your mouse over an item to get details.", ID_TEXT2, 14, 77, 85, 123
+	LTEXT "Language:", ID_TEXT11, 116, 178, 50, 10
+	COMBOBOX ID_COMBO1, 166, 176, 80, 24, CBS_DROPDOWNLIST | WS_TABSTOP
+	GROUPBOX "", IDC_STATIC, 10, 70, 93, 121
+	LTEXT "Please keep your mouse over an item to get details.", ID_TEXT2, 14, 77, 85, 112
 	LTEXT "", ID_TEXT3, 105, 79, 10, 12
 	LTEXT "", ID_TEXT4, 105, 90, 10, 12
 	LTEXT "", ID_TEXT5, 105, 101, 10, 12
 	LTEXT "", ID_TEXT6, 105, 129, 10, 12
 	LTEXT "", ID_TEXT7, 105, 140, 10, 12
 	LTEXT "", ID_TEXT8, 105, 151, 10, 12
-	LTEXT "", ID_TEXT9, 105, 162, 10, 12
-	PUSHBUTTON "Credits", ID_PBUTTON2, 5, 220, 43, 13
-	DEFPUSHBUTTON "Install", IDOK, 205, 220, 43, 13
-	PUSHBUTTON "Cancel", IDCANCEL, 252, 220, 43, 13
-	GROUPBOX "", IDC_STATIC, -5, 209, 310, 40
+	PUSHBUTTON "Credits", ID_PBUTTON2, 5, 209, 43, 13
+	DEFPUSHBUTTON "Install", IDOK, 205, 209, 43, 13
+	PUSHBUTTON "Cancel", IDCANCEL, 252, 209, 43, 13
+	GROUPBOX "", IDC_STATIC, -5, 198, 310, 40
 END
 
 CREDITSBOX DIALOGEX 0, 0, 220, 200
@@ -102,7 +100,7 @@ END
 
 
 1 VERSIONINFO
-FILEVERSION 8,0,0,0
+FILEVERSION 9,0,0,0
 BEGIN
 BLOCK "StringFileInfo"
 	BEGIN
@@ -110,7 +108,7 @@ BLOCK "StringFileInfo"
 		BEGIN
 			VALUE "FileDescription", "ImDisk Toolkit Configuration"
 			VALUE "ProductName", "imdisk"
-			VALUE "ProductVersion", "8.0.0.0"
+			VALUE "ProductVersion", "9.0.0.0"
 		END
 	END
 BLOCK "VarFileInfo"

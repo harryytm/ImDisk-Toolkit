@@ -11,7 +11,6 @@ Herramienta de configuración RamDisk
 Permitir entradas en menús contextuales
 Crear accesos directos en escritorio
 Accesos directos para todos los usuarios
-Cargue ImDskSvc automáticamente
 Lenguaje:
 Mantenga su mouse sobre un artículo para obtener detalles.
 Instalar controlador. Esto incluye un panel de control, una herramienta de línea de  comandos, imdisk.exe, e interfaces para manejar volúmenes desde menús contextuales en el Explorador.##Favor de escribir "imdisk" en línea de comandos para detalles.
@@ -20,7 +19,6 @@ Esta herramienta permitirá configurar fácilmente uno o varios RamDisks con var
 Agregar entradas en el menú contextual de la unidad y en el menú contextual del archivo para manejar volúmenes ImDisk y archivos imagen directamente desde el explorador.##Esta opción puede ajustarse después en el menú de inicio de Windows.
 Crear accesos directos en el escritorio.##Todos los accesos directos se crean siempre en el menú Inicio de Windows.
 Crear accesos directos para todos los usuarios en lugar del usuario actual.
-Inicie ImDskSvc automáticamente al inicio del sistema.##Ninguna herramienta de este paquete utiliza este servicio, por lo que puede desmarcar esta opción de manera segura.##Es instalado por el controlador para iniciar TCP/IP o conexiones de puerto serie con software proxy.
 Créditos
 Instalar
 Cancelar
@@ -183,7 +181,7 @@ Utilizar variables Temp
 Usuario:
 Sistema:
 Ajustar todo a:
-Use una unión (recomendado)
+Use una unión
 de:
 para:
 Ajustar por defecto
