@@ -10,6 +10,7 @@ RAM-Disk Konfigurator
  Einstellungen 
 Einträge in Kontextmenüs aktivieren
 Verknüpfungen auf Desktop anlegen
+Verknüpfungen für alle Benutzer
 ImDskSvc automatisch laden
 Sprache:
 Zeige mit der Maus auf einen Eintrag, um mehr zu erfahren.
@@ -18,6 +19,7 @@ Benötigt, um fortgeschrittene Abbilder wie VHD, VDI, VMDK und einige andere ein
 Dieses Programm ermöglicht die einfache Konfiguration von einer oder mehrerer RAM-Disks mit unterschiedlichen Einstellungen.
 Füge Einträge zum Kontextmenü des Laufwerks und das Datei-Kontextmenü hinzu, um die ImDisk-Volumes und Abbilder direkt vom Explorer aus zu verwalten.##Diese Option kann später vom Windows-Startmenü aus gesetzt werden.
 Verknüpfungen auf dem Desktop anlegen.##Windows-Startmenü werden stets alle Verknüpfungen angelegt.
+Verknüpfungen für alle Benutzer anlegen anstatt nur für den aktuellen Nutzer.
 ImDskSvc beim Systemstart automatisch starten.##Kein Teil dieses Pakets nutzt diesen Dienst, sodass diese Option sicher abgeschaltet werden kann.##Er wird vom Treiber installiert, um Verbindungen per TCP/IP oder serieller Schnittstelle über Proxy-Software zu ermöglichen.
 Mitwirkende
 Installieren
@@ -168,6 +170,7 @@ Fehler: Diese Datei enthält kein gültiges Dateisystem.
 Fehler: Das Laufwerk kann nicht formatiert werden.
 Fehler: Das Laufwerk kann nicht eingebunden werden.
 Kopiere Dateien ...
+Fehler: Dateien können nicht kopiert werden.
 Zeige neues Laufwerk an ...
 Speichere Parameter ...
 Warnung: Zu viele Bereitstellungspunkte.#Dieser kann nicht registriert werden.
@@ -176,13 +179,17 @@ Fertig.
 Trenne Laufwerk ...
 Synchronisiere ...
 
- TEMP Umgebungsvariablen 
-Anwender  
-System  
+Temp-Variablen verwenden
+Benutzer:
+System:
 Alle setzen auf:
+Verknüpfung/Junction verwenden (empfohlen)
+von:
+nach:
 Zurücksetzen
 OK
 Abbrechen
+Fehler: Kann Junction nicht anlegen.
 
 Speicherfreigabemethode:
 Automatisch

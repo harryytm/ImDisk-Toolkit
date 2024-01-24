@@ -18,7 +18,7 @@ static HINSTANCE hinst;
 static HICON hIcon, hIconWarn;
 static HBRUSH hBrush;
 static RECT icon_coord, iconwarn_coord;
-static HWND hwnd_check[6], hwnd_text1, hwnd_static1, hwnd_static2, hwnd_static3, hwnd_uninst;
+static HWND hwnd_check[7], hwnd_text1, hwnd_static1, hwnd_static2, hwnd_static3, hwnd_uninst;
 static WPARAM prev_wparam = 0;
 static int prev_mark = 0;
 static _Bool copy_error = FALSE, reboot = FALSE, process_uninst = FALSE;
@@ -32,7 +32,7 @@ static _Bool silent_uninstall = FALSE;
 static WCHAR path[MAX_PATH + 100] = {}, *path_name_ptr;
 static WCHAR install_path[MAX_PATH], *path_cmdline = NULL;
 static WCHAR path_prev[MAX_PATH + 30] = {};
-static WCHAR desk[MAX_PATH + 100], *desk_ptr, startmenu[MAX_PATH + 100];
+static WCHAR desk[MAX_PATH + 100], *desk_ptr, desk_all[MAX_PATH + 100], *desk_all_ptr, startmenu[MAX_PATH + 100], *startmenu_ptr, startmenu_all[MAX_PATH + 100], *startmenu_all_ptr;
 static WCHAR cmd[32768];
 static WCHAR *file_list[] = {L"DiscUtils.Core.dll", L"DiscUtils.Dmg.dll", L"DiscUtils.Streams.dll", L"DiscUtils.Vdi.dll", L"DiscUtils.Vhd.dll", L"DiscUtils.Vhdx.dll", L"DiscUtils.Vmdk.dll", L"DiscUtils.Xva.dll",
 							 L"DevioNet.dll", L"DiscUtilsDevio.exe", L"ImDiskNet.dll", L"ImDisk-Dlg.exe", L"ImDiskTk-svc.exe", L"lang.txt", L"MountImg.exe", L"RamDiskUI.exe", L"RamDyn.exe",
@@ -59,9 +59,9 @@ enum {
 	TITLE,
 	TXT_1, TXT_2, TXT_3,
 	COMP_0, COMP_1, COMP_2, COMP_3,
-	OPT_0, OPT_1, OPT_2, OPT_3,
+	OPT_0, OPT_1, OPT_2, OPT_3, OPT_4,
 	LANG_TXT,
-	DESC_0, DESC_1, DESC_2, DESC_3, DESC_4, DESC_5, DESC_6,
+	DESC_0, DESC_1, DESC_2, DESC_3, DESC_4, DESC_5, DESC_6, DESC_7,
 	CTRL_1, CTRL_2, CTRL_3, CTRL_4,
 	ERR_1, ERR_2, ERR_3,
 	PREV_TXT,
@@ -213,12 +213,6 @@ static BOOL del(WCHAR *file)
 	return DeleteFile(path);
 }
 
-static void del_shortcut(WCHAR *file)
-{
-	_snwprintf(path_name_ptr, 99, L"%.94s.lnk", file);
-	DeleteFile(path);
-}
-
 static void write_context_menu(WCHAR *path, _Bool use_cpl)
 {
 	WCHAR path_test[MAX_PATH + 20];
@@ -327,7 +321,7 @@ static void install(HWND hDlg)
 	SERVICE_PRESHUTDOWN_INFO svc_preshutdown_info;
 	SC_HANDLE scman_handle, svc_handle;
 	HKEY h_key;
-	WCHAR *startmenu_ptr, image_file[MAX_PATH], *param_name_ptr;
+	WCHAR image_file[MAX_PATH], *param_name_ptr;
 	BOOL driver_ok, desk_lnk, show_dotnet = FALSE, priv_req, sync;
 	DWORD data_size, RD_found, awealloc, dynamic, sync_flags;
 	WCHAR privilege_name[] = L"SeLockMemoryPrivilege";
@@ -371,8 +365,28 @@ static void install(HWND hDlg)
 	move(L"config.exe");
 
 	// shortcuts
-	SHGetFolderPath(NULL, CSIDL_PROGRAMS, NULL, SHGFP_TYPE_CURRENT, startmenu);
-	wcscat(startmenu, L"\\ImDisk");
+	if (IsDlgButtonChecked(hDlg, ID_CHECK6)) {
+		desk_ptr = &desk[desk_all_ptr - desk_all];
+		desk_all_ptr = &desk_all[desk_ptr - desk];
+		wcscpy(cmd, desk);
+		wcscpy(desk, desk_all);
+		wcscpy(desk_all, cmd);
+		wcscpy(cmd, startmenu);
+		wcscpy(startmenu, startmenu_all);
+		wcscpy(startmenu_all, cmd);
+	}
+	startmenu_all_ptr = PathAddBackslash(startmenu_all);
+	for (i = SHORTCUT_1; i <= SHORTCUT_5 + 1; i++) {
+		_snwprintf(startmenu_all_ptr, 99, i > SHORTCUT_5 ? L"ImDisk Virtual Disk Driver.lnk" : i == SHORTCUT_3 ? L"%.94s.url" : L"%.94s.lnk", t[i]);
+		DeleteFile(startmenu_all);
+		if (i >= SHORTCUT_4) {
+			wcscpy(desk_all_ptr, startmenu_all_ptr);
+			DeleteFile(desk_all);
+		}
+	}
+	*(startmenu_all_ptr - 1) = 0;
+	RemoveDirectory(startmenu_all);
+
 	CreateDirectory(startmenu, NULL);
 	startmenu_ptr = PathAddBackslash(startmenu);
 	_snwprintf(startmenu_ptr, 99, L"%.94s.lnk", t[SHORTCUT_2]);
@@ -435,7 +449,7 @@ static void install(HWND hDlg)
 		wcscpy(cmd, L"reg copy HKLM\\SOFTWARE\\ImDisk\\DriverBackup HKLM\\SYSTEM\\CurrentControlSet\\Services\\ImDisk\\Parameters /f");
 		start_process(TRUE);
 		del_key(HKEY_LOCAL_MACHINE, "SOFTWARE\\ImDisk\\DriverBackup");
-		j = IsDlgButtonChecked(hDlg, ID_CHECK6);
+		j = IsDlgButtonChecked(hDlg, ID_CHECK7);
 		for (i = 0; i < _countof(driver_svc_list); i++) {
 			svc_handle = OpenService(scman_handle, driver_svc_list[i], SERVICE_CHANGE_CONFIG | SERVICE_START);
 			if (!i && (j || ImDskSvc_starttype != SERVICE_DISABLED))
@@ -680,7 +694,7 @@ static void load_lang_install(HWND hDlg)
 	if (t[0]) {
 		SetWindowText(hDlg, t[TITLE]);
 		SetDlgItemText(hDlg, ID_TEXT1, t[TXT_1]);
-		SetDlgItemText(hDlg, ID_TEXT9, t[TXT_3]);
+		SetDlgItemText(hDlg, ID_TEXT10, t[TXT_3]);
 		SetDlgItemText(hDlg, ID_GROUP1, t[COMP_0]);
 		SetDlgItemText(hDlg, ID_CHECK1, t[COMP_1]);
 		SetDlgItemText(hDlg, ID_CHECK2, t[COMP_2]);
@@ -689,7 +703,8 @@ static void load_lang_install(HWND hDlg)
 		SetDlgItemText(hDlg, ID_CHECK4, t[OPT_1]);
 		SetDlgItemText(hDlg, ID_CHECK5, t[OPT_2]);
 		SetDlgItemText(hDlg, ID_CHECK6, t[OPT_3]);
-		SetDlgItemText(hDlg, ID_TEXT10, t[LANG_TXT]);
+		SetDlgItemText(hDlg, ID_CHECK7, t[OPT_4]);
+		SetDlgItemText(hDlg, ID_TEXT11, t[LANG_TXT]);
 		SetDlgItemText(hDlg, ID_TEXT2, t[DESC_0]);
 		SetDlgItemText(hDlg, ID_PBUTTON2, t[CTRL_1]);
 		SetDlgItemText(hDlg, IDOK, t[CTRL_2]);
@@ -747,9 +762,6 @@ static INT_PTR __stdcall InstallProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM 
 				VirtualFree(v_buff1, 0, MEM_RELEASE);
 			}
 
-			SHGetFolderPath(NULL, CSIDL_DESKTOPDIRECTORY, NULL, SHGFP_TYPE_CURRENT, desk);
-			desk_ptr = PathAddBackslash(desk);
-
 			SendDlgItemMessage(hDlg, ID_EDIT1, EM_SETLIMITTEXT, MAX_PATH, 0);
 			CheckDlgButton(hDlg, ID_CHECK5, BST_CHECKED);
 
@@ -780,14 +792,19 @@ static INT_PTR __stdcall InstallProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM 
 				}
 
 				wcscpy(desk_ptr, L"ImDisk Virtual Disk Driver.lnk");
-				if (!PathFileExists(desk)) {
+				wcscpy(desk_all_ptr, L"ImDisk Virtual Disk Driver.lnk");
+				if (!PathFileExists(desk) && !PathFileExists(desk_all)) {
 					_snwprintf(desk_ptr, 99, L"%.94s.lnk", t[SHORTCUT_4]);
-					if (!PathFileExists(desk)) {
-						_snwprintf(desk_ptr, 99, L"%.94s.lnk", t[SHORTCUT_3]);
-						if (!PathFileExists(desk))
+					_snwprintf(desk_all_ptr, 99, L"%.94s.lnk", t[SHORTCUT_4]);
+					if (!PathFileExists(desk) && !PathFileExists(desk_all)) {
+						_snwprintf(desk_ptr, 99, L"%.94s.lnk", t[SHORTCUT_5]);
+						_snwprintf(desk_all_ptr, 99, L"%.94s.lnk", t[SHORTCUT_5]);
+						if (!PathFileExists(desk) && !PathFileExists(desk_all))
 							CheckDlgButton(hDlg, ID_CHECK5, BST_UNCHECKED);
 					}
 				}
+
+				CheckDlgButton(hDlg, ID_CHECK6, PathFileExists(startmenu_all));
 			} else
 				for (i = ID_CHECK4; i >= ID_CHECK2; i--)
 					CheckDlgButton(hDlg, i, BST_CHECKED);
@@ -797,7 +814,7 @@ static INT_PTR __stdcall InstallProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM 
 			if ((svc_handle = OpenService(scman_handle, driver_svc_list[0], SERVICE_QUERY_CONFIG))) {
 				qsc = (QUERY_SERVICE_CONFIG*)&cmd;
 				if (QueryServiceConfig(svc_handle, qsc, 8192, &data_size))
-					CheckDlgButton(hDlg, ID_CHECK6, (ImDskSvc_starttype = qsc->dwStartType) == SERVICE_AUTO_START);
+					CheckDlgButton(hDlg, ID_CHECK7, (ImDskSvc_starttype = qsc->dwStartType) == SERVICE_AUTO_START);
 				CloseServiceHandle(svc_handle);
 			}
 			CloseServiceHandle(scman_handle);
@@ -1010,23 +1027,24 @@ static DWORD __stdcall uninstall(LPVOID lpParam)
 		wcscpy(wcsrchr(dir, '\\') + 1, L"lang.txt");
 		if (silent_uninstall) load_lang(dir);
 	}
-	SHGetFolderPath(NULL, CSIDL_DESKTOPDIRECTORY, NULL, SHGFP_TYPE_CURRENT, path);
-	path_name_ptr = PathAddBackslash(path);
-	del(L"ImDisk Virtual Disk Driver.lnk");
-	del_shortcut(t[SHORTCUT_5]);
-	del_shortcut(t[SHORTCUT_4]);
-	SHGetFolderPath(NULL, CSIDL_PROGRAMS, NULL, SHGFP_TYPE_CURRENT, path);
-	wcscat(path, L"\\ImDisk");
-	path_name_ptr = PathAddBackslash(path);
-	del(L"ImDisk Virtual Disk Driver.lnk");
-	del_shortcut(t[SHORTCUT_5]);
-	del_shortcut(t[SHORTCUT_4]);
-	_snwprintf(path_name_ptr, 99, L"%.94s.url", t[SHORTCUT_3]);
-	DeleteFile(path);
-	del_shortcut(t[SHORTCUT_2]);
-	del_shortcut(t[SHORTCUT_1]);
-	path_name_ptr[0] = 0;
-	RemoveDirectory(path);
+	startmenu_ptr = PathAddBackslash(startmenu);
+	startmenu_all_ptr = PathAddBackslash(startmenu_all);
+	for (i = SHORTCUT_1; i <= SHORTCUT_5 + 1; i++) {
+		_snwprintf(startmenu_ptr, 99, i > SHORTCUT_5 ? L"ImDisk Virtual Disk Driver.lnk" : i == SHORTCUT_3 ? L"%.94s.url" : L"%.94s.lnk", t[i]);
+		DeleteFile(startmenu);
+		wcscpy(startmenu_all_ptr, startmenu_ptr);
+		DeleteFile(startmenu_all);
+		if (i >= SHORTCUT_4) {
+			wcscpy(desk_ptr, startmenu_ptr);
+			DeleteFile(desk);
+			wcscpy(desk_all_ptr, startmenu_ptr);
+			DeleteFile(desk_all);
+		}
+	}
+	*(startmenu_ptr - 1) = 0;
+	RemoveDirectory(startmenu);
+	*(startmenu_all_ptr - 1) = 0;
+	RemoveDirectory(startmenu_all);
 
 	// files
 	if (dir[0]) {
@@ -1357,6 +1375,14 @@ int __stdcall wWinMain(HINSTANCE hinstance, HINSTANCE hPrevInstance, LPWSTR lpCm
 
 	PathRemoveFileSpec(argv[0]);
 	SetCurrentDirectory(argv[0]);
+	SHGetFolderPath(NULL, CSIDL_DESKTOPDIRECTORY, NULL, SHGFP_TYPE_CURRENT, desk);
+	desk_ptr = PathAddBackslash(desk);
+	SHGetFolderPath(NULL, CSIDL_COMMON_DESKTOPDIRECTORY, NULL, SHGFP_TYPE_CURRENT, desk_all);
+	desk_all_ptr = PathAddBackslash(desk_all);
+	SHGetFolderPath(NULL, CSIDL_PROGRAMS, NULL, SHGFP_TYPE_CURRENT, startmenu);
+	wcscat(startmenu, L"\\ImDisk");
+	SHGetFolderPath(NULL, CSIDL_COMMON_PROGRAMS, NULL, SHGFP_TYPE_CURRENT, startmenu_all);
+	wcscat(startmenu_all, L"\\ImDisk");
 
 	if (argc > 1 && !_wcsicmp(argv[1], L"/silentuninstall")) {
 		silent_uninstall = TRUE;

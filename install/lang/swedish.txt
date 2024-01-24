@@ -10,6 +10,7 @@ RamDisk Configuration Tool
  Alternativ 
 Aktivera kontextmenyposter
 Skapa genvägar på skrivbordet
+Genvägar för alla användare
 Starta ImDskSvc automatiskt
 Språk:
 Håll muspekaren över ett objekt för info.
@@ -18,6 +19,7 @@ Krävs för att montera avancerade avbildsformat som VHD, VDI, VMDK och några a
 Detta verktyg låter dig enkelt konfigurera en eller flera RamDiskar med varierande inställningar.
 Lägger till poster i disk- och filkontext för att hantera ImDisk-volymer och avbildsfiler direkt från Utforskaren.##Detta alternativ kan aktiveras senare, i Windows startmeny.
 Skapar genvägar på skrivbordet.##Alla genvägar skapas alltid i Windows startmeny.
+Skapa genvägar för alla användare istället för nuvarande användare.
 Starta ImDskSvc automatiskt vid systemstart.##Inget verktyg i det här paketet använder denna tjänst, så du kan riskfritt avmarkera detta alternativ.##Det installeras av drivrutinen för att initiera TCP/IP eller serieportanslutningar med proxy-mjukvara.
 Tack
 Installera
@@ -168,6 +170,7 @@ Fel: Filen innehåller inget giltigt filsystem.
 Fel: Volymen kan inte formateras.
 Fel: Volymen kan inte monteras.
 Kopierar filer...
+Fel: Filerna kunde inte kopieras.
 Visar ny enhet...
 Sparar parametrar...
 Varning: för många monteringspunkter.#Denna kommer inte att registreras.
@@ -176,13 +179,17 @@ Klar.
 Avmonterar volym...
 Synkroniserar...
 
- TEMP-miljövariabler 
- Användare 
- System 
+Använd TEMP-variabeln
+Användare:
+System:
 Ange alla som:
+Skapa koppling (rekommenderas)
+från:
+till:
 Ange standard
 OK
 Avbryt
+Fel: Kan inte koppla katalog.
 
 Minnesrensningsmetod:
 Automatisk

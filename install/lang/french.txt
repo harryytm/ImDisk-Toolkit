@@ -10,6 +10,7 @@ Outil de Configuration de RamDisk
  Options 
 Entrées dans les menus contextuels
 Créer des raccourcis sur le bureau
+Raccourcis pour tous les utilisateurs
 Charger ImDskSvc automatiquement
 Langue :
 Laisser la souris sur un élément pour obtenir des informations.
@@ -18,6 +19,7 @@ Requis pour monter des formats de fichier image avancés tels que VHD, VDI, VMDK
 Cet outil vous permettra de configurer facilement un ou plusieurs RamDisks avec divers paramètres.
 Ajouter des entrées dans le menu contextuel de lecteur et le menu contextuel de fichier pour gérer les volumes ImDisk et les fichiers images depuis l'Explorateur.##Cette option peut être définie plus tard dans le Menu Démarrer de Windows.
 Créer des raccourcis sur le bureau.##Tous les raccourcis sont toujours créés dans le Menu Démarrer de Windows.
+Créer des raccourcis pour tous les utilisateurs au lieu de l'utilisateur actuel.
 Lance ImDskSvc automatiquement au démarrage du système.##Aucun outil dans ce paquet utilise ce service, vous pouvez donc sans risque décocher cette option.##Il est installé par le pilote pour initier des connexions TCP/IP ou port série avec des logiciels proxy.
 Crédits
 Installer
@@ -168,6 +170,7 @@ Erreur : le fichier ne contient pas de système de fichiers valide.
 Erreur : le volume ne peut pas être formaté.
 Erreur : le volume ne peut pas être monté.
 Copie des fichiers...
+Erreur : les fichiers ne peuvent pas être copiés.
 Affichage du nouveau lecteur...
 Sauvegarde des paramètres...
 Attention: points de montage trop nombreux.#Celui-ci ne sera pas enregistré.
@@ -176,13 +179,17 @@ Terminé.
 Démontage du volume...
 Synchronisation...
 
- Variables d'Environnement TEMP 
- Utilisateur 
- Système 
+Utiliser les variables Temp
+Utilisateur :
+Système :
 Tout définir à :
+Utiliser une jonction (recommandé) :
+de :
+vers :
 Réglages par défaut
 OK
 Annuler
+Erreur : impossible de créer la jonction.
 
 Méthode de Libération de la Mémoire :
 Automatique

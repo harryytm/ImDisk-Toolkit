@@ -241,7 +241,7 @@ static DWORD __stdcall save_ramdisk(LPVOID lpParam)
 		j = lstrlenW(path_dest);
 		base_dest = path_dest + j;
 
-		if (flags & 4) scan_dir_delete(i, j, FALSE);
+		if ((flags & 0x0c) == 0x0c) scan_dir_delete(i, j, FALSE);
 		scan_dir_copy(i, j);
 
 		if (!dest_is_dir) ImDiskRemoveDevice(NULL, 0, temp_letter);

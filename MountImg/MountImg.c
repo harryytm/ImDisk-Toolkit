@@ -79,7 +79,10 @@ static void load_lang()
 	DWORD dw;
 	int i;
 
-	if ((h = CreateFile(L"lang.txt", GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL)) == INVALID_HANDLE_VALUE) return;
+	if ((h = CreateFile(L"lang.txt", GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL)) == INVALID_HANDLE_VALUE) {
+		MessageBoxA(NULL, "Warning: cannot find lang.txt.", "ImDisk", MB_ICONERROR);
+		return;
+	}
 	GetFileSizeEx(h, &size);
 	if (size.QuadPart > 1 << 17) {
 		CloseHandle(h);
@@ -1243,7 +1246,7 @@ int __stdcall wWinMain(HINSTANCE hinstance, HINSTANCE hPrevInstance, LPWSTR lpCm
 			if (!_wcsnicmp(opt, L"MP=", 3)) {
 				opt += 3;
 				if (*opt && opt[1] == ':' && !opt[2])
-					cmdline_drive_letter = *opt;
+					cmdline_drive_letter = *opt & ~0x20;
 				else {
 					mount_point = TRUE;
 					wcsncpy(mountdir, opt, _countof(mountdir) - 1);

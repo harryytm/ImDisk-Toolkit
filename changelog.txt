@@ -1,3 +1,10 @@
+Version 20211103
+- RamDiskUI.exe: new dialog box for TEMP variables that allows creating junctions (fix for some MSI installers)
+- installer: added an option to create shortcuts for all users instead of current user
+- fix for ramdisks: data synchronization could delete files if an error prevented them from being copied at ramdisk creation
+- fix in MountImg.exe: drive letter specified in command line did not work in lowercase
+- RamDiskUI.exe and MountImg.exe: added a warning in case of lang.txt missing
+
 Version 20210125
 - added finnish language
 

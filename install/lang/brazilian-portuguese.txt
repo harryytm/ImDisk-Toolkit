@@ -10,6 +10,7 @@ Ferramenta de Configuração RamDisk
  Opções 
 Ativar entradas nos menus de contexto
 Crie atalhos na área de trabalho
+Atalhos para todos usuários
 Carregar ImDskSvc automaticamente
 Língua:
 Mantenha o mouse sobre um item para obter detalhes.
@@ -18,6 +19,7 @@ Necessário para montar formatos avançados de arquivo de imagem, como VHD, VDI,
 Esta ferramenta permitirá que você configure facilmente um ou vários RamDisks com várias configurações.
 Adicione entradas no menu de contexto da unidade e no menu de contexto do arquivo para gerenciar os volumes do ImDisk e os arquivos de imagem diretamente do Explorer.##Esta opção pode ser definida posteriormente no menu Iniciar do Windows.
 Crie atalhos na área de trabalho.##Todos os atalhos são sempre criados no menu Iniciar do Windows.
+Cria atalhos para todos usuários em vez de apenas o atual.
 Inicie o ImDskSvc automaticamente na inicialização do sistema.##Nenhuma ferramenta deste pacote usa este serviço, portanto você pode desmarcar essa opção com segurança.##Ela é instalada pelo driver para iniciar conexões de porta serial / TCP / IP com softwares de proxy.
 Créditos
 Instalar
@@ -168,6 +170,7 @@ Erro: o arquivo não contém um sistema de arquivos válido.
 Erro: o volume não pode ser formatado.
 Erro: o volume não pode ser montado.
 Copiando arquivos ...
+Erro: arquivos não puderam ser copiados.
 Exibindo nova unidade ...
 Salvando parâmetros ...
 Aviso: muitos pontos de montagem.#Este não será registrado.
@@ -176,13 +179,17 @@ Feito.
 Desmontando volume ...
 Sincronizando ...
 
- Variáveis ​​de ambiente TEMP 
- Do utilizador 
- Sistema 
+Usar Variáveis Temporárias
+Usuário:
+Sistema:
 Definir tudo como:
+Usar Junções (recomendado)
+de:
+para:
 Definir padrões
 Está bem
 Cancelar
+Erro: não foi possível criar junção.
 
 Método de Liberação de Memória:
 Automático

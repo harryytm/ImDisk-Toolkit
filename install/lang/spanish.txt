@@ -10,6 +10,7 @@ Herramienta de configuración RamDisk
  Opciones 
 Permitir entradas en menús contextuales
 Crear accesos directos en escritorio
+Accesos directos para todos los usuarios
 Cargue ImDskSvc automáticamente
 Lenguaje:
 Mantenga su mouse sobre un artículo para obtener detalles.
@@ -18,6 +19,7 @@ Requeridos para montar formatos de archivo de imagen avanzadas como VHD, VDI, VM
 Esta herramienta permitirá configurar fácilmente uno o varios RamDisks con varios ajustes.
 Agregar entradas en el menú contextual de la unidad y en el menú contextual del archivo para manejar volúmenes ImDisk y archivos imagen directamente desde el explorador.##Esta opción puede ajustarse después en el menú de inicio de Windows.
 Crear accesos directos en el escritorio.##Todos los accesos directos se crean siempre en el menú Inicio de Windows.
+Crear accesos directos para todos los usuarios en lugar del usuario actual.
 Inicie ImDskSvc automáticamente al inicio del sistema.##Ninguna herramienta de este paquete utiliza este servicio, por lo que puede desmarcar esta opción de manera segura.##Es instalado por el controlador para iniciar TCP/IP o conexiones de puerto serie con software proxy.
 Créditos
 Instalar
@@ -168,6 +170,7 @@ Error: el archivo no contiene un sistema de archivo válido.
 Error: el volumen no se puede formatear.
 Error: el volumen no se puede montar.
 Copiando archivos...
+Error: los archivos no se pueden copiar.
 Viendo nueva unidad...
 Guardando Parámetros...
 Advertencia:. Demasiados puntos de montaje#Este no será registrado.
@@ -176,13 +179,17 @@ Hecho.
 Desmontando Volumen...
 Sincronizando...
 
- Variables de entorno TEMP 
- Usuario 
- Sistema 
+Utilizar variables Temp
+Usuario:
+Sistema:
 Ajustar todo a:
+Use una unión (recomendado)
+de:
+para:
 Ajustar por defecto
 OK
 Cancelar
+Error: no se puede crear la unión.
 
 Método de liberación de memoria:
 Automático

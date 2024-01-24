@@ -10,6 +10,7 @@ RamDisk Configuration Tool
  Options 
 Enable entries in context menus
 Create shortcuts on desktop
+Shortcuts for all users
 Load ImDskSvc automatically
 Language:
 Please keep your mouse over an item to get details.
@@ -18,6 +19,7 @@ Required to mount advanced image file formats like VHD, VDI, VMDK and some other
 This tool will allow you to easily configure one or several RamDisks with various settings.
 Add entries in the drive context menu and the file context menu to manage ImDisk volumes and image files directly from Explorer.##This option can be set later in the Windows Start Menu.
 Create shortcuts on desktop.##All shortcuts are always created in the Windows Start Menu.
+Create shortcuts for all users instead of current user.
 Start ImDskSvc automatically at system startup.##No tool in this package uses this service, so you can safely uncheck this option.##It is installed by the driver to initiate TCP/IP or serial port connections with proxy softwares.
 Credits
 Install
@@ -168,6 +170,7 @@ Error: the file does not contain a valid file system.
 Error: the volume cannot be formatted.
 Error: the volume cannot be mounted.
 Copying files...
+Error: files cannot be copied.
 Displaying new drive...
 Saving parameters...
 Warning: too many mount points.#This one will not be registered.
@@ -176,13 +179,17 @@ Done.
 Unmounting volume...
 Synchronizing...
 
- TEMP Environment Variables 
- User 
- System 
+Use Temp Variables
+User:
+System:
 Set All To:
+Use a Junction (recommended)
+from:
+to:
 Set Defaults
 OK
 Cancel
+Error: cannot create junction.
 
 Memory Release Method:
 Automatic

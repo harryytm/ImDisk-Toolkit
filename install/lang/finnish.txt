@@ -10,6 +10,7 @@ RamDisk-määritystyökalu
  Valinnat 
 Valinnat kontekstivalikoissa
 Luo pikakuvakkeet työpöydälle
+Pikakuvake kaikille käyttäjille
 Lataa ImDskSvc automaattisesti
 Kieli:
 Pidä hiirtä kohteen päällä nähdäksesi lisätiedot.
@@ -18,6 +19,7 @@ Vaaditaan, jos haluat ottaa käyttöön edistyneempia levykuvamuotoja, kuten VHD
 Tällä työkalulla voit helposti määritellä yden tai useampia RAM-levyjä (RamDisk) eri asetuksilla.
 Lisää kohdat levyjen ja tiedostojen kontekstivalikkoon ImDisk-taltioiden ja levykuvien hallintaan suoraan resurssienhallinnasta.##Tämän voi myös myöhemmin valita käynnistysvalikosta.
 Luo pikakuvakkeet työpöydälle.##Pikakuvakkeet luodaan Windowsin käynnistysvalikkoon aina.
+Luo pikakuvakkeet kaikille käyttäjille, ei vain nykyiselle.
 Käynnistää ImDskSvc:n automaattisesti järjestelmän mukana.##Mikään työkalu ei käytä tätä palvelua, joten tämän voi turvallisesti jättää pois.##Ajuri asentaa sen käyttääkseen TCP/IP- ja sarjaporttiyhteyksiä määritettyjen välityspalvelinten kautta.
 Tekijät
 Asenna
@@ -168,6 +170,7 @@ Virhe: tiedosto ei sisällä tuettua tiedostojärjestelmää.
 Virhe: taltiota ei voitu alustaa.
 Virhe: taltiota ei voitu liittää.
 Kopioidaan tiedostoja...
+Virhe: tiedostoja ei voitu kopioida.
 Näytetään uutta asemaa...
 Tallennetaan parametreja...
 Varoitus: liian monta liitoskohtaa.#Tätä kohtaa ei rekisteröidä.
@@ -176,13 +179,17 @@ Valmista.
 Irrotetaan taltiota...
 Synkronoidaan...
 
- TEMP-ympäristömuuttujat 
- Käyttäjä 
- Järjestelmä 
+Käytä TEMP-ympäristömuuttujia
+Käyttäjä:
+Järjestelmä:
 Aseta kaikkiin:
+Käytä liitoskohtaa (suositeltu)
+liitä:
+kohde:
 Palauta oletukset
 OK
 Peruuta
+Virhe: liitoskohtaa ei voitu luoda.
 
 Muistin vapautus:
 Automaattinen

@@ -5,6 +5,7 @@
 #include <shlwapi.h>
 #include <wtsapi32.h>
 #include <stdio.h>
+#include <winternl.h>
 #include <ntstatus.h>
 #include <ntdef.h>
 #include <aclapi.h>
@@ -79,8 +80,8 @@ enum {
 	TAB3_0, TAB3_1, TAB3_2, TAB3_3, TAB3_4, TAB3_5, TAB3_6,
 	TTIP3_1, TTIP3_2, TTIP3_3, TTIP3_4,
 	DYNAWE_1, DYNAWE_2, DYNAWE_3,
-	MSG_0, MSG_1, MSG_2, MSG_3, MSG_4, MSG_5, MSG_6, MSG_7, MSG_8, MSG_9, MSG_10, MSG_11, MSG_12, MSG_13, MSG_14, MSG_15, MSG_16, MSG_17, MSG_18, MSG_19, MSG_20, MSG_21, MSG_22, MSG_23,
-	TEMP_1, TEMP_2, TEMP_3, TEMP_4, TEMP_5, TEMP_6, TEMP_7,
+	MSG_0, MSG_1, MSG_2, MSG_3, MSG_4, MSG_5, MSG_6, MSG_7, MSG_8, MSG_9, MSG_10, MSG_11, MSG_12, MSG_13, MSG_14, MSG_15, MSG_16, MSG_17, MSG_18, MSG_19, MSG_20, MSG_21, MSG_22, MSG_23, MSG_24,
+	TEMP_1, TEMP_2, TEMP_3, TEMP_4, TEMP_5, TEMP_6, TEMP_7, TEMP_8, TEMP_9, TEMP_10, TEMP_11,
 	DYN_1, DYN_2, DYN_3, DYN_4, DYN_5, DYN_6, DYN_7, DYN_8, DYN_9, DYN_10, DYN_11, DYN_12, DYN_13, DYN_14,
 	DYNTT_1, DYNTT_2, DYNTT_3, DYNTT_4, DYNTT_5,
 	WARN_1, WARN_2, WARN_3, WARN_4,
@@ -96,7 +97,10 @@ static void load_lang()
 	DWORD dw;
 	int i;
 
-	if ((h = CreateFile(L"lang.txt", GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL)) == INVALID_HANDLE_VALUE) return;
+	if ((h = CreateFile(L"lang.txt", GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL)) == INVALID_HANDLE_VALUE) {
+		MessageBoxA(NULL, "Warning: cannot find lang.txt.", "ImDisk", MB_ICONERROR);
+		return;
+	}
 	GetFileSizeEx(h, &size);
 	if (size.QuadPart > 1 << 17) {
 		CloseHandle(h);
@@ -115,7 +119,7 @@ static void load_lang()
 }
 
 
-static void start_process(WCHAR *cmd, BYTE flag)
+static DWORD start_process(WCHAR *cmd, BYTE flag)
 {
 	STARTUPINFO si = {sizeof si};
 	PROCESS_INFORMATION pi;
@@ -132,11 +136,16 @@ static void start_process(WCHAR *cmd, BYTE flag)
 		CloseHandle(lt.LinkedToken);
 	} else
 		result = CreateProcess(NULL, cmd, NULL, NULL, FALSE, CREATE_NO_WINDOW, NULL, NULL, &si, &pi);
+	dw = 1;
 	if (result) {
-		if (flag) WaitForSingleObject(pi.hProcess, INFINITE);
+		if (flag) {
+			WaitForSingleObject(pi.hProcess, INFINITE);
+			GetExitCodeProcess(pi.hProcess, &dw);
+		}
 		CloseHandle(pi.hProcess);
 		CloseHandle(pi.hThread);
 	}
+	return dw;
 }
 
 static void reg_set_dword(WCHAR *name, DWORD *value)
@@ -306,7 +315,7 @@ __declspec(noreturn) static void configure_services_and_exit()
 					ChangeServiceConfig2(h_svc, SERVICE_CONFIG_PRESHUTDOWN_INFO, &svc_preshutdown_info);
 				}
 			} else
-				MessageBox(NULL, t[MSG_20], L"ImDisk", MB_ICONERROR);
+				MessageBox(NULL, t[MSG_21], L"ImDisk", MB_ICONERROR);
 		}
 		StartService(h_svc, 0, NULL);
 	} else {
@@ -369,7 +378,7 @@ static DWORD __stdcall UnmountDrive(LPVOID lpParam)
 {
 	WCHAR cmd_line[24];
 
-	notif(RGB(255, 255, 0), t[MSG_22]);
+	notif(RGB(255, 255, 0), t[MSG_23]);
 	_snwprintf(cmd_line, _countof(cmd_line), L"ImDisk-Dlg RM %s", drive_select);
 	start_process(cmd_line, TRUE);
 	if (!PathFileExists(drive_select)) {
@@ -382,18 +391,18 @@ static DWORD __stdcall UnmountDrive(LPVOID lpParam)
 		remove_reg_param(drive_select[0]);
 	}
 	init1_ok = apply_ok = TRUE;
-	notif(RGB(0, 255, 0), t[MSG_21]);
+	notif(RGB(0, 255, 0), t[MSG_22]);
 	return 0;
 }
 
 static DWORD __stdcall UnmountMP(LPVOID lpParam)
 {
-	notif(RGB(255, 255, 0), t[MSG_22]);
+	notif(RGB(255, 255, 0), t[MSG_23]);
 	remove_mount_point();
 	load_mount_point();
 	SetFocus(hwnd[2]);
 	init2_ok = apply_ok = TRUE;
-	notif(RGB(0, 255, 0), t[MSG_21]);
+	notif(RGB(0, 255, 0), t[MSG_22]);
 	return 0;
 }
 
@@ -437,10 +446,10 @@ static DWORD __stdcall SyncThread(LPVOID lpParam)
 {
 	WCHAR cmd_line[] = L"ImDiskTk-svc SYNC";
 
-	notif(RGB(255, 255, 0), t[MSG_23]);
+	notif(RGB(255, 255, 0), t[MSG_24]);
 	start_process(cmd_line, TRUE);
 	init1_ok = init2_ok = init3_ok = apply_ok = TRUE;
-	notif(RGB(0, 255, 0), t[MSG_21]);
+	notif(RGB(0, 255, 0), t[MSG_22]);
 	return 0;
 }
 
@@ -448,7 +457,12 @@ static INT_PTR __stdcall VarProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPar
 {
 	HKEY reg_key;
 	DWORD data_size;
-	WCHAR path[MAX_PATH];
+	HANDLE h;
+	WIN32_FIND_DATA FindFileData;
+	WCHAR path[MAX_PATH + 8];
+	struct {REPARSE_DATA_BUFFER rdb; WCHAR path[2 * MAX_PATH + 2];} reparse_buf;
+	UNICODE_STRING nt_path;
+	WCHAR *error_msg;
 	int i;
 
 	switch (Msg)
@@ -458,76 +472,122 @@ static INT_PTR __stdcall VarProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPar
 
 			// set localized strings
 			if (t[0]) {
-				SetDlgItemText(hDlg, ID_TITLE, t[TEMP_1]);
+				SetDlgItemText(hDlg, ID_RB1, t[TEMP_1]);
 				SetDlgItemText(hDlg, ID_TEXT1, t[TEMP_2]);
 				SetDlgItemText(hDlg, ID_TEXT2, t[TEMP_3]);
-				SetDlgItemText(hDlg, ID_PBUTTON5, t[TEMP_4]);
-				SetDlgItemText(hDlg, ID_PBUTTON6, t[TEMP_5]);
-				SetDlgItemText(hDlg, IDOK, t[TEMP_6]);
-				SetDlgItemText(hDlg, IDCANCEL, t[TEMP_7]);
+				SetDlgItemText(hDlg, ID_PBUTTON1, t[TEMP_4]);
+				SetDlgItemText(hDlg, ID_RB2, t[TEMP_5]);
+				SetDlgItemText(hDlg, ID_TEXT3, t[TEMP_6]);
+				SetDlgItemText(hDlg, ID_TEXT4, t[TEMP_7]);
+				SetDlgItemText(hDlg, ID_PBUTTON2, t[TEMP_8]);
+				SetDlgItemText(hDlg, IDOK, t[TEMP_9]);
+				SetDlgItemText(hDlg, IDCANCEL, t[TEMP_10]);
 			}
 
-			for (i = ID_EDIT5; i <= ID_EDIT9; i++)
-				SendDlgItemMessage(hDlg, i, EM_SETLIMITTEXT, _countof(path) - 1, 0);
+			for (i = ID_EDIT1; i <= ID_EDIT5; i++)
+				SendDlgItemMessage(hDlg, i, EM_SETLIMITTEXT, MAX_PATH, 0);
 
+			path[_countof(path) - 1] = 0;
 			RegOpenKeyExA(HKEY_CURRENT_USER, "Environment", 0, KEY_QUERY_VALUE, &reg_key);
 			data_size = sizeof path;
-			if (RegQueryValueEx(reg_key, L"TEMP", NULL, NULL, (void*)&path, &data_size) == ERROR_SUCCESS)
-				SetDlgItemText(hDlg, ID_EDIT5, path);
-			data_size = sizeof path;
 			if (RegQueryValueEx(reg_key, L"TMP", NULL, NULL, (void*)&path, &data_size) == ERROR_SUCCESS)
-				SetDlgItemText(hDlg, ID_EDIT6, path);
+				SetDlgItemText(hDlg, ID_EDIT1, path);
 			RegCloseKey(reg_key);
+
+			FindClose(h = FindFirstFile(path, &FindFileData));
+			if (h != INVALID_HANDLE_VALUE && FindFileData.dwFileAttributes & FILE_ATTRIBUTE_REPARSE_POINT && FindFileData.dwReserved0 == IO_REPARSE_TAG_MOUNT_POINT) {
+				CheckRadioButton(hDlg, ID_RB1, ID_RB2, ID_RB2);
+				SetDlgItemText(hDlg, ID_EDIT4, path);
+				h = CreateFile(path, 0, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS | FILE_FLAG_OPEN_REPARSE_POINT, NULL);
+				ZeroMemory(&reparse_buf, sizeof reparse_buf);
+				DeviceIoControl(h, FSCTL_GET_REPARSE_POINT, NULL, 0, &reparse_buf, sizeof reparse_buf, &data_size, NULL);
+				CloseHandle(h);
+				SetDlgItemText(hDlg, ID_EDIT5, reparse_buf.rdb.MountPointReparseBuffer.PathBuffer + (reparse_buf.rdb.MountPointReparseBuffer.PrintNameOffset >> 1));
+			} else {
+				CheckRadioButton(hDlg, ID_RB1, ID_RB2, ID_RB1);
+				SHGetFolderPath(NULL, CSIDL_COMMON_APPDATA, NULL, SHGFP_TYPE_CURRENT, path);
+				wcscat(path, L"\\Temp");
+				SetDlgItemText(hDlg, ID_EDIT4, path);
+				_snwprintf(path, _countof(path) - 1, L"%s\\Temp", drive_select);
+				SetDlgItemText(hDlg, ID_EDIT5, path);
+			}
 
 			RegOpenKeyExA(HKEY_LOCAL_MACHINE, "SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment", 0, KEY_QUERY_VALUE, &reg_key);
 			data_size = sizeof path;
-			if (RegQueryValueEx(reg_key, L"TEMP", NULL, NULL, (void*)&path, &data_size) == ERROR_SUCCESS)
-				SetDlgItemText(hDlg, ID_EDIT7, path);
-			data_size = sizeof path;
 			if (RegQueryValueEx(reg_key, L"TMP", NULL, NULL, (void*)&path, &data_size) == ERROR_SUCCESS)
-				SetDlgItemText(hDlg, ID_EDIT8, path);
+				SetDlgItemText(hDlg, ID_EDIT2, path);
 			RegCloseKey(reg_key);
 
-			_snwprintf(path, _countof(path), L"%s\\Temp", drive_select);
-			SetDlgItemText(hDlg, ID_EDIT9, path);
-			SendMessage(hDlg, WM_NEXTDLGCTL, (WPARAM)GetDlgItem(hDlg, ID_EDIT9), TRUE);
+			_snwprintf(path, _countof(path) - 1, L"%s\\Temp", drive_select);
+			SetDlgItemText(hDlg, ID_EDIT3, path);
 
 			return TRUE;
 
 		case WM_COMMAND:
-			if (LOWORD(wParam) == ID_PBUTTON5) {
-				GetDlgItemText(hDlg, ID_EDIT9, path, _countof(path));
-				for (i = ID_EDIT5; i <= ID_EDIT8; i++)
-					SetDlgItemText(hDlg, i, path);
+			if (LOWORD(wParam) == ID_PBUTTON1) {
+				GetDlgItemText(hDlg, ID_EDIT3, path, _countof(path));
+				SetDlgItemText(hDlg, ID_EDIT1, path);
+				SetDlgItemText(hDlg, ID_EDIT2, path);
 			}
 
-			if (LOWORD(wParam) == ID_PBUTTON6) {
+			if (LOWORD(wParam) == ID_PBUTTON2) {
 				RegOpenKeyExA(HKEY_USERS, ".DEFAULT\\Environment", 0, KEY_QUERY_VALUE, &reg_key);
 				data_size = sizeof path;
-				if (RegQueryValueEx(reg_key, L"TEMP", NULL, NULL, (void*)&path, &data_size) == ERROR_SUCCESS)
-					SetDlgItemText(hDlg, ID_EDIT5, path);
-				data_size = sizeof path;
 				if (RegQueryValueEx(reg_key, L"TMP", NULL, NULL, (void*)&path, &data_size) == ERROR_SUCCESS)
-					SetDlgItemText(hDlg, ID_EDIT6, path);
+					SetDlgItemText(hDlg, ID_EDIT1, path);
 				RegCloseKey(reg_key);
-				SetDlgItemText(hDlg, ID_EDIT7, L"%SystemRoot%\\TEMP");
-				SetDlgItemText(hDlg, ID_EDIT8, L"%SystemRoot%\\TEMP");
+				SetDlgItemText(hDlg, ID_EDIT2, L"%SystemRoot%\\TEMP");
+				CheckRadioButton(hDlg, ID_RB1, ID_RB2, ID_RB1);
 			}
 
 			if (LOWORD(wParam) == IDOK) {
-				RegOpenKeyExA(HKEY_CURRENT_USER, "Environment", 0, KEY_SET_VALUE, &reg_key);
-				GetDlgItemText(hDlg, ID_EDIT5, path, _countof(path));
-				RegSetValueEx(reg_key, L"TEMP", 0, REG_EXPAND_SZ, (void*)&path, (wcslen(path) + 1) * sizeof(WCHAR));
-				GetDlgItemText(hDlg, ID_EDIT6, path, _countof(path));
-				RegSetValueEx(reg_key, L"TMP", 0, REG_EXPAND_SZ, (void*)&path, (wcslen(path) + 1) * sizeof(WCHAR));
-				RegCloseKey(reg_key);
-
-				RegOpenKeyEx(HKEY_LOCAL_MACHINE, L"SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment", 0, KEY_SET_VALUE, &reg_key);
-				GetDlgItemText(hDlg, ID_EDIT7, path, _countof(path));
-				RegSetValueEx(reg_key, L"TEMP", 0, REG_EXPAND_SZ, (void*)&path, (wcslen(path) + 1) * sizeof(WCHAR));
-				GetDlgItemText(hDlg, ID_EDIT8, path, _countof(path));
-				RegSetValueEx(reg_key, L"TMP", 0, REG_EXPAND_SZ, (void*)&path, (wcslen(path) + 1) * sizeof(WCHAR));
-				RegCloseKey(reg_key);
+				if (IsDlgButtonChecked(hDlg, ID_RB1)) {
+					RegOpenKeyExA(HKEY_CURRENT_USER, "Environment", 0, KEY_SET_VALUE, &reg_key);
+					GetDlgItemText(hDlg, ID_EDIT1, path, _countof(path));
+					RegSetValueEx(reg_key, L"TEMP", 0, REG_EXPAND_SZ, (void*)&path, (wcslen(path) + 1) * sizeof(WCHAR));
+					RegSetValueEx(reg_key, L"TMP", 0, REG_EXPAND_SZ, (void*)&path, (wcslen(path) + 1) * sizeof(WCHAR));
+					RegCloseKey(reg_key);
+					RegOpenKeyEx(HKEY_LOCAL_MACHINE, L"SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment", 0, KEY_SET_VALUE, &reg_key);
+					GetDlgItemText(hDlg, ID_EDIT2, path, _countof(path));
+					RegSetValueEx(reg_key, L"TEMP", 0, REG_EXPAND_SZ, (void*)&path, (wcslen(path) + 1) * sizeof(WCHAR));
+					RegSetValueEx(reg_key, L"TMP", 0, REG_EXPAND_SZ, (void*)&path, (wcslen(path) + 1) * sizeof(WCHAR));
+					RegCloseKey(reg_key);
+				} else {
+					GetDlgItemText(hDlg, ID_EDIT4, path, _countof(path));
+					CreateDirectory(path, NULL);
+					h = CreateFile(path, GENERIC_WRITE, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS | FILE_FLAG_OPEN_REPARSE_POINT, NULL);
+					GetDlgItemText(hDlg, ID_EDIT5, path, _countof(path));
+					RtlDosPathNameToNtPathName_U(path, &nt_path, NULL, NULL);
+					i = wcslen(path) << 1;
+					ZeroMemory(&reparse_buf, sizeof reparse_buf);
+					reparse_buf.rdb.ReparseTag = IO_REPARSE_TAG_MOUNT_POINT;
+					reparse_buf.rdb.ReparseDataLength = sizeof(reparse_buf.rdb.MountPointReparseBuffer) + nt_path.Length + i + 2;
+					reparse_buf.rdb.MountPointReparseBuffer.SubstituteNameLength = nt_path.Length;
+					reparse_buf.rdb.MountPointReparseBuffer.PrintNameOffset = nt_path.Length + 2;
+					reparse_buf.rdb.MountPointReparseBuffer.PrintNameLength = i;
+					memcpy(reparse_buf.rdb.MountPointReparseBuffer.PathBuffer, nt_path.Buffer, nt_path.Length);
+					memcpy(reparse_buf.rdb.MountPointReparseBuffer.PathBuffer + (nt_path.Length >> 1) + 1, path, i);
+					if (DeviceIoControl(h, FSCTL_SET_REPARSE_POINT, &reparse_buf, 20 + nt_path.Length + i, NULL, 0, &data_size, NULL)) {
+						RegOpenKeyExA(HKEY_CURRENT_USER, "Environment", 0, KEY_SET_VALUE, &reg_key);
+						GetDlgItemText(hDlg, ID_EDIT4, path, _countof(path));
+						i = (wcslen(path) + 1) * sizeof(WCHAR);
+						RegSetValueEx(reg_key, L"TEMP", 0, REG_EXPAND_SZ, (void*)&path, i);
+						RegSetValueEx(reg_key, L"TMP", 0, REG_EXPAND_SZ, (void*)&path, i);
+						RegCloseKey(reg_key);
+						RegOpenKeyEx(HKEY_LOCAL_MACHINE, L"SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment", 0, KEY_SET_VALUE, &reg_key);
+						RegSetValueEx(reg_key, L"TEMP", 0, REG_EXPAND_SZ, (void*)&path, i);
+						RegSetValueEx(reg_key, L"TMP", 0, REG_EXPAND_SZ, (void*)&path, i);
+						RegCloseKey(reg_key);
+					} else {
+						FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, NULL, GetLastError(), 0, (LPTSTR)&error_msg, 0, NULL);
+						_snwprintf(reparse_buf.path, _countof(reparse_buf.path) - 1, L"%s\n%s", t[TEMP_11] ? t[TEMP_11] : L"Error: cannot create junction.", error_msg);
+						reparse_buf.path[_countof(reparse_buf.path) - 1] = 0;
+						MessageBox(hDlg, reparse_buf.path, L"ImDisk", MB_ICONERROR);
+						LocalFree(error_msg);
+					}
+					CloseHandle(h);
+					LocalFree(nt_path.Buffer);
+				}
 
 				EndDialog(hDlg, 0);
 			}
@@ -874,7 +934,10 @@ err_cannot_mount:
 		_snwprintf(cmd_line, _countof(cmd_line), L"xcopy \"%s*\" \"%s\" /e /c /q /h /k /y", image_file, current_MP);
 		if (!fs.filesystem) wcscat(cmd_line, L" /x");
 		if (os_ver.dwMajorVersion >= 6) wcscat(cmd_line, L" /b");
-		start_process(cmd_line, TRUE);
+		if (start_process(cmd_line, TRUE))
+			MessageBox(hwnd[0], t[MSG_17], L"ImDisk", MB_ICONERROR);
+		else
+			sync_flags |= 8;
 		if ((sync_flags & 3) == 3 && image_file[0]) {
 			_snwprintf(cmd_line, _countof(cmd_line), L"attrib -a \"%s\\*\" /s", current_MP);
 			if (os_ver.dwMajorVersion >= 6) wcscat(cmd_line, L" /l");
@@ -884,7 +947,7 @@ err_cannot_mount:
 
 	// show the mounted drive
 	if (!use_mount_point && show_explorer) {
-		notif(RGB(255, 255, 0), t[MSG_17]);
+		notif(RGB(255, 255, 0), t[MSG_18]);
 		ShExInf.fMask = SEE_MASK_INVOKEIDLIST;
 		ShExInf.lpVerb = L"properties";
 		ShExInf.lpFile = drive_select;
@@ -893,7 +956,7 @@ err_cannot_mount:
 	}
 
 	// save parameters
-	notif(RGB(255, 255, 0), t[MSG_18]);
+	notif(RGB(255, 255, 0), t[MSG_19]);
 	param_name[0] = wanted_drive;
 	param_name[1] = '_';
 	if (mount_current)
@@ -944,7 +1007,7 @@ err_cannot_mount:
 		for (param_name[0] = '0'; param_name[0] <= '9'; param_name[0]++)
 			if (reg_query_dword(param_name, &dw) == ERROR_FILE_NOT_FOUND) break;
 		if (param_name[0] > '9' && (win_boot || (sync_flags & 1 && image_file[0])))
-			MessageBox(hwnd[0], t[MSG_19], L"ImDisk", MB_ICONWARNING);
+			MessageBox(hwnd[0], t[MSG_20], L"ImDisk", MB_ICONWARNING);
 		else {
 			if (win_boot)
 				copy_list_param(param_name, FALSE);
@@ -954,7 +1017,7 @@ err_cannot_mount:
 		load_mount_point();
 	}
 
-	notif(RGB(0, 255, 0), t[MSG_21]);
+	notif(RGB(0, 255, 0), t[MSG_22]);
 
 	apply_ok = TRUE;
 	return 0;
@@ -1578,7 +1641,12 @@ static void __stdcall SvcMain(DWORD dwArgc, LPTSTR *lpszArgv)
 				wcscpy(reg_add_param, add_param);
 				reg_sync_flags = sync_flags;
 				key_name_ptr = &key_name[2];
+				wcscpy(&key_name[2], L"SyncFlags");
 			} else continue;
+
+			// prevent data from being deleted in source if xcopy has not finished
+			reg_sync_flags &= ~8;
+			reg_set_dword(key_name_ptr, &reg_sync_flags);
 
 			attrib = GetFileAttributes(reg_image_file);
 			reg_mount_dir = attrib != INVALID_FILE_ATTRIBUTES && attrib & FILE_ATTRIBUTE_DIRECTORY;
@@ -1666,7 +1734,11 @@ static void __stdcall SvcMain(DWORD dwArgc, LPTSTR *lpszArgv)
 				_snwprintf(cmd_line, _countof(cmd_line), L"xcopy \"%s*\" \"%s\" /e /c /q /h /k /y", reg_image_file, current_MP);
 				if (!reg_fs.filesystem) wcscat(cmd_line, L" /x");
 				if (os_ver.dwMajorVersion >= 6) wcscat(cmd_line, L" /b");
-				start_process(cmd_line, TRUE);
+				if (!start_process(cmd_line, TRUE)) {
+					wcscpy(&key_name[2], L"SyncFlags");
+					reg_sync_flags |= 8;
+					reg_set_dword(key_name_ptr, &reg_sync_flags);
+				}
 				if ((reg_sync_flags & 3) == 3 && reg_image_file[0]) {
 					_snwprintf(cmd_line, _countof(cmd_line), L"attrib -a \"%s\\*\" /s", current_MP);
 					if (os_ver.dwMajorVersion >= 6) wcscat(cmd_line, L" /l");
@@ -1770,8 +1842,9 @@ int __stdcall wWinMain(HINSTANCE hinstance, HINSTANCE hPrevInstance, LPWSTR lpCm
 	sa.lpSecurityDescriptor = &sd;
 	sa.bInheritHandle = FALSE;
 
-	if (!(h_cpl = LoadLibraryA("imdisk.cpl")))
-		WTSSendMessage(WTS_CURRENT_SERVER_HANDLE, WTSGetActiveConsoleSessionId(), L"ImDisk", 14, L"Warning: cannot find imdisk.cpl.", 66, MB_OK | MB_ICONWARNING, 0, &data_size, FALSE);
+	h_cpl = LoadLibraryA("imdisk.cpl");
+	if (!h_cpl && argc > 1 && (!wcscmp(argv[1], L"SVC") || !wcscmp(argv[1], L"UAC")))
+		WTSSendMessageA(WTS_CURRENT_SERVER_HANDLE, WTSGetActiveConsoleSessionId(), "ImDisk", 14, "Warning: cannot find imdisk.cpl.", 66, MB_OK | MB_ICONWARNING, 0, &data_size, FALSE);
 	ImDisk_OpenDeviceByMountPoint = GetProcAddress(h_cpl, "ImDiskOpenDeviceByMountPoint");
 	ImDisk_NotifyShellDriveLetter = GetProcAddress(h_cpl, "ImDiskNotifyShellDriveLetter");
 
@@ -1814,7 +1887,7 @@ int __stdcall wWinMain(HINSTANCE hinstance, HINSTANCE hPrevInstance, LPWSTR lpCm
 			svc_description.lpDescription = L"Mounts a RamDisk at system startup.";
 			ChangeServiceConfig2(h_svc, SERVICE_CONFIG_DESCRIPTION, &svc_description);
 		} else
-			MessageBox(NULL, t[MSG_20], L"ImDisk", MB_ICONERROR);
+			MessageBox(NULL, t[MSG_21], L"ImDisk", MB_ICONERROR);
 	}
 
 	// set up the property sheet
