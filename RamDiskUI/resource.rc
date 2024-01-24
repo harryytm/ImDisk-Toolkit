@@ -134,7 +134,7 @@ END
 
 
 1 VERSIONINFO
-FILEVERSION 7,5,0,0
+FILEVERSION 7,6,0,0
 BEGIN
 BLOCK "StringFileInfo"
 	BEGIN
@@ -142,7 +142,7 @@ BLOCK "StringFileInfo"
 		BEGIN
 			VALUE "FileDescription", "RamDisk Configuration Tool"
 			VALUE "ProductName", "imdisk"
-			VALUE "ProductVersion", "7.5.0.0"
+			VALUE "ProductVersion", "7.6.0.0"
 		END
 	END
 BLOCK "VarFileInfo"

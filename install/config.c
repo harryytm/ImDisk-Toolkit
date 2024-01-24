@@ -45,9 +45,9 @@ static DWORD EstimatedSize = 1813;
 static WCHAR *driver_svc_list[] = {L"ImDskSvc", L"AWEAlloc", L"ImDisk"};
 static WCHAR *tk_svc_list[] = {L"ImDiskRD", L"ImDiskTk-svc", L"ImDiskImg"};
 
-static WCHAR *lang_list[] = {L"english", L"deutsch", L"español", L"français", L"italiano", L"русский", L"svenska", L"简体中文"};
-static WCHAR *lang_file_list[] = {L"english", L"german", L"spanish", L"french", L"italian", L"russian", L"swedish", L"schinese"};
-static USHORT lang_id_list[] = {0, 0x07, 0x0a, 0x0c, 0x10, 0x19, 0x1d, 0x04};
+static WCHAR *lang_list[] = {L"english", L"deutsch", L"español", L"français", L"italiano", L"português brasileiro", L"русский", L"svenska", L"简体中文"};
+static WCHAR *lang_file_list[] = {L"english", L"german", L"spanish", L"french", L"italian", L"brazilian-portuguese", L"russian", L"swedish", L"schinese"};
+static USHORT lang_id_list[] = {0, 0x07, 0x0a, 0x0c, 0x10, 0x16, 0x19, 0x1d, 0x04};
 static int n_lang = 0;
 static _Bool lang_cmdline = FALSE;
 
@@ -65,7 +65,7 @@ enum {
 	ERR_1, ERR_2, ERR_3,
 	PREV_TXT,
 	FIN_1, FIN_2, FIN_3,
-	CRED_0, CRED_1, CRED_2, CRED_3, CRED_4, TRANS_0, TRANS_1, TRANS_2, TRANS_3, TRANS_4, TRANS_5, TRANS_6, TRANS_MAX,
+	CRED_0, CRED_1, CRED_2, CRED_3, TRANS_0, TRANS_1, TRANS_2, TRANS_3, TRANS_4, TRANS_5, TRANS_6, TRANS_7, TRANS_MAX,
 	SHORTCUT_1, SHORTCUT_2, SHORTCUT_3, SHORTCUT_4, SHORTCUT_5,
 	CONTEXT_1, CONTEXT_2, CONTEXT_3,
 
@@ -74,7 +74,7 @@ enum {
 	U_MSG_1, U_MSG_2, U_MSG_3, U_MSG_4,
 
 	S_TITLE,
-	S_CTRL_0, S_CTRL_1, S_CTRL_2, S_CTRL_3, S_CTRL_4, S_CTRL_5, S_CTRL_6, S_CTRL_7, S_CTRL_8,
+	S_CTRL_0, S_CTRL_1, S_CTRL_2, S_CTRL_3, S_CTRL_4, S_CTRL_5, S_CTRL_6, S_CTRL_7, S_CTRL_8, S_CTRL_9,
 
 	NB_TXT
 };
@@ -1117,7 +1117,7 @@ static INT_PTR __stdcall SettingsProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM
 	RECT ctrl1, ctrl2, ctrl3;
 	HFONT font;
 	DWORD data_size, bytes_written;
-	DWORD dlg_flags = 0, hidden_drives = 0;
+	DWORD show_explorer = 1, dlg_flags = 0, hidden_drives = 0;
 	OPENFILENAME ofn = {sizeof ofn};
 	BOOL disp_warn;
 	HANDLE h;
@@ -1137,12 +1137,13 @@ static INT_PTR __stdcall SettingsProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM
 				SetWindowText(hDlg, t[S_TITLE]);
 				SetDlgItemText(hDlg, ID_STATIC1, t[S_CTRL_0]);
 				SetDlgItemText(hDlg, ID_CHECK1, t[S_CTRL_1]);
-				SetDlgItemText(hDlg, ID_PBUTTON1, t[S_CTRL_2]);
-				SetDlgItemText(hDlg, ID_STATIC2, t[S_CTRL_3]);
-				SetDlgItemText(hDlg, ID_PBUTTON2, t[S_CTRL_4]);
-				SetDlgItemText(hDlg, ID_CHECK2, t[S_CTRL_5]);
-				SetDlgItemText(hDlg, IDOK, t[S_CTRL_6]);
-				SetDlgItemText(hDlg, IDCANCEL, t[S_CTRL_7]);
+				SetDlgItemText(hDlg, ID_CHECK2, t[S_CTRL_2]);
+				SetDlgItemText(hDlg, ID_PBUTTON1, t[S_CTRL_3]);
+				SetDlgItemText(hDlg, ID_STATIC2, t[S_CTRL_4]);
+				SetDlgItemText(hDlg, ID_PBUTTON2, t[S_CTRL_5]);
+				SetDlgItemText(hDlg, ID_CHECK3, t[S_CTRL_6]);
+				SetDlgItemText(hDlg, IDOK, t[S_CTRL_7]);
+				SetDlgItemText(hDlg, IDCANCEL, t[S_CTRL_8]);
 			}
 
 			// create list of letters
@@ -1170,10 +1171,13 @@ static INT_PTR __stdcall SettingsProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM
 			}
 
 			if (RegOpenKeyExA(HKEY_LOCAL_MACHINE, "SOFTWARE\\ImDisk", 0, KEY_QUERY_VALUE | KEY_WOW64_64KEY, &reg_key) == ERROR_SUCCESS) {
+				data_size = sizeof show_explorer;
+				RegQueryValueExA(reg_key, "ShowExplorer", NULL, NULL, (void*)&show_explorer, &data_size);
 				data_size = sizeof dlg_flags;
 				RegQueryValueExA(reg_key, "DlgFlags", NULL, NULL, (void*)&dlg_flags, &data_size);
 				RegCloseKey(reg_key);
 			}
+			CheckDlgButton(hDlg, ID_CHECK2, !show_explorer);
 			EnableWindow(GetDlgItem(hDlg, ID_PBUTTON1), dlg_flags);
 
 			RegCreateKeyExA(HKEY_LOCAL_MACHINE, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\Explorer", 0, NULL, REG_OPTION_NON_VOLATILE, KEY_QUERY_VALUE | KEY_WOW64_64KEY, NULL, &reg_key, NULL);
@@ -1243,7 +1247,7 @@ static INT_PTR __stdcall SettingsProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM
 							_snwprintf(cmd, _countof(cmd) - 1, L"[HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\Explorer]\r\n\"NoDrives\"=dword:%08x\r\n\r\n", hidden_drives);
 							WriteFile(h_file, cmd, wcslen(cmd) * sizeof(WCHAR), &bytes_written, NULL);
 						}
-						if (IsDlgButtonChecked(hDlg, ID_CHECK2)) {
+						if (IsDlgButtonChecked(hDlg, ID_CHECK3)) {
 							WriteFile(h_file, L"[HKEY_CURRENT_USER\\Environment]\r\n", 66, &bytes_written, NULL);
 							RegOpenKeyExA(HKEY_CURRENT_USER, "Environment", 0, KEY_QUERY_VALUE, &reg_key);
 							write_file_reg_tmp(L"TMP");
@@ -1275,6 +1279,19 @@ static INT_PTR __stdcall SettingsProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM
 					del_command_key("*\\shell\\ImDiskMountFile");
 					del_command_key("Drive\\shell\\ImDiskSaveImage");
 					del_command_key("Drive\\shell\\ImDiskUnmount");
+				}
+
+				if (IsDlgButtonChecked(hDlg, ID_CHECK2)) {
+					if (RegCreateKeyExA(HKEY_LOCAL_MACHINE, "SOFTWARE\\ImDisk", 0, NULL, REG_OPTION_NON_VOLATILE, KEY_SET_VALUE | KEY_WOW64_64KEY, NULL, &reg_key, NULL) == ERROR_SUCCESS) {
+						show_explorer = 0;
+						RegSetValueExA(reg_key, "ShowExplorer", 0, REG_DWORD, (void*)&show_explorer, sizeof show_explorer);
+						RegCloseKey(reg_key);
+					}
+				} else {
+					if (RegOpenKeyExA(HKEY_LOCAL_MACHINE, "SOFTWARE\\ImDisk", 0, KEY_SET_VALUE | KEY_WOW64_64KEY, &reg_key) == ERROR_SUCCESS) {
+						RegDeleteValueA(reg_key, "ShowExplorer");
+						RegCloseKey(reg_key);
+					}
 				}
 
 				RegOpenKeyExA(HKEY_LOCAL_MACHINE, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\Explorer", 0, KEY_SET_VALUE | KEY_WOW64_64KEY, &reg_key);

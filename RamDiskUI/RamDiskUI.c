@@ -53,7 +53,7 @@ static DWORD reg_dynamic, reg_win_boot, reg_awealloc, reg_use_MP, reg_image_file
 static BOOL mount_file, mount_dir;
 static WCHAR drive_list[26][4] = {}, drive_select[3];
 static UINT drive_default;
-static DWORD mask0;
+static DWORD mask0, show_explorer = 1;
 
 static WCHAR svc_cmd_line[MAX_PATH + 16], hlp_svc_path[MAX_PATH + 4], key_name[16];
 static HWND hwnd[4];
@@ -65,8 +65,8 @@ static COMBOBOXINFO combo4;
 static RECT circle = {13, 208, 18, 213}, icon_coord = {};
 static COLORREF color;
 static HWND hTTip;
-static TOOLINFO tool_info;
 static WCHAR TTip_txt[200] = {};
+static _Bool ttip_on_disabled_ctrl;
 
 
 enum {
@@ -208,12 +208,27 @@ static void notif(COLORREF c, WCHAR *text)
 	}
 }
 
-static void add_tooltip(TOOLINFO *ti)
+static HWND add_tooltip(TOOLINFO *ti)
 {
+	HWND hwnd_ctrl;
+
 	ti->cbSize = sizeof(TOOLINFO);
-	ti->uFlags = TTF_IDISHWND | TTF_SUBCLASS;
+	hwnd_ctrl = ti->uId == ID_COMBO4 ? combo4.hwndItem : GetDlgItem(ti->hwnd, ti->uId);
 	ti->lpszText = LPSTR_TEXTCALLBACK;
+
+	if (ttip_on_disabled_ctrl) {
+		ti->uFlags = TTF_SUBCLASS;
+		GetWindowRect(hwnd_ctrl, &ti->rect);
+		ScreenToClient(ti->hwnd, (LPPOINT)&ti->rect);
+		ScreenToClient(ti->hwnd, ((LPPOINT)&ti->rect) + 1);
+		SendMessage(hTTip, TTM_ADDTOOL, 0, (LPARAM)ti);
+	}
+
+	ti->uFlags = TTF_IDISHWND | TTF_SUBCLASS;
+	ti->uId = (UINT_PTR)hwnd_ctrl;
 	SendMessage(hTTip, TTM_ADDTOOL, 0, (LPARAM)ti);
+
+	return hwnd_ctrl;
 }
 
 static void remove_reg_param(WCHAR item_to_remove)
@@ -532,6 +547,7 @@ static INT_PTR __stdcall VarProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPar
 
 static INT_PTR __stdcall DynProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lParam)
 {
+	TOOLINFO ti;
 	int i;
 
 	switch (Msg)
@@ -555,17 +571,18 @@ static INT_PTR __stdcall DynProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPar
 			}
 
 			// add tooltips
-			tool_info.hwnd = hDlg;
-			tool_info.uId = (UINT_PTR)(hwnd_combo5 = GetDlgItem(hDlg, ID_COMBO5));
-			add_tooltip(&tool_info);
-			tool_info.uId = (UINT_PTR)(hwnd_edit11 = GetDlgItem(hDlg, ID_EDIT11));
-			add_tooltip(&tool_info);
-			tool_info.uId = (UINT_PTR)(hwnd_edit12 = GetDlgItem(hDlg, ID_EDIT12));
-			add_tooltip(&tool_info);
-			tool_info.uId = (UINT_PTR)(hwnd_edit13 = GetDlgItem(hDlg, ID_EDIT13));
-			add_tooltip(&tool_info);
-			tool_info.uId = (UINT_PTR)(hwnd_edit14 = GetDlgItem(hDlg, ID_EDIT14));
-			add_tooltip(&tool_info);
+			ttip_on_disabled_ctrl = FALSE;
+			ti.hwnd = hDlg;
+			ti.uId = ID_COMBO5;
+			hwnd_combo5 = add_tooltip(&ti);
+			ti.uId = ID_EDIT11;
+			hwnd_edit11 = add_tooltip(&ti);
+			ti.uId = ID_EDIT12;
+			hwnd_edit12 = add_tooltip(&ti);
+			ti.uId = ID_EDIT13;
+			hwnd_edit13 = add_tooltip(&ti);
+			ti.uId = ID_EDIT14;
+			hwnd_edit14 = add_tooltip(&ti);
 
 			// initialize controls
 			for (i = DYN_2; i <= DYN_4; i++)
@@ -606,15 +623,18 @@ static INT_PTR __stdcall DynProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPar
 					if (block_size > 30) block_size = 30;
 
 				case IDCANCEL:
-					SendMessage(hTTip, TTM_DELTOOL, 0, (LPARAM)&tool_info);
-					tool_info.uId = (UINT_PTR)hwnd_edit13;
-					SendMessage(hTTip, TTM_DELTOOL, 0, (LPARAM)&tool_info);
-					tool_info.uId = (UINT_PTR)hwnd_edit12;
-					SendMessage(hTTip, TTM_DELTOOL, 0, (LPARAM)&tool_info);
-					tool_info.uId = (UINT_PTR)hwnd_edit11;
-					SendMessage(hTTip, TTM_DELTOOL, 0, (LPARAM)&tool_info);
-					tool_info.uId = (UINT_PTR)hwnd_combo5;
-					SendMessage(hTTip, TTM_DELTOOL, 0, (LPARAM)&tool_info);
+					ti.cbSize = sizeof(TOOLINFO);
+					ti.hwnd = hDlg;
+					ti.uId = (UINT_PTR)hwnd_edit14;
+					SendMessage(hTTip, TTM_DELTOOL, 0, (LPARAM)&ti);
+					ti.uId = (UINT_PTR)hwnd_edit13;
+					SendMessage(hTTip, TTM_DELTOOL, 0, (LPARAM)&ti);
+					ti.uId = (UINT_PTR)hwnd_edit12;
+					SendMessage(hTTip, TTM_DELTOOL, 0, (LPARAM)&ti);
+					ti.uId = (UINT_PTR)hwnd_edit11;
+					SendMessage(hTTip, TTM_DELTOOL, 0, (LPARAM)&ti);
+					ti.uId = (UINT_PTR)hwnd_combo5;
+					SendMessage(hTTip, TTM_DELTOOL, 0, (LPARAM)&ti);
 					EndDialog(hDlg, 0);
 			}
 			return TRUE;
@@ -863,7 +883,7 @@ err_cannot_mount:
 	}
 
 	// show the mounted drive
-	if (!use_mount_point) {
+	if (!use_mount_point && show_explorer) {
 		notif(RGB(255, 255, 0), t[MSG_17]);
 		ShExInf.fMask = SEE_MASK_INVOKEIDLIST;
 		ShExInf.lpVerb = L"properties";
@@ -947,6 +967,7 @@ static INT_PTR __stdcall Tab1Proc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPa
 	DWORD mask, data_size, version;
 	WCHAR text[8];
 	BOOL Translated;
+	TOOLINFO ti;
 	int n_drive, i;
 
 	switch (Msg)
@@ -956,19 +977,20 @@ static INT_PTR __stdcall Tab1Proc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPa
 			hwnd[0] = GetParent(hDlg);
 
 			// add tooltips
-			tool_info.hwnd = hDlg;
-			tool_info.uId = (UINT_PTR)(hwnd_edit1 = GetDlgItem(hDlg, ID_EDIT1));
-			add_tooltip(&tool_info);
-			tool_info.uId = (UINT_PTR)(hwnd_check1 = GetDlgItem(hDlg, ID_CHECK1));
-			add_tooltip(&tool_info);
-			tool_info.uId = (UINT_PTR)(hwnd_combo2 = GetDlgItem(hDlg, ID_COMBO2));
-			add_tooltip(&tool_info);
-			tool_info.uId = (UINT_PTR)(hwnd_pbutton3 = GetDlgItem(hDlg, ID_PBUTTON3));
-			add_tooltip(&tool_info);
-			tool_info.uId = (UINT_PTR)(hwnd_check2 = GetDlgItem(hDlg, ID_CHECK2));
-			add_tooltip(&tool_info);
-			tool_info.uId = (UINT_PTR)(hwnd_check3 = GetDlgItem(hDlg, ID_CHECK3));
-			add_tooltip(&tool_info);
+			ttip_on_disabled_ctrl = TRUE;
+			ti.hwnd = hDlg;
+			ti.uId = ID_EDIT1;
+			hwnd_edit1 = add_tooltip(&ti);
+			ti.uId = ID_CHECK1;
+			hwnd_check1 = add_tooltip(&ti);
+			ti.uId = ID_COMBO2;
+			hwnd_combo2 = add_tooltip(&ti);
+			ti.uId = ID_PBUTTON3;
+			hwnd_pbutton3 = add_tooltip(&ti);
+			ti.uId = ID_CHECK2;
+			hwnd_check2 = add_tooltip(&ti);
+			ti.uId = ID_CHECK3;
+			hwnd_check3 = add_tooltip(&ti);
 
 			// set localized strings
 			if (t[0]) {
@@ -1038,7 +1060,7 @@ static INT_PTR __stdcall Tab1Proc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPa
 
 		case WM_NOTIFY:
 			if (((NMHDR*)lParam)->code == TTN_GETDISPINFO) {
-				if (((NMHDR*)lParam)->idFrom == (UINT_PTR)hwnd_edit1) {
+				if (((NMHDR*)lParam)->idFrom == (UINT_PTR)hwnd_edit1 || ((NMHDR*)lParam)->idFrom == ID_EDIT1) {
 					_snwprintf(TTip_txt, 99, t[TTIP1_1], (min_size[fs.filesystem][cluster] + (1 << (unit * 10)) - 1) >> (unit * 10), t[TAB1_2 + unit]);
 					TTip_txt[99] = 0;
 					if (fs.filesystem == 1 || fs.filesystem == 2) {
@@ -1049,13 +1071,13 @@ static INT_PTR __stdcall Tab1Proc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPa
 				}
 				if (((NMHDR*)lParam)->idFrom == (UINT_PTR)hwnd_check1)
 					((NMTTDISPINFO*)lParam)->lpszText = t[TTIP1_3];
-				if (((NMHDR*)lParam)->idFrom == (UINT_PTR)hwnd_pbutton3)
+				if (((NMHDR*)lParam)->idFrom == (UINT_PTR)hwnd_pbutton3 || ((NMHDR*)lParam)->idFrom == ID_PBUTTON3)
 					((NMTTDISPINFO*)lParam)->lpszText = t[TTIP1_4];
-				if (((NMHDR*)lParam)->idFrom == (UINT_PTR)hwnd_combo2)
+				if (((NMHDR*)lParam)->idFrom == (UINT_PTR)hwnd_combo2 || ((NMHDR*)lParam)->idFrom == ID_COMBO2)
 					((NMTTDISPINFO*)lParam)->lpszText = t[TTIP1_5];
 				if (((NMHDR*)lParam)->idFrom == (UINT_PTR)hwnd_check2)
 					((NMTTDISPINFO*)lParam)->lpszText = t[TTIP1_6];
-				if (((NMHDR*)lParam)->idFrom == (UINT_PTR)hwnd_check3)
+				if (((NMHDR*)lParam)->idFrom == (UINT_PTR)hwnd_check3 || ((NMHDR*)lParam)->idFrom == ID_CHECK3)
 					((NMTTDISPINFO*)lParam)->lpszText = t[TTIP1_7];
 			}
 
@@ -1130,27 +1152,30 @@ static INT_PTR __stdcall Tab2Proc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPa
 			hwnd[2] = hDlg;
 
 			// add tooltips
+			ttip_on_disabled_ctrl = TRUE;
 			ti.hwnd = hDlg;
-			ti.uId = (UINT_PTR)(hwnd_combo3 = GetDlgItem(hDlg, ID_COMBO3));
-			add_tooltip(&ti);
-			ti.uId = (UINT_PTR)(hwnd_edit2 = GetDlgItem(hDlg, ID_EDIT2));
-			add_tooltip(&ti);
-			ti.uId = (UINT_PTR)(hwnd_check4 = GetDlgItem(hDlg, ID_CHECK4));
-			add_tooltip(&ti);
-			ti.uId = (UINT_PTR)(hwnd_check5 = GetDlgItem(hDlg, ID_CHECK5));
-			add_tooltip(&ti);
-			ti.uId = (UINT_PTR)(hwnd_check6 = GetDlgItem(hDlg, ID_CHECK6));
-			add_tooltip(&ti);
-			ti.uId = (UINT_PTR)(hwnd_check7 = GetDlgItem(hDlg, ID_CHECK7));
-			add_tooltip(&ti);
-			ti.uId = (UINT_PTR)(hwnd_pbutton7 = GetDlgItem(hDlg, ID_PBUTTON7));
-			add_tooltip(&ti);
+			ti.uId = ID_COMBO3;
+			hwnd_combo3 = add_tooltip(&ti);
+			ti.uId = ID_EDIT2;
+			hwnd_edit2 = add_tooltip(&ti);
+			ti.uId = ID_CHECK4;
+			hwnd_check4 = add_tooltip(&ti);
+			ti.uId = ID_CHECK5;
+			hwnd_check5 = add_tooltip(&ti);
+			ti.uId = ID_CHECK6;
+			hwnd_check6 = add_tooltip(&ti);
+			ti.uId = ID_CHECK7;
+			hwnd_check7 = add_tooltip(&ti);
+			ti.uId = ID_PBUTTON7;
+			hwnd_pbutton7 = add_tooltip(&ti);
+
 			combo4.cbSize = sizeof(COMBOBOXINFO);
 			GetComboBoxInfo(GetDlgItem(hDlg, ID_COMBO4), &combo4);
-			ti.uId = (UINT_PTR)(combo4.hwndItem);
+			ti.uId = ID_COMBO4;
 			add_tooltip(&ti);
-			ti.uId = (UINT_PTR)(hwnd_edit4 = GetDlgItem(hDlg, ID_EDIT4));
-			add_tooltip(&ti);
+
+			ti.uId = ID_EDIT4;
+			hwnd_edit4 = add_tooltip(&ti);
 
 			// set localized strings
 			if (t[0]) {
@@ -1201,19 +1226,19 @@ static INT_PTR __stdcall Tab2Proc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPa
 
 		case WM_NOTIFY:
 			if (((NMHDR*)lParam)->code == TTN_GETDISPINFO) {
-				if (((NMHDR*)lParam)->idFrom == (UINT_PTR)hwnd_combo3)
+				if (((NMHDR*)lParam)->idFrom == (UINT_PTR)hwnd_combo3 || ((NMHDR*)lParam)->idFrom == ID_COMBO3)
 					((NMTTDISPINFO*)lParam)->lpszText = t[TTIP2_1];
-				if (((NMHDR*)lParam)->idFrom == (UINT_PTR)hwnd_edit2)
+				if (((NMHDR*)lParam)->idFrom == (UINT_PTR)hwnd_edit2 || ((NMHDR*)lParam)->idFrom == ID_EDIT2)
 					((NMTTDISPINFO*)lParam)->lpszText = t[TTIP2_2];
-				if (((NMHDR*)lParam)->idFrom == (UINT_PTR)hwnd_check4)
+				if (((NMHDR*)lParam)->idFrom == (UINT_PTR)hwnd_check4 || ((NMHDR*)lParam)->idFrom == ID_CHECK4)
 					((NMTTDISPINFO*)lParam)->lpszText = t[TTIP2_3];
-				if (((NMHDR*)lParam)->idFrom == (UINT_PTR)hwnd_check5)
+				if (((NMHDR*)lParam)->idFrom == (UINT_PTR)hwnd_check5 || ((NMHDR*)lParam)->idFrom == ID_CHECK5)
 					((NMTTDISPINFO*)lParam)->lpszText = t[TTIP2_4];
 				if (((NMHDR*)lParam)->idFrom == (UINT_PTR)hwnd_check6)
 					((NMTTDISPINFO*)lParam)->lpszText = t[TTIP2_5];
 				if (((NMHDR*)lParam)->idFrom == (UINT_PTR)hwnd_check7)
 					((NMTTDISPINFO*)lParam)->lpszText = t[TTIP2_6];
-				if (((NMHDR*)lParam)->idFrom == (UINT_PTR)hwnd_pbutton7)
+				if (((NMHDR*)lParam)->idFrom == (UINT_PTR)hwnd_pbutton7 || ((NMHDR*)lParam)->idFrom == ID_PBUTTON7)
 					((NMTTDISPINFO*)lParam)->lpszText = t[TTIP2_7];
 				if (((NMHDR*)lParam)->idFrom == (UINT_PTR)combo4.hwndItem)
 					((NMTTDISPINFO*)lParam)->lpszText = t[TTIP2_8];
@@ -1313,15 +1338,16 @@ static INT_PTR __stdcall Tab3Proc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPa
 			hwnd[3] = hDlg;
 
 			// add tooltips
+			ttip_on_disabled_ctrl = TRUE;
 			ti.hwnd = hDlg;
-			ti.uId = (UINT_PTR)(hwnd_edit3 = GetDlgItem(hDlg, ID_EDIT3));
-			add_tooltip(&ti);
-			ti.uId = (UINT_PTR)(hwnd_check8 = GetDlgItem(hDlg, ID_CHECK8));
-			add_tooltip(&ti);
-			ti.uId = (UINT_PTR)(hwnd_edit5 = GetDlgItem(hDlg, ID_EDIT5));
-			add_tooltip(&ti);
-			ti.uId = (UINT_PTR)(hwnd_pbutton2 = GetDlgItem(hDlg, ID_PBUTTON2));
-			add_tooltip(&ti);
+			ti.uId = ID_EDIT3;
+			hwnd_edit3 = add_tooltip(&ti);
+			ti.uId = ID_CHECK8;
+			hwnd_check8 = add_tooltip(&ti);
+			ti.uId = ID_EDIT5;
+			hwnd_edit5 = add_tooltip(&ti);
+			ti.uId = ID_PBUTTON2;
+			hwnd_pbutton2 = add_tooltip(&ti);
 
 			// set localized strings
 			if (t[0]) {
@@ -1352,11 +1378,11 @@ static INT_PTR __stdcall Tab3Proc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPa
 			if (((NMHDR*)lParam)->code == TTN_GETDISPINFO) {
 				if (((NMHDR*)lParam)->idFrom == (UINT_PTR)hwnd_edit3)
 					((NMTTDISPINFO*)lParam)->lpszText = t[TTIP3_1];
-				if (((NMHDR*)lParam)->idFrom == (UINT_PTR)hwnd_check8)
+				if (((NMHDR*)lParam)->idFrom == (UINT_PTR)hwnd_check8 || ((NMHDR*)lParam)->idFrom == ID_CHECK8)
 					((NMTTDISPINFO*)lParam)->lpszText = t[TTIP3_2];
-				if (((NMHDR*)lParam)->idFrom == (UINT_PTR)hwnd_edit5)
+				if (((NMHDR*)lParam)->idFrom == (UINT_PTR)hwnd_edit5 || ((NMHDR*)lParam)->idFrom == ID_EDIT5)
 					((NMTTDISPINFO*)lParam)->lpszText = t[TTIP3_3];
-				if (((NMHDR*)lParam)->idFrom == (UINT_PTR)hwnd_pbutton2)
+				if (((NMHDR*)lParam)->idFrom == (UINT_PTR)hwnd_pbutton2 || ((NMHDR*)lParam)->idFrom == ID_PBUTTON2)
 					((NMTTDISPINFO*)lParam)->lpszText = t[TTIP3_4];
 			}
 			if (((NMHDR*)lParam)->code != PSN_SETACTIVE) return TRUE;
@@ -1723,6 +1749,7 @@ int __stdcall wWinMain(HINSTANCE hinstance, HINSTANCE hPrevInstance, LPWSTR lpCm
 	data_size = sizeof sync_excluded;
 	RegQueryValueEx(registry_key, L"SyncExcluded", NULL, NULL, (void*)&sync_excluded, &data_size);
 	reg_query_dword(L"RDMountCurrent", &mount_current);
+	reg_query_dword(L"ShowExplorer", &show_explorer);
 
 	reg_dynamic = dynamic;
 	reg_win_boot = win_boot;
@@ -1821,7 +1848,7 @@ int __stdcall wWinMain(HINSTANCE hinstance, HINSTANCE hPrevInstance, LPWSTR lpCm
 	psh.ppsp = (LPCPROPSHEETPAGE)&psp;
 
 	// initialize tooltips
-	hTTip = CreateWindow(TOOLTIPS_CLASS, NULL, TTS_NOPREFIX, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, NULL, NULL, hinst, NULL); 
+	hTTip = CreateWindow(TOOLTIPS_CLASS, NULL, TTS_ALWAYSTIP | TTS_NOPREFIX, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, NULL, NULL, hinst, NULL); 
 	SendMessage(hTTip, TTM_SETMAXTIPWIDTH, 0, 1000);
 	SendMessage(hTTip, TTM_SETDELAYTIME, TTDT_AUTOPOP, 20000);
 

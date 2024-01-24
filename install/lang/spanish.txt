@@ -35,7 +35,6 @@ ImDisk - Créditos
 ● Olof Lagerkvist: Controlador de disco virtual ImDisk, y varias herramientas para usar la librería DiscUtils
 ● v77: Herramienta de configuración RamDisk, caja de dialogo para usar DiscUtils y el  instalador de este paquete
 ● Kenneth Bell: Librería DiscUtils .NET
-● Igor Pavlov: compresor y pequeño modulo 7z-SFX module usado para este paquete
 Traducciones:
 - Français: v77
 - Español: alacran
@@ -44,6 +43,7 @@ Traducciones:
 - русский: 0x00ffh
 - 简体中文: Arne Sacnussem
 - Italiano: Ajeje Brazorf
+- Português Brasileiro: Rodolfo Bendinelli
 
 Ajustes Generales
 Desinstalar
@@ -70,6 +70,7 @@ Removiendo contenidos remanentes...
 ImDisk - Instalación
  Ajustes generales 
 Permitir entradas en menús contextuales
+No mostrar Explorer después de montar el volumen
 Restaurar los cuadros de diálogo ocultos
  Ocultar las unidades siguientes en el Explorador: 
 Guardar Parámetros...

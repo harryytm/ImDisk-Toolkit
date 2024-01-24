@@ -35,7 +35,6 @@ ImDisk - Tack!
 ● Olof Lagerkvist: ImDisk Virtual Disk Driver, och flera verktyg för att använda DiscUtils library
 ● v77: RamDisk Configuration Tool, dialogruta för att använda DiscUtils och installerare för det här paketet
 ● Kenneth Bell: DiscUtils .NET library
-● Igor Pavlov: Komprimering och en liten 7z-SFX-modul, använd av det här paketet
 Översättningar:
 - Français: v77
 - Español: alacran
@@ -44,6 +43,7 @@ ImDisk - Tack!
 - русский: 0x00ffh
 - 简体中文: Arne Sacnussem
 - Italiano: Ajeje Brazorf
+- Português Brasileiro: Rodolfo Bendinelli
 
 Allmänna inställningar
 Avinstallera
@@ -70,6 +70,7 @@ Tar bort kvarvarande komponenter...
 ImDisk - Installation
  Allmänna inställningar 
 Aktivera kontextmenyposter
+Öppna inte Utforskaren efter montering
 Återställ dolda dialogrutor
  Dölj följande diskenheter i Utforskaren: 
 Spara parametrar...

@@ -1,3 +1,8 @@
+Version 20200727
+- added brazilian portuguese language
+- config.exe: added an option to avoid Explorer window appearing after volume mounting
+- RamDiskUI.exe: tooltips now always appear
+
 Version 20200609
 - added italian language
 - installer parameters can now be passed to install.bat

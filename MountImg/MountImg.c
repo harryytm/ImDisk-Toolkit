@@ -20,7 +20,7 @@ static HICON hIcon;
 static RECT icon_coord;
 static HWND hDialog;
 static OSVERSIONINFO os_ver;
-static DWORD mask0 = 0;
+static DWORD mask0 = 0, show_explorer = 1;
 static HKEY registry_key;
 static FARPROC ImDisk_GetDeviceListEx, ImDisk_ForceRemoveDevice, ImDisk_RemoveRegistrySettings, ImDisk_NotifyShellDriveLetter;
 
@@ -31,15 +31,14 @@ static WCHAR *rm_list[] = {L"fix", L"rem"};
 static WCHAR *boot_list[] = {L"", L" -P"};
 static DWORD floppy_size[] = {160 << 10, 180 << 10, 320 << 10, 360 << 10, 640 << 10, 1200 << 10, 720 << 10, 820 << 10, 1440 << 10, 1680 << 10, 1722 << 10, 2880 << 10, 123264 << 10, 234752 << 10};
 
-static WCHAR filename[MAX_PATH] = {}, mountdir[MAX_PATH];
+static WCHAR filename[MAX_PATH] = {}, mountdir[MAX_PATH] = {};
 static WCHAR drive_list[27][4] = {}, drive[MAX_PATH + 2] = {};
 static WCHAR module_name[MAX_PATH + 16], txt[1024] = {};
 
-static BOOL mount_point;
 static BYTE init_ok = FALSE, net_installed = FALSE, partition_changed;
 static UINT cmdline_dev_type = 0, dev_type, cmdline_partition = 1, partition;
 static _Bool cmdline_partition_exist = FALSE, cmdline_mount = FALSE;
-static BOOL readonly = FALSE, removable = FALSE, new_file, win_boot;
+static BOOL mount_point = FALSE, readonly = FALSE, removable = FALSE, new_file, win_boot;
 static long device_number;
 static WCHAR cmdline_drive_letter = 0;
 
@@ -652,7 +651,7 @@ ready_again:
 		if (mount_point) PathAddBackslash(drive);
 		do {
 			if (GetVolumeInformation(drive, NULL, 0, NULL, NULL, NULL, NULL, 0)) {
-				if (cmdline_mount) break;
+				if (cmdline_mount || !show_explorer) break;
 				if (os_ver.dwMajorVersion < 6) {
 					_snwprintf(cmdline, _countof(cmdline), L"explorer /n,%s", drive);
 					start_process(cmdline, FALSE);
@@ -718,7 +717,7 @@ static INT_PTR __stdcall DlgProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPar
 			}
 
 			// initialize tooltips
-			hTTip = CreateWindow(TOOLTIPS_CLASS, NULL, TTS_NOPREFIX, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, NULL, NULL, hinst, NULL); 
+			hTTip = CreateWindow(TOOLTIPS_CLASS, NULL, TTS_ALWAYSTIP | TTS_NOPREFIX, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, NULL, NULL, hinst, NULL); 
 			ti.cbSize = sizeof(TOOLINFO);
 			ti.uFlags = TTF_IDISHWND | TTF_SUBCLASS;
 			ti.hwnd = hDlg;
@@ -1214,15 +1213,13 @@ int __stdcall wWinMain(HINSTANCE hinstance, HINSTANCE hPrevInstance, LPWSTR lpCm
 		ExitProcess(0);
 	}
 
-	// load default values
-	mount_point = FALSE;
-	mountdir[0] = 0;
-
 	// get registry values
 	data_size = sizeof mount_point;
 	RegQueryValueEx(registry_key, L"MountPoint", NULL, NULL, (void*)&mount_point, &data_size);
 	data_size = sizeof mountdir;
 	RegQueryValueEx(registry_key, L"MountDir", NULL, NULL, (void*)mountdir, &data_size);
+	data_size = sizeof show_explorer;
+	RegQueryValueEx(registry_key, L"ShowExplorer", NULL, NULL, (void*)&show_explorer, &data_size);
 
 	if (RegOpenKeyExA(HKEY_LOCAL_MACHINE, "SOFTWARE\\Microsoft\\.NETFramework\\v4.0.30319", 0, KEY_QUERY_VALUE | KEY_WOW64_64KEY, &h_key) == ERROR_SUCCESS) {
 		RegCloseKey(h_key);

@@ -35,7 +35,6 @@ ImDisk - Credits
 ● Olof Lagerkvist: ImDisk Virtual Disk Driver, and several tools to use the DiscUtils library
 ● v77: RamDisk Configuration Tool, dialog box using DiscUtils and installer of this package
 ● Kenneth Bell: DiscUtils .NET library
-● Igor Pavlov: compressor and small 7z-SFX module used for the package
 Translations:
 - Français: v77
 - Español: alacran
@@ -44,6 +43,7 @@ Translations:
 - русский: 0x00ffh
 - 简体中文: Arne Sacnussem
 - Italiano: Ajeje Brazorf
+- Português Brasileiro: Rodolfo Bendinelli
 
 General Settings
 Uninstall
@@ -70,6 +70,7 @@ Removing remaining components...
 ImDisk - Setup
  General Settings 
 Enable entries in context menus
+Don't show Explorer after volume mounting
 Restore hidden dialog boxes
  Hide the following drives in Explorer: 
 Save Parameters...

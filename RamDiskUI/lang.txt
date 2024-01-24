@@ -1,42 +1,41 @@
 [Setup]
 ImDisk - Setup
-Benvenuto nell'installer di ImDisk Toolkit.
-Questo installerà il ImDisk Toolkit (build %S).
-Cartella di installazione:
- Componenti 
-ImDisk Virtual Disk Driver (richiesto)
-Libreria DiscUtils (usa .NET Framework 4)
-Strumento di Configurazione RamDisk
- Opzioni 
-Abilita voci nei menu di scelta rapida
-Crea collegamenti sul desktop
-Carica ImDskSvc automaticamente
-Lingua:
-Tieni il mouse sopra un oggetto per ottenere i dettagli.
-Installa il driver. Questo include un'applet del Pannello di controllo, uno strumento da riga di comando, imdisk.exe, e interfacce per gestire i volumi dai menu di scelta rapida di Explorer.##Per maggiori dettagli, digitare "imdisk" in un prompt dei comandi.
-Richiesto per montare formati di file immagine avanzati come VHD, VDI, VMDK e alcuni altri.##Aggiunge inoltre uno strumento da riga di comando nella cartella di installazione, DiscUtilsDevio.exe, e una finestra di dialogo dedicata per utilizzare la libreria dal menu di scelta rapida dei file in Esplora risorse.
-Questo strumento ti permetterà di configurare facilmente uno o più RamDisk con varie impostazioni.
-Aggiungi voci nel menu contestuale dell'unità e nel menu contestuale dei file per gestire i volumi ImDisk e i file immagine direttamente da Esplora risorse.##Questa opzione può essere impostata in un secondo momento nel menu Start di Windows.
-Crea collegamenti sul desktop.##Tutti i collegamenti vengono sempre creati nel menu Start di Windows.
-Avvia ImDskSvc automaticamente all'avvio del sistema.##Nessuno strumento in questo pacchetto utilizza questo servizio, quindi puoi deselezionare in sicurezza questa opzione.##Viene installato dal driver per avviare connessioni TCP/IP o connessioni alla porta seriale con software proxy.
-Crediti
-Installa
-Cancella
-Installando…
-Errore di copia del file.
-Percorso non valido.
-Errore: impossibile creare il servizio.
-L'installazione precedente è in un'altra cartella.#Vuoi rimuoverla?
-Installazione completata.
-Installazione completata.##Tuttavia, .NET Framework 4 non è presente nel tuo sistema.#Senza di esso, non sarai in grado di montare alcuni formati di file immagine.##Visita il sito <a href="https://www.microsoft.com/en-us/download/details.aspx?id=17113">Microsoft Download Center</a> per scaricare l'installer.
+Welcome to the installer for ImDisk Toolkit.
+This will install the ImDisk Toolkit (build %S).
+Installation folder:
+ Components 
+ImDisk Virtual Disk Driver (required)
+DiscUtils library (uses .NET Framework 4)
+RamDisk Configuration Tool
+ Options 
+Enable entries in context menus
+Create shortcuts on desktop
+Load ImDskSvc automatically
+Language:
+Please keep your mouse over an item to get details.
+Install driver. This includes a Control Panel applet, a command line tool, imdisk.exe, and interfaces to manage volumes from Explorer context menus.##Please type "imdisk" in a command prompt for details.
+Required to mount advanced image file formats like VHD, VDI, VMDK and some others.##Also adds a command line tool in the installation folder, DiscUtilsDevio.exe, and a dedicated dialog box to use the library from file context menu in Explorer.
+This tool will allow you to easily configure one or several RamDisks with various settings.
+Add entries in the drive context menu and the file context menu to manage ImDisk volumes and image files directly from Explorer.##This option can be set later in the Windows Start Menu.
+Create shortcuts on desktop.##All shortcuts are always created in the Windows Start Menu.
+Start ImDskSvc automatically at system startup.##No tool in this package uses this service, so you can safely uncheck this option.##It is installed by the driver to initiate TCP/IP or serial port connections with proxy softwares.
+Credits
+Install
+Cancel
+Installing...
+File copy error.
+Invalid path.
+Error: cannot create service.
+The previous installation is in another folder.#Do you want to remove it?
+Installation finished.
+Installation finished.##However, .NET Framework 4 is not present on your system.#Without it, you will not be able to mount some image file formats.##Please visit the <a href="https://www.microsoft.com/en-us/download/details.aspx?id=17113">Microsoft Download Center</a> to download installer.
 OK
 
-ImDisk - Crediti
-● Olof Lagerkvist: Driver del Disco Virtuale ImDisk, e parecchi strumenti per usare la libreria DiscUtils
-● v77: Strumento di Configurazione RamDisk, finestra di dialogo utilizzando DiscUtils e installer di questo pacchetto
-● Kenneth Bell: libreria .NET DiscUtils
-● Igor Pavlov: compressore e piccolo modulo 7z-SFX utilizzati per il pacchetto
-Traduzioni:
+ImDisk - Credits
+● Olof Lagerkvist: ImDisk Virtual Disk Driver, and several tools to use the DiscUtils library
+● v77: RamDisk Configuration Tool, dialog box using DiscUtils and installer of this package
+● Kenneth Bell: DiscUtils .NET library
+Translations:
 - Français: v77
 - Español: alacran
 - Svenska: Åke Engelbrektson / Olof Lagerkvist
@@ -44,77 +43,79 @@ Traduzioni:
 - русский: 0x00ffh
 - 简体中文: Arne Sacnussem
 - Italiano: Ajeje Brazorf
+- Português Brasileiro: Rodolfo Bendinelli
 
-Impostazioni Generali
-Disinstalla
-Pagina iniziale
-Configurazione RamDisk
-Monta File Immagine
+General Settings
+Uninstall
+Home page
+RamDisk Configuration
+Mount Image File
 
-Monta come ImDisk Virtual Disk
-Salva i contenuti del disco come file immagine
-Smonta ImDisk Virtual Disk
-
-
-ImDisk - Setup
-Disinstalla il driver (non è necessario il riavvio)
-Rimuovi le impostazioni
-Disinstalla
-Cancella
-Disco virtuale ImDisk rilevato.#Tutti i dischi virtuali ImDisk esistenti saranno smontati!
-Smontaggio dei volumi ImDisk...
-Interruzione %s...
-Rimozione dei componenti rimanenti...
+Mount as ImDisk Virtual Disk
+Save disk contents as image file
+Unmount ImDisk Virtual Disk
 
 
 ImDisk - Setup
- Impostazioni Generali 
-Abilita voci nei menu di scelta rapida
-Ripristina finestre di dialogo nascoste
- Nascondi le seguenti unità in Esplora risorse:
-Salva parametri...
-con Variabili di Ambiente TEMP
+Uninstall driver (no reboot required)
+Remove settings
+Uninstall
+Cancel
+ImDisk virtual disk detected.#All existing ImDisk virtual disks will be unmounted!
+Unmounting ImDisk volumes...
+Stopping %s...
+Removing remaining components...
+
+
+ImDisk - Setup
+ General Settings 
+Enable entries in context menus
+Don't show Explorer after volume mounting
+Restore hidden dialog boxes
+ Hide the following drives in Explorer: 
+Save Parameters...
+with TEMP Environment Variables
 OK
-Cancella
-Questi cambiamenti avranno effetto#solo dopo il riavvio di Windows!
+Cancel
+These changes will take effect#only after restarting Windows!
 
 
 [RamDiskUI]
- Strumento di Configurazione RamDisk 
+ RamDisk Configuration Tool 
 OK
-Esci
+Exit
 
-Generale
- Dimensione:
+Basic
+    Size:
 KB
 MB
 GB
-Alloca Memoria Dinamicamente
- Lettera del Drive:
-Smonta
- File System:
-Esegui all'Avvio di Windows
-Crea Cartella TEMP
-Imposta Variabili TEMP...
+Allocate Memory Dynamically
+    Drive Letter:
+Unmount
+    File System:
+Launch at Windows Startup
+Create TEMP Folder
+Set TEMP Variables...
 Min: %d %s
 Max: %d %s
-Invece di allocare l'intera dimensione, la memoria è allocata#solo quando viene effettivamente utilizzata.#Ciò è più lento ma può farti risparmiare molta memoria se#stai usando solo una piccola parte del ramdisk.
-Smonta l'unità ImDisk selezionata e annulla la registrazione.
-Predefinito: NTFS.##I file system *FAT* sono generalmente più veloci ma con meno funzioni.#FAT e FAT32 hanno anche limitazioni sulla dimensione massima del volume.
-Una volta creato, registra il ramdisk per l'avvio con Windows.#È possibile registrare diversi ramdisk.
-Crea una cartella Temp nella radice del volume.##Per creare altre cartelle, definisci ciò che vuoi in una cartella#del tuo disco rigido, e specificalo nella scheda Dati.
+Instead of allocating the whole size, memory is#allocated only when it is actually used.#This is slower but can save a lot of memory if#you are using only a small part of the ramdisk.
+Unmount the selected ImDisk drive and unregister it.
+Default: NTFS.##*FAT* file systems are usually faster but with less features.#FAT and FAT32 also have limitations in the maximal volume size.
+Once created, register the ramdisk to be started with Windows.#Several ramdisks can be registered.
+Create a Temp folder at the root of the volume.##To create other folders, define what you want in a#folder of your hard drive, and specify it in the Data tab.
 
-Avanzate
-Dimensione del Cluster:
-Etichetta dell'Unità:
-Formattazione Veloce
-Abilita Compressione NTFS
-Usa la memoria fisica AWE
-Parametri del RamDisk Dinamico...
-Usa Punto di Montaggio:
-Smonta
-Parametri Aggiuntivi:
-Predefinita
+Advanced
+Cluster Size:
+Drive Label:
+Quick Format
+Enable NTFS Compression
+Use AWE physical memory
+Dynamic RamDisk Parameters...
+Use Mount Point:
+Unmount
+Additional Parameters:
+Default
 0.5 KB
 1 KB
 2 KB
@@ -123,143 +124,143 @@ Predefinita
 16 KB
 32 KB
 64 KB
-Cluster più grandi sono generalmente più veloci ma possono usare#più spazio sul disco, specialmente con un elevato numero di file.
-La dimensione dell'etichetta è limitata dal file system:#32 caratteri con NTFS, 11 con *FAT*.
-Predefinito: disabilitato.##Esegui una formattazione veloce. Può velocizzare la costruzione#del RamDisk ma la memoria allocata non appare immediatamente#come utilizzata nel Task Manager di Windows.
-Predefinito: disabilitato.##Consente di comprimere i file prima di scriverli sul ramdisk.#Funziona solo con il file system NTFS.#Non usarlo se ti interessa la velocità!##Non consigliato con i ramdisk dinamici, poiché la memoria#potrebbe non essere rilasciata correttamente.
-Predefinito: disabilitato.##Alloca memoria tramite AWE.#Ciò garantisce che la memoria non venga mai scritta nel pagefile.##Su sistemi a 32-bit, questo aggira anche i limiti di 2GB e 4GB per#processo e permette di allocare tutta la memoria gestita dal#sistema (ma non la memoria non gestita o invisibile).
-Predefinito: disabilitato.##Utilizza una cartella anziché una lettera di unità per montare il ramdisk.
-Smonta il punto di montaggio ImDisk selezionato e annulla la registrazione.
-Il punto di montaggio deve essere una directory vuota situata su un volume NTFS.#È possibile registrare fino a 10 punti di montaggio da montare all'avvio di Windows.
-Puoi aggiungere qui qualsiasi parametro che non sia già utilizzato dalla GUI.#Per esempio, "-o rem" aggiungerà l'attributo rimovibile all'unità.#Clicca sul bottone "..." per elencare tutti i parametri.
+Bigger clusters are usually faster but can use more#disk space, especially with a large number of files.
+Label size is limited by the file system:#32 characters with NTFS, 11 with *FAT*.
+Default: disabled.##Do a quick format. It can speed up the RamDisk building but the allocated#memory does not immediately appear as used in the Windows Task Manager.
+Default: disabled.##Allows files to be compressed before being written to the ramdisk.#Only works with the NTFS file system.#Do not use it if you care about speed!##Not recommended with dynamic ramdisks, because memory#may not be released properly.
+Default: disabled.##Allocate memory through AWE.#This guarantees that the memory is never written to the pagefile.##On 32-bit systems, this also bypasses the 2GB and 4GB limits per#process and allows to allocate as much memory as the system#manages (but not the unmanaged or invisible memory).
+Default: disabled.##Use a folder instead of a drive letter to mount the ramdisk.
+Unmount selected ImDisk mount point and unregister it.
+The mount point must be an empty directory located on a NTFS volume.#Up to 10 mount points can be registered to be mounted at Windows startup.
+You can add here any parameter that is not already used by the GUI.#For example, "-o rem" will add removable attribute to the drive.#Click on the "..." button to list all parameters.
 
-Dati
-Carica Contenuto da File Immagine o Cartella:
-Sincronizza all'Arresto del Sistema
-Copia solo i file con l'attributo Archive
-Elimina i dati rimossi dal RamDisk
-Cartelle Escluse:
-Sincronizza ora
-Se selezioni una cartella, il suo intero contenuto verrà copiato una volta creato#il ramdisk, con attributi di file e ACL, a seconda del file system.##Un file di immagine deve essere grezzo, senza alcuna partizione, e con un valido file system.#Tale immagine può essere creata ad esempio con un clic destro su una lettera di unità#in Esplora risorse: "Salva i contenuti del disco come file immagine".
-Predefinito: disabilitato.##Copia i dati dal ramdisk alla cartella o al file immagine all'#arresto del sistema, a seconda dei parametri seguenti.
-Una cartella per riga.#Le cartelle sono connesse alla radice del ramdisk#(lettera di unità o punto di montaggio): non aggiungerlo.
-Sincronizza ora tutti i ramdisk registrati.
+Data
+Load Content from Image File or Folder:
+Synchronize at System Shutdown
+Copy only files with Archive attribute
+Delete data removed from the RamDisk
+Excluded Folders:
+Synchronize now
+If you select a folder, its entire content will be copied once the ramdisk#created, with file attributes and ACL, depending on the file system.##An image file must be raw, without partition, and with a valid file system.#Such image can be created for instance with a right click on a drive letter#in Explorer: "Save disk contents as image file".
+Default: disabled.##Copy data from the ramdisk to the folder or image file at#system shutdown, depending on the parameters below.
+One folder per line.#Folders are relative to the root of the ramdisk#(drive letter or mount point): do not add it.
+Synchronize all the registered ramdisks now.
 
-Usare AWE con ramdisk dinamici richiede il privilegio di bloccare le pagine in memoria nei criteri di gruppo locali.#Se scegli di continuare, questo privilegio verrà concesso al gruppo Amministratori.##Vuoi continuare?
-Privilegio concesso con successo.#È necessario disconnettersi per rendere effettiva questa modifica.#Disconnettersi adesso?
-Errore: impossibile concedere il privilegio.
+Using AWE with dynamic ramdisks requires the privilege to lock pages in memory in the local group policy.#If you choose to continue, this privilege will be granted for the Administrators group.##Do you want to continue?
+Privilege granted successfully.#A logout is required for this change to take effect.#Logout now?
+Error: cannot grant the privilege.
 
-Pronto
-Avvio dell'elaborazione...
-Errore: la dimensione deve essere almeno %d KB.
-Errore: la dimensione non deve superare %d %cB.
-Errore: dimensione errata.
-Errore: nessuna cartella vuota selezionata.
-Il punto di montaggio selezionato verrà smontato.#Tutti i dati non salvati andranno persi.#Continuare?
-Smontaggio del punto di montaggio selezionato...
-Questo volume sarà smontato.#Tutti i dati non salvati andranno persi.#Continuare?
-Smontaggio del volume corrente...
-Errore: impossibile smontare il volume.
-Montaggio nuovo RamDisk...
-Errore: impossibile recuperare la destinazione del punto di montaggio.
-Errore: il file non contiene un file system valido.
-Errore: impossibile formattare il volume.
-Errore: impossibile montare il volume.
-Copia dei file...
-Visualizzazione di una nuova unità...
-Salvataggio parametri...
-Attenzione: troppi punti di montaggio.#Questo non sarà registrato.
-Errore: impossibile creare il servizio.
-Fatto.
-Smontando volume...
-Sincronizzando...
+Ready
+Starting processing...
+Error: size must be at least %d KB.
+Error: size must not exceed %d %cB.
+Error: incorrect size.
+Error: no empty folder selected.
+The selected mount point will be unmounted.#Any unsaved data will be lost.#Continue?
+Unmounting selected mount point...
+This volume will be unmounted.#Any unsaved data will be lost.#Continue?
+Unmounting current volume...
+Error: the volume cannot be unmounted.
+Mounting new RamDisk...
+Error: cannot retrieve mount point target.
+Error: the file does not contain a valid file system.
+Error: the volume cannot be formatted.
+Error: the volume cannot be mounted.
+Copying files...
+Displaying new drive...
+Saving parameters...
+Warning: too many mount points.#This one will not be registered.
+Error: cannot create service.
+Done.
+Unmounting volume...
+Synchronizing...
 
- Variabili di Ambiente TEMP 
- Utente
- Sistema
-Imposta Tutto Su:
-Ripristina Predefiniti
+ TEMP Environment Variables 
+ User 
+ System 
+Set All To:
+Set Defaults
 OK
-Cancella
+Cancel
 
-Metodo di Rilascio della Memoria:
-Automatico
-Comandi TRIM
-Pulizia dello Spazio Libero
- Parametri di Pulizia dello Spazio Libero 
-Questi parametri vengono ignorati quando vengono utilizzati i comandi TRIM.
-Quantità Minima di Dati da Pulire:
-Tempo Minimo tra 2 Pulizie:
-Attività Massima prima della Pulizia:
-Secondi
+Memory Release Method:
+Automatic
+TRIM Commands
+Free Space Wiping
+ Free Space Wiping Parameters 
+These parameters are ignored when TRIM commands are used.
+Minimal Amount of Data to Clean:
+Minimal Time between 2 Cleanups:
+Maximal Activity before Cleanup:
+Seconds
 MB/s
-Dimensione dei Blocchi della Memoria Allocata:
+Size of Allocated Memory Blocks:
 OK
-Cancella
-"Automatico" usa i comandi TRIM quando disponibili. Sono molto#più efficienti ma richiedono NTFS e Windows 7 o versioni successive.##Altrimenti, quando richiesto, a seconda dei 3 parametri seguenti, una#funzione di pulizia pulisce l'intero spazio vuoto con un file temporaneo#riempito con 0 (perché i blocchi di dati riempiti con 0 vengono liberati automaticamente).
-Predefinito: 20.##Numero di byte per blocco di memoria allocata, in potenza di 2.#Il valore minimo è 12 (4 KB). Usa 13 per 8 KB, 14 per 16 KB,#e così via, fino a 30 (1 GB).##Un valore inferiore può ridurre l'utilizzo della memoria e migliorare#l'efficienza della funzione di pulizia in caso di file#altamente frammentati, ma riduce anche le prestazioni.
-Predefinito: 10.##La funzione di pulizia viene eseguita solo se è possibile liberare#questa quantità di memoria. Il valore è un rapporto dello spazio totale dell'unità (e.g.:#10/1000 di un disco di 4 GB = 40 MB). Questa è solo una stima: la quantità di memoria # effettivamente liberata può essere leggermente superiore o inferiore.
-Predefinito: 10.##Un valore basso può rendere la pulizia più reattiva ma potrebbe essere inappropriato#nel caso in cui i file vengano regolarmente eliminati senza essere ricreati.
-Predefinito: 10.##Attende che le letture e scritture siano inferiori a questo valore prima di eseguire la pulizia.
+Cancel
+"Automatic" uses TRIM commands when available. They are much#more efficient but they require NTFS and Windows 7 or later.##Otherwise, when required, depending on the 3 parameters below, a#cleanup function wipes the whole empty space with a temporary file#filled with 0 (because data blocks filled with 0 are automatically freed).
+Default: 20.##Number of bytes per allocated memory block, in power of 2.#The minimal value is 12 (4 KB). Use 13 for 8 KB, 14 for 16 KB,#and so on, up to 30 (1 GB).##A lower value can reduce the memory use and improve#efficiency of the cleanup function in case of highly#fragmented files, but it also reduces the performances.
+Default: 10.##The cleanup function runs only if this amount of memory can#be freed. The value is a ratio of the total drive space (e.g.:#10/1000 of a 4 GB drive = 40 MB). This is only an estimate: the#memory amount actually freed can be slightly higher or lower.
+Default: 10.##A low value can make the cleanup more responsive but may be inappropriate#in case where files are regularly deleted without being recreated.
+Default: 10.##Wait until reads and writes are below this value before processing the cleanup.
 
-Attenzione: la funzione di avvio rapido di Windows è abilitata. Questo può portare ad alcuni problemi:##● Il sistema scrive il contenuto del ramdisk sul disco rigido allo spegnimento, e lo ripristina all'avvio.#● La funzione di sincronizzazione dei dati di ImDisk Toolkit non funziona all'arresto del sistema.##Apri le impostazioni di Arresto per disabilitare l'avvio rapido.
-Impostazioni di arresto
-Non mostrare più questo avviso
-Chiudi
+Warning: the fast startup feature of Windows is enabled. This can lead to some issues:##● The system writes the ramdisk content onto the hard drive at shutdown, and restores it at startup.#● The data synchronization feature of ImDisk Toolkit does not work at system shutdown.##Open the Shutdown settings to disable the fast startup.
+Shutdown settings
+Do not show this warning again
+Close
 
 
 [MountImg]
- Monta Nuovo Disco Virtuale 
-File Immagine:
-Lettera di Unità
-Punto di Montaggio
-Smonta
-Tipo di Dispositivo:
-Disco Rigido
+ Mount New Virtual Disk 
+Image File:
+Drive Letter
+Mount Point
+Unmount
+Device Type:
+Hard Disk
 CD/DVD
 Floppy
-Sola lettura
-Rimovibile
-Partizione:
-Monta all'Avvio di Windows
-Passa all'Interfaccia Driver
+Read-only
+Removable
+Partition:
+Mount at Windows Startup
+Switch to Driver Interface
 OK
-Cancella
-Montaggio...
-ImDisk - Punto di Montaggio
-Dimensione
+Cancel
+Mounting...
+ImDisk - Mount Point
+Size
 File System
-Etichetta
-Rimuove il file immagine selezionato dall'avvio di Windows,#e quindi smonta l'unità o il punto di montaggio selezionati.
-Inserisci il nome del file immagine, selezionalo con#il bottone "..." oppure trascinalo e rilascialo.#Un'estensione errata può far fallire il montaggio!##Se il file non esiste, ti verrà richiesto di creare un#nuovo file grezzo.##La lista a cascata mostra i file registrati per essere#montati all'avvio di Windows.
-Il punto di montaggio deve essere una directory vuota situata su un volume NTFS.##Se trascini e rilasci una cartella, questa verrà selezionata come punto di montaggio.
-"CD/DVD" è raccomandato per file ISO, BIN e NRG,#"Floppy" per file VFD, "Hard Disk" per altri formati.
-Inserisci 1 se il file immagine non contiene alcuna partizione o solo una.#0 indica l'intera immagine: la tabella delle partizioni, se presente, verrà sovrascritta.
-Impedisci la scrittura nel file immagine.
-Questo di solito disabilita la cache di scrittura: i dati#vengono immediatamente scritti nel file immagine ma#ciò può ridurre le prestazioni.
-Registra il file immagine e i parametri#da montare all'avvio di Windows.#È possibile registrare fino a 64000 file immagine.
+Label
+Unregisters the selected image file from Windows startup,#and then unmounts the selected drive or mount point.
+Enter image file name, select it with the "..." button#or drag and drop it.#A wrong extension can make the mouting fail!##If the file does not exist, you will be prompted to#create a new raw file.##The drop-down list displays the files registered to#be mounted at Windows startup.
+The mount point must be an empty directory located on a NTFS volume.##If you drag and drop a folder, it will be selected as mount point.
+"CD/DVD" is recommended for ISO, BIN and NRG files,#"Floppy" for VFD files, "Hard Disk" for other formats.
+Enter 1 if the image file contains no partition or only one.#0 means the entire image: the partition table, if any, will be overwritten.
+Prevent writing to the image file.
+This usually disables the write caching: the data#are immediately written to the image file but#this can decrease the performances.
+Registers the image file and parameters#to be mounted at Windows startup.#Up to 64000 image files can be registered.
 
-Si è verificato un errore durante il montaggio.#Controlla i parametri.
-Errore: il file system del punto di montaggio selezionato non supporta i punti di analisi.
-La directory selezionata è già un punto di montaggio.#Se scegli di continuare, il volume precedentemente montato diventerà irraggiungibile tramite questo punto di montaggio.##Vuoi ancora continuare?
-Errore: il punto di montaggio selezionato non è una directory vuota.
-Errore: la lettera di unità selezionata è già in uso.
-Errore: impossibile creare il servizio.
+An error occurred while the mounting.#Please check the parameters.
+Error: file system of the selected mount point does not support reparse points.
+The selected directory is already a mount point.#If you choose to continue, the previously mounted volume will become unreachable via this mount point.##Do you still want to continue?
+Error: the selected mount point is not an empty directory.
+Error: the selected drive letter is already in use.
+Error: cannot create service.
 
-File System Invalido
-Il volume non contiene un file system valido.##Che cosa vuoi fare?
-Smonta
-Formatta
-Esci
+Invalid File System
+The volume does not contain a valid file system.##What do you want to do?
+Unmount
+Format
+Exit
 
-Crea Nuovo File Immagine
-Il file non esiste.#Vuoi creare un nuovo file di immagine RAW?
- Dimensione del File:#        (Min 65KB)
-Monta
-Crea
-Cancella
-Errore: impossibile creare il file.
-Errore: impossibile creare un file della dimensione specificata.
+Create New Image File
+The file does not exist.#Do you want to create a new RAW image file?
+        File Size:#        (Min 65KB)
+Mount
+Create
+Cancel
+Error: file cannot be created.
+Error: cannot create a file of the specified size.
 
 Bytes
 KB
@@ -270,47 +271,47 @@ PB
 
 
 [ImDisk-Dlg]
-Attenzione: non hai abbastanza diritti per smontare correttamente questo volume.#I buffer di scrittura potrebbero non essere scaricati e quindi c'è il rischio di perdere i dati.##Vuoi ancora continuare?
-Il volume è utilizzato da un altro processo e non può essere bloccato.##Se tutti i tuoi dati sono salvati, puoi continuare in modo sicuro e il volume verrà smontato correttamente.##Vuoi continuare?
-Il disco virtuale è stato modificato.##Vuoi salvarlo come file immagine prima di rimuoverlo?
-Non mostrare più questo avviso
-Non chiedere più
+Warning: you don't have enough rights to properly dismount this volume.#The write buffers might not be flushed and therefore there is a risk of data loss.##Do you still want to continue?
+The volume is in use by another process and cannot be locked.##If all your data are saved, you can safely continue and the volume will be properly dismounted.##Do you want to continue?
+The virtual disk has been modified.##Do you want to save it as an image file before removing it?
+Do not show this warning again
+Do not ask again
 OK
-Cancella
-Si
+Cancel
+Yes
 No
-Apertura del dispositivo...
-Informando le applicazioni della rimozione del dispositivo...
-Svuotamento dei buffer di file...
-Bloccaggio del volume...
-Smontaggio del file system...
-Salvataggio del file immagine...
-Rimozione del dispositivo...
-Rimozione della lettera di unità...
-Impossibile aprire il dispositivo.
-%s non è un disco virtuale ImDisk.
-Impossibile rimuovere il dispositivo.
-Impossibile rimuovere il punto di montaggio.
+Opening device...
+Notifying applications about device removal...
+Flushing file buffers...
+Locking volume...
+Dismounting file system...
+Saving image file...
+Removing device...
+Removing drive letter...
+Cannot open device.
+%s is not an ImDisk virtual disk.
+Cannot remove device.
+Cannot remove mount point.
 
- Salva Immagine Disco 
-File Immagine:
-Offset nel File Immagine:
-Scrivi un MBR all'inizio del file
+ Save Disk Image 
+Image File:
+Offset in Image File:
+Write a MBR at the beginning of the file
 OK
-Cancella
-File Immagine
-Immagini ISO
-Tutti i file
-%s bloccato e pronto.
-%s è utilizzato da un altro processo e non può essere bloccato.#Dunque, può essere modificato durante la copia.
-Salvataggio di %s in corso... %u%%
-Volume %s salvato con successo in %s.
-Tipo di unità non supportato.
-Errore durante il recupero delle proprietà del volume.
-Impossibile aprire il file immagine.
-Impossibile allocare memoria.
-Errore durante la creazione di un nuovo MBR.
-Errore durante la scrittura del MBR.
-Errore durante l'impostazione del puntatore del file.
-Errore di lettura.
-Errore di scrittura.
+Cancel
+Image Files
+ISO Images
+All Files
+%s locked and ready.
+%s is in use by another process and cannot be locked.#Therefore, it can be modified while copying.
+Save of %s in progress... %u%%
+Volume %s successfully saved into %s.
+Unsupported drive type.
+Error retrieving volume properties.
+Cannot open image file.
+Cannot allocate memory.
+Error creating new MBR.
+Error writing MBR.
+Error setting file pointer.
+Read error.
+Write error.

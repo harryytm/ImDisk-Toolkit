@@ -35,7 +35,6 @@ ImDisk - Mitwirkende
 ● Olof Lagerkvist: ImDisk Virtual Disk Driver und einige andere Tools, die die DiscUtils Bibliothek verwendet
 ● v77: RAM-Disk Konfigurator, Dialog Box von DiscUtils und den Installer dieses Pakets
 ● Kenneth Bell: DiscUtils .NET Bibliothek
-● Igor Pavlov: Kompressionsprogramm und kleines 7z-SFX-Modul, das von diesem Paket verwendet wird
 Übersetzungen:
 - Français: v77
 - Español: alacran
@@ -44,6 +43,7 @@ ImDisk - Mitwirkende
 - русский: 0x00ffh
 - 简体中文: Arne Sacnussem
 - Italiano: Ajeje Brazorf
+- Português Brasileiro: Rodolfo Bendinelli
 
 Allgemeine Einstellungen
 Deinstallation
@@ -70,6 +70,7 @@ Entferne verbleibende Komponenten
 ImDisk - Setup
  Allgemeine Einstellungen 
 Einträge in Kontextmenüs aktivieren
+Explorer nach Anlegen des Laufwerks nicht öffnen
 Verborgene Dialogfenster wiederherstellen
  Die folgenden Laufwerke im Explorer verbergen: 
 Parameter speichern ...
