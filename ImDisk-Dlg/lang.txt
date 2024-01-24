@@ -9,7 +9,6 @@ DiscUtils library (uses .NET Framework 4)
 RamDisk Configuration Tool
  Options 
 Enable entries in context menus
-Request administrator rights in Explorer
 Create shortcuts on desktop
 Load ImDskSvc automatically
 Language:
@@ -18,7 +17,6 @@ Install driver. This includes a Control Panel applet, a command line tool, imdis
 Required to mount advanced image file formats like VHD, VDI, VMDK and some others.##Also adds a command line tool in the installation folder, DiscUtilsDevio.exe, and a dedicated dialog box to use the library from file context menu in Explorer.
 This tool will allow you to easily configure one or several RamDisks with various settings.
 Add entries in the drive context menu and the file context menu to manage ImDisk volumes and image files directly from Explorer.##This option can be set later in the Windows Start Menu.
-This affects the commands in the drive context menu: "Save disk contents as image file" and "Unmount ImDisk Virtual Disk".##Solves some UAC related issues.##This option can be set later in the Windows Start Menu.
 Create shortcuts on desktop.##All shortcuts are always created in the Windows Start Menu.
 Start ImDskSvc automatically at system startup.##No tool in this package uses this service, so you can safely uncheck this option.##It is installed by the driver to initiate TCP/IP or serial port connections with proxy softwares.
 Credits
@@ -41,9 +39,10 @@ ImDisk - Credits
 Translations:
 - Français: v77
 - Español: alacran
-- Svenska: Åke Engelbrektson
+- Svenska: Åke Engelbrektson / Olof Lagerkvist
 - Deutsch: Bodo Thevissen
 - русский: 0x00ffh
+- 简体中文: Arne Sacnussem
 
 General Settings
 Uninstall
@@ -70,7 +69,6 @@ Removing remaining components...
 ImDisk - Setup
  General Settings 
 Enable entries in context menus
-Request administrator rights in Explorer
 Restore hidden dialog boxes
  Hide the following drives in Explorer: 
 Save Parameters...
@@ -82,6 +80,9 @@ These changes will take effect#only after restarting Windows!
 
 [RamDiskUI]
  RamDisk Configuration Tool 
+OK
+Exit
+
 Basic
     Size:
 KB

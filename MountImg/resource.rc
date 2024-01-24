@@ -8,7 +8,7 @@
 1 ICON "..\\VD.ico"
 
 MOUNT_DLG DIALOGEX 0, 0, 230, 250
-		  STYLE WS_SYSMENU | DS_SHELLFONT | DS_CENTER
+		  STYLE WS_SYSMENU | DS_SHELLFONT | DS_CENTER | WS_DISABLED
 		  EXSTYLE WS_EX_ACCEPTFILES
 		  FONT 9, "MS Shell Dlg"
 		  CAPTION "ImDisk"
@@ -70,7 +70,7 @@ END
 
 
 1 VERSIONINFO
-FILEVERSION 3,1,0,0
+FILEVERSION 4,0,1,0
 BEGIN
 BLOCK "StringFileInfo"
 	BEGIN
@@ -78,7 +78,7 @@ BLOCK "StringFileInfo"
 		BEGIN
 			VALUE "FileDescription", "Mount new virtual disk"
 			VALUE "ProductName", "imdisk"
-			VALUE "ProductVersion", "3.1.0.0"
+			VALUE "ProductVersion", "4.0.1.0"
 		END
 	END
 BLOCK "VarFileInfo"

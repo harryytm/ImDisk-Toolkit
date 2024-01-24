@@ -9,7 +9,6 @@ DiscUtils Bibliothek (nutzt .Net Framework 4)
 RAM-Disk Konfigurator
  Einstellungen 
 Einträge in Kontextmenüs aktivieren
-Administratorrechte im Explorer erbitten
 Verknüpfungen auf Desktop anlegen
 ImDskSvc automatisch laden
 Sprache:
@@ -18,7 +17,6 @@ Treiber installieren. Dies enthält ein Systemsteuerungs-Applet, ein Befehlszeil
 Benötigt, um fortgeschrittene Abbilder wie VHD, VDI, VMDK und einige andere einzubinden.##Ermöglicht auch ein Kommandozeilen-Tool im Installationsverzeichnis, DiscUtilsDevio.exe, und ein dediziertes Eingabefeld, um die Bibliothek im Dateikontextmenü des Explorers zu verwenden.
 Dieses Programm ermöglicht die einfache Konfiguration von einer oder mehrerer RAM-Disks mit unterschiedlichen Einstellungen.
 Füge Einträge zum Kontextmenü des Laufwerks und das Datei-Kontextmenü hinzu, um die ImDisk-Volumes und Abbilder direkt vom Explorer aus zu verwalten.##Diese Option kann später vom Windows-Startmenü aus gesetzt werden.
-Dies betrifft die Befehle im Laufwerks-Kontextmenü: "Diskinhalt als Abbild speichern" und "ImDisk Virtual Disk trennen".##Löst einige UAC-bezogene Probleme.##Diese Option kann später vom Windows-Startmenü aus gesetzt werden.
 Verknüpfungen auf dem Desktop anlegen.##Windows-Startmenü werden stets alle Verknüpfungen angelegt.
 ImDskSvc beim Systemstart automatisch starten.##Kein Teil dieses Pakets nutzt diesen Dienst, sodass diese Option sicher abgeschaltet werden kann.##Er wird vom Treiber installiert, um Verbindungen per TCP/IP oder serieller Schnittstelle über Proxy-Software zu ermöglichen.
 Mitwirkende
@@ -44,6 +42,7 @@ ImDisk - Mitwirkende
 - Svenska: Åke Engelbrektson / Olof Lagerkvist
 - Deutsch: Bodo Thevissen
 - русский: 0x00ffh
+- 简体中文: Arne Sacnussem
 
 Allgemeine Einstellungen
 Deinstallation
@@ -70,7 +69,6 @@ Entferne verbleibende Komponenten
 ImDisk - Setup
  Allgemeine Einstellungen 
 Einträge in Kontextmenüs aktivieren
-Administratorrechte im Explorer erbitten
 Verborgene Dialogfenster wiederherstellen
  Die folgenden Laufwerke im Explorer verbergen: 
 Parameter speichern ...
@@ -82,6 +80,9 @@ Diese Änderungen wirken erst#nach einem Windows-Neustart
 
 [RamDiskUI]
  RAM-Disk Konfigurator 
+OK
+Beenden
+
 Grundlegend
 Größe:    
 KB

@@ -9,7 +9,6 @@
 Утилита конфигурации Ram-диска
  Опции 
 Разрешить пункты контекстного меню
-Запрашивать права администратора в проводнике
 Создавать ярлыки на рабочем столе
 Load ImDskSvc automatically
 Язык:
@@ -18,7 +17,6 @@ Load ImDskSvc automatically
 Требуется для монтирования образов форматов VHD, VDI, VMDK и некоторые другие.##Добавляет утилиты коммандной строки в папку установки, DiscUtilsDevio.exe, и dedicated диалоговые окна для работы с библиотекой из контекстного меню оболочки.
 Эта утилита позволит Вам настроить один или несколько RAM-дисков.
 Добавить пункты в контекстное меню дисков и файлов для управления томами и файлами оббразов прямо в Проводнике.##Можно настроить позднее в меню Пуск.
-Это воздействует на команды  в контекстном меню дисков: "Сохранить данные в файл-образ" and "Отключить том ImDisk".##Решает некоторые проблемы с UAC.##Это может быть настроено позднее в меню Пуск.
 Создать ярлыки на рабочем столе.##Все ярлыки создаются в меню Пуск.
 Start ImDskSvc automatically at system startup.##No tool in this package uses this service, so you can safely uncheck this option.##It is installed by the driver to initiate TCP/IP or serial port connections with proxy softwares.
 Создатели
@@ -29,8 +27,8 @@ Start ImDskSvc automatically at system startup.##No tool in this package uses th
 Неверный путь.
 Ошибка: не удалось создать службу.
 The previous installation is in another folder.#Do you want to remove it?
-Установка заершена.
-Установка завершена.##И всё же, необходимо установить .NET Framework 4.#Без этого Вам не удастся подключить файлы образов некоторых форматов.##Перейдите на <a href="https://www.microsoft.com/en-us/download/details.aspx?id=17113">Microsoft Download Center</a> для загрузки установщика.
+Установка завершена.
+Установка завершена.##И всё же, необходимо установить .NET Framework 4.#Без этого Вам не удастся подключить файлы образов некоторых форматов.#Перейдите на <a href="https://www.microsoft.com/en-us/download/details.aspx?id=17113">Microsoft Download Center</a> для загрузки установщика.
 ОК
 
 ImDisk - Создатели
@@ -44,6 +42,7 @@ ImDisk - Создатели
 - Svenska: Åke Engelbrektson / Olof Lagerkvist
 - Deutsch: Bodo Thevissen
 - русский: 0x00ffh
+- 简体中文: Arne Sacnussem
 
 Основные настройки
 Удаление
@@ -70,7 +69,6 @@ ImDisk - Удаление
 ImDisk - Установка
  Основные параметры 
 Добавить в контекстное меню
-Запрос прав администратора в оболочке
 Восстановить скрытые диалоговые окна
  Скрыть следующие диски в Проводнике: 
 Сохранить параметры...
@@ -82,6 +80,9 @@ ImDisk - Установка
 
 [RamDiskUI]
  Настройки RAM-диска 
+OK
+Выход
+
 Базовые
    Размер:
 КБ

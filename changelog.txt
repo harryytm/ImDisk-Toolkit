@@ -1,3 +1,43 @@
+Version 20200412
+- new packages without self-extracting modules
+- config.exe: added a command line option to retrieve the version of the package
+
+Version 20200404
+- SFX module: removed UPX compression and compiled it as console application because of antiviruses
+
+Version 20200402
+- updated DiscUtils: fix for VMDK metadata files larger than 20KB and fix for corrupted GPT images
+- fix in MountImg.exe: VMDK metadata files could be changed even in read-only
+- fix in MountImg.exe: partition display or mounting could fail if DiscUtilsDevio takes too much time to close the image file
+- fix in MountImg.exe: the OK button could stay disabled with the drag and drop of an invalid file
+
+Version 20200315
+- MountImg.exe: added command line parameters
+
+Version 20191126
+- the shortcut for the driver control panel now asks for administrative privileges
+- removed "Request administrator rights in Explorer" from the installer; they are now always required
+- RamDyn.exe: performances improved with NT API
+- RamDyn.exe: no longer waits for WM_ENDSESSION when executed in session 0
+
+Version 20190924
+- RamDiskUI.exe: renamed Cancel button to Exit
+- fix in MountImg.exe: formatting could fail if the image file was a new created one (regression from 20180917)
+- fix in MountImg.exe: when a non-existent file was selected with the "..." button, the "OK" button was not enabled
+
+Version 20190629
+- fix in RamDiskUI.exe: an error occurred if RamDyn took more than 15 seconds to load an image file (regression from 20160726)
+- fix in ImDisk-Dlg.exe: when unmounting a ramdisk, the prompt to save it as an image file is now displayed even for dynamic ramdisks
+
+Version 20190419
+- fix in RamDiskUI.exe: copied files might have their archive attribute removed even if the synchronization feature is not used (regression introduced in 20190407)
+- fix in RamDyn.exe: the cleanup function can work not properly (regression introduced in 20190407)
+
+Version 20190407
+- added simplified chinese language
+- fix in RamDyn.exe: a race condition could lead to a mounting fail and/or the fail of the manual trigger of the cleanup function (regression introduced in 20190130)
+- executables are now compiled with MinGW 7.3.0 (instead of 6.2.0)
+
 Version 20190130
 - RamDyn.exe: added a command to manually trigger the cleanup function
 

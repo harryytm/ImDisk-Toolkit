@@ -9,7 +9,6 @@ DiscUtils library (använder .NET Framework 4)
 RamDisk Configuration Tool
  Alternativ 
 Aktivera kontextmenyposter
-begär administratörsrättigheter i Utforskaren
 Skapa genvägar på skrivbordet
 Starta ImDskSvc automatiskt
 Språk:
@@ -18,7 +17,6 @@ Installerar drivrutin. Detta inkluderar en kontrollpanelpost, ett kommandoradsve
 Krävs för att montera avancerade avbildsformat som VHD, VDI, VMDK och några andra.##Lägger också till ett kommandoradsverktyg i installationsmappen (DiscUtilsDevio.exe) och en dialogruta för att använda biblioteket från filkontextmenyn i Utforskaren.
 Detta verktyg låter dig enkelt konfigurera en eller flera RamDiskar med varierande inställningar.
 Lägger till poster i disk- och filkontext för att hantera ImDisk-volymer och avbildsfiler direkt från Utforskaren.##Detta alternativ kan aktiveras senare, i Windows startmeny.
-Detta påverkar diskkontextens kommandon: "Spara diskinnehåll som avbildsfil" och "Avmontera ImDisk Virtual Disk".##Löser några UAC-relaterade frågor.##Detta alternativ kan aktiveras senare, i Windows startmeny.
 Skapar genvägar på skrivbordet.##Alla genvägar skapas alltid i Windows startmeny.
 Starta ImDskSvc automatiskt vid systemstart.##Inget verktyg i det här paketet använder denna tjänst, så du kan riskfritt avmarkera detta alternativ.##Det installeras av drivrutinen för att initiera TCP/IP eller serieportanslutningar med proxy-mjukvara.
 Tack
@@ -44,6 +42,7 @@ ImDisk - Tack!
 - Svenska: Åke Engelbrektson / Olof Lagerkvist
 - Deutsch: Bodo Thevissen
 - русский: 0x00ffh
+- 简体中文: Arne Sacnussem
 
 Allmänna inställningar
 Avinstallera
@@ -70,7 +69,6 @@ Tar bort kvarvarande komponenter...
 ImDisk - Installation
  Allmänna inställningar 
 Aktivera kontextmenyposter
-Kräv administratörsrättighet i Utforskaren
 Återställ dolda dialogrutor
  Dölj följande diskenheter i Utforskaren: 
 Spara parametrar...
@@ -82,6 +80,9 @@ De här ändringarna verkställs#först efter Windows-omstart!
 
 [RamDiskUI]
  RamDisk Inställningar 
+OK
+Avsluta
+
 Grundläggande
     Storlek:
 KB

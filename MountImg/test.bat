@@ -1,0 +1,1 @@
+start K:\imdisk\MountImg\DiscUtilsDevio.exe /filename=R:\Boot95.vdi /mount=Z:

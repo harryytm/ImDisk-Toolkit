@@ -70,7 +70,7 @@ static WCHAR TTip_txt[200] = {};
 
 
 enum {
-	TITLE,
+	TITLE, PS_OK, PS_EXIT,
 	TAB1_0, TAB1_1, TAB1_2, TAB1_3, TAB1_4, TAB1_5, TAB1_6, TAB1_7, TAB1_8, TAB1_9, TAB1_10, TAB1_11,
 	TTIP1_1, TTIP1_2, TTIP1_3, TTIP1_4, TTIP1_5, TTIP1_6, TTIP1_7,
 	TAB2_0, TAB2_1, TAB2_2, TAB2_3, TAB2_4, TAB2_5, TAB2_6, TAB2_7, TAB2_8, TAB2_9,
@@ -777,7 +777,7 @@ size_error:
 		svc_arg[1] = cmd_line;
 		h = CreateEventA(NULL, FALSE, FALSE, "Global\\RamDynSvcEvent");
 		StartService(h_svc, 2, (void*)svc_arg);
-		WaitForSingleObject(h, 15000);
+		WaitForSingleObject(h, 3600000);
 		CloseHandle(h);
 		if (!use_mount_point && (GetLogicalDrives() & (1 << (drive_select[0] - 'A'))))
 			ImDisk_NotifyShellDriveLetter(NULL, current_MP);
@@ -972,6 +972,9 @@ static INT_PTR __stdcall Tab1Proc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPa
 
 			// set localized strings
 			if (t[0]) {
+				SetDlgItemText(hwnd[0], IDOK, t[PS_OK]);
+				SetDlgItemText(hwnd[0], IDCANCEL, t[PS_EXIT]);
+
 				SetDlgItemText(hDlg, ID_TITLE, t[TITLE]);
 				SetDlgItemText(hDlg, ID_TEXT3, t[TAB1_1]);
 				SetDlgItemText(hDlg, ID_RB1, t[TAB1_2]);

@@ -9,7 +9,6 @@ Librería DiscUtils (usa .NET Framework 4)
 Herramienta de configuración RamDisk
  Opciones 
 Permitir entradas en menús contextuales
-Derechos de administrador en el Explorador
 Crear accesos directos en escritorio
 Cargue ImDskSvc automáticamente
 Lenguaje:
@@ -18,7 +17,6 @@ Instalar controlador. Esto incluye un panel de control, una herramienta de líne
 Requeridos para montar formatos de archivo de imagen avanzadas como VHD, VDI, VMDK y algunos otros.##También agrega una herramienta de línea de comandos en la carpeta de instalación, DiscUtilsDevio.exe, y una caja de dialogo dedicada a usar la librería desde el menú en el Explorador.
 Esta herramienta permitirá configurar fácilmente uno o varios RamDisks con varios ajustes.
 Agregar entradas en el menú contextual de la unidad y en el menú contextual del archivo para manejar volúmenes ImDisk y archivos imagen directamente desde el explorador.##Esta opción puede ajustarse después en el menú de inicio de Windows.
-Esto afecta los comandos en el menú contextual de la unidad: "Guardar contenidos del disco como archivo imagen" y "Desmontar disco virtual ImDisk".##Resuelve algunos problemas relacionados con UAC.##Esta opción se puede ajustar más tarde en el menú Inicio de Windows.
 Crear accesos directos en el escritorio.##Todos los accesos directos se crean siempre en el menú Inicio de Windows.
 Inicie ImDskSvc automáticamente al inicio del sistema.##Ninguna herramienta de este paquete utiliza este servicio, por lo que puede desmarcar esta opción de manera segura.##Es instalado por el controlador para iniciar TCP/IP o conexiones de puerto serie con software proxy.
 Créditos
@@ -44,6 +42,7 @@ Traducciones:
 - Svenska: Åke Engelbrektson / Olof Lagerkvist
 - Deutsch: Bodo Thevissen
 - русский: 0x00ffh
+- 简体中文: Arne Sacnussem
 
 Ajustes Generales
 Desinstalar
@@ -70,7 +69,6 @@ Removiendo contenidos remanentes...
 ImDisk - Instalación
  Ajustes generales 
 Permitir entradas en menús contextuales
-Derechos de administrador en el Explorador
 Restaurar los cuadros de diálogo ocultos
  Ocultar las unidades siguientes en el Explorador: 
 Guardar Parámetros...
@@ -82,6 +80,9 @@ Estos cambios entrarán en efecto#¡sólo después de reiniciar Windows!
 
 [RamDiskUI]
  Herramienta de configuración RamDisk 
+OK
+Salir
+
 Básico
 Tamaño:
 KB

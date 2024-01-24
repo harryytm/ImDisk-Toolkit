@@ -26,19 +26,22 @@ static FARPROC ImDisk_GetDeviceListEx, ImDisk_ForceRemoveDevice, ImDisk_RemoveRe
 
 static WCHAR dev_list[] = {'h', 'c', 'f'};
 static WCHAR ro_list[] = {'w', 'o'};
+static WCHAR *ro_discutils_list[] = {L"", L" /readonly"};
 static WCHAR *rm_list[] = {L"fix", L"rem"};
 static WCHAR *boot_list[] = {L"", L" -P"};
 static DWORD floppy_size[] = {160 << 10, 180 << 10, 320 << 10, 360 << 10, 640 << 10, 1200 << 10, 720 << 10, 820 << 10, 1440 << 10, 1680 << 10, 1722 << 10, 2880 << 10, 123264 << 10, 234752 << 10};
 
 static WCHAR filename[MAX_PATH] = {}, mountdir[MAX_PATH];
 static WCHAR drive_list[27][4] = {}, drive[MAX_PATH + 2] = {};
-static WCHAR module_name[MAX_PATH + 16];
+static WCHAR module_name[MAX_PATH + 16], txt[1024] = {};
 
 static BOOL mount_point;
 static BYTE init_ok = FALSE, net_installed = FALSE, partition_changed;
-static UINT dev_type, partition;
-static BOOL readonly, removable, new_file, win_boot;
+static UINT cmdline_dev_type = 0, dev_type, cmdline_partition = 1, partition;
+static _Bool cmdline_partition_exist = FALSE, cmdline_mount = FALSE;
+static BOOL readonly = FALSE, removable = FALSE, new_file, win_boot;
 static long device_number;
+static WCHAR cmdline_drive_letter = 0;
 
 static int list_partition;
 static __int64 list_size;
@@ -46,6 +49,7 @@ static WCHAR list_filesystem[MAX_PATH + 1], list_label[MAX_PATH + 1];
 static ULONG list_device[64000];
 static int lv_itemindex = 0;
 static HANDLE mount_mutex;
+static PROCESS_INFORMATION pi_discutilsdevio;
 
 static TOOLINFO ti;
 static HWND hTTip, h_listview;
@@ -127,6 +131,15 @@ static DWORD start_process(WCHAR *cmd, BYTE flag)
 }
 
 
+static void wait_discutilsdevio()
+{
+	if (pi_discutilsdevio.hProcess == INVALID_HANDLE_VALUE) return;
+	CloseHandle(pi_discutilsdevio.hThread);
+	WaitForSingleObject(pi_discutilsdevio.hProcess, INFINITE);
+	CloseHandle(pi_discutilsdevio.hProcess);
+	pi_discutilsdevio.hProcess = INVALID_HANDLE_VALUE;
+}
+
 static long get_imdisk_unit()
 {
 	long i, j;
@@ -180,7 +193,6 @@ static BOOL imdisk_check()
 static BOOL discutils_check()
 {
 	STARTUPINFO si = {sizeof si};
-	PROCESS_INFORMATION pi;
 	DWORD ExitCode;
 	long list_unit;
 	WCHAR cmdline[MAX_PATH + 100], txt_partition[24];
@@ -191,22 +203,19 @@ static BOOL discutils_check()
 	pipe = _rdtsc();
 	_snwprintf(txt_partition, _countof(txt_partition), list_partition != 1 ? L" /partition=%d" : L"", list_partition);
 	_snwprintf(cmdline, _countof(cmdline), L"DiscUtilsDevio /name=ImDisk%I64x%s /filename=\"%s\" /readonly", pipe, txt_partition, filename);
-	if (!CreateProcess(NULL, cmdline, NULL, NULL, FALSE, CREATE_NO_WINDOW, NULL, NULL, &si, &pi)) return FALSE;
+	if (!CreateProcess(NULL, cmdline, NULL, NULL, FALSE, CREATE_NO_WINDOW, NULL, NULL, &si, &pi_discutilsdevio)) return FALSE;
 	if ((list_unit = get_imdisk_unit()) < 0) return FALSE;
 	_snwprintf(cmdline, _countof(cmdline), L"imdisk -a -t proxy -u %d -o shm,%cd,ro,%s -f ImDisk%I64x", list_unit, dev_list[dev_type], rm_list[removable], pipe);
 	for (i = 0; i < 100; i++) {
 		Sleep(50);
 		// check if DiscUtilsDevio is still active
-		GetExitCodeProcess(pi.hProcess, &ExitCode);
+		GetExitCodeProcess(pi_discutilsdevio.hProcess, &ExitCode);
 		if (ExitCode != STILL_ACTIVE) break;
 		if (!start_process(cmdline, TRUE)) {
 			get_volume_param(list_unit);
 			break;
 		}
 	}
-	CloseHandle(pi.hProcess);
-	CloseHandle(pi.hThread);
-
 	return list_size != -1;
 }
 
@@ -235,7 +244,9 @@ static DWORD __stdcall list_thread(LPVOID lpParam)
 			if (!volume_ok && net_installed) discutils_pref = volume_ok = discutils_check();
 		}
 		if (!volume_ok) {
-			if (!partition_changed) {
+			if (cmdline_partition_exist)
+				cmdline_partition_exist = FALSE;
+			else if (!partition_changed) {
 				lv_itemindex = max_partition - 1;
 				ListView_SetItemState(h_listview, lv_itemindex, LVIS_SELECTED, LVIS_SELECTED);
 				ListView_EnsureVisible(h_listview, lv_itemindex, FALSE);
@@ -265,8 +276,10 @@ static DWORD __stdcall list_thread(LPVOID lpParam)
 			max_list_size = list_size;
 			max_partition = list_partition;
 		}
+		wait_discutilsdevio();
 		ReleaseMutex(mount_mutex);
 	}
+	wait_discutilsdevio();
 	return 0;
 }
 
@@ -293,7 +306,7 @@ static void file_check()
 	}
 
 	ListView_DeleteAllItems(h_listview);
-	if (file_exist && !(file_data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY))
+	if (!cmdline_mount && file_exist && !(file_data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY))
 		CreateThread(NULL, 0, list_thread, NULL, 0, NULL);
 }
 
@@ -460,6 +473,7 @@ static INT_PTR __stdcall CreateFile_Proc(HWND hDlg, UINT Msg, WPARAM wParam, LPA
 					return TRUE;
 				}
 				CloseHandle(h);
+				new_file = TRUE;
 				if (!(i = IsDlgButtonChecked(hDlg, ID_CHECK21))) file_check();
 				EndDialog(hDlg, i);
 			}
@@ -474,10 +488,18 @@ static INT_PTR __stdcall CreateFile_Proc(HWND hDlg, UINT Msg, WPARAM wParam, LPA
 	}
 }
 
-static INT_PTR __stdcall InvalidFS_Proc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lParam)
+static DWORD __stdcall invalid_fs_unmount(LPVOID lpParam)
 {
 	WCHAR cmdline[MAX_PATH + 20];
 
+	_snwprintf(cmdline, _countof(cmdline), L"ImDisk-Dlg RM \"%s\"", drive);
+	start_process(cmdline, TRUE);
+	EndDialog(lpParam, 0);
+	return 0;
+}
+
+static INT_PTR __stdcall InvalidFS_Proc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lParam)
+{
 	switch (Msg)
 	{
 		case WM_INITDIALOG:
@@ -516,10 +538,10 @@ static INT_PTR __stdcall InvalidFS_Proc(HWND hDlg, UINT Msg, WPARAM wParam, LPAR
 
 		case WM_COMMAND:
 			if (LOWORD(wParam) == ID_PBUTTON11) {
-				_snwprintf(cmdline, _countof(cmdline), L"imdisk -D -m \"%s\"", drive);
-				start_process(cmdline, FALSE);
+				EnableWindow(GetDlgItem(hDlg, ID_PBUTTON11), FALSE);
+				EnableWindow(GetDlgItem(hDlg, ID_PBUTTON12), FALSE);
+				CreateThread(NULL, 0, invalid_fs_unmount, hDlg, 0, NULL);
 				reg_remove();
-				EndDialog(hDlg, 0);
 			}
 
 			if (LOWORD(wParam) == ID_PBUTTON12) {
@@ -577,7 +599,7 @@ static int DiscUtils_Mount()
 
 	pipe = _rdtsc();
 	_snwprintf(txt_partition, _countof(txt_partition), partition != 1 ? L" /partition=%d" : L"", partition);
-	_snwprintf(cmdline1, _countof(cmdline1), L"/name=ImDisk%I64x%s /filename=\"%s\"", pipe, txt_partition, filename);
+	_snwprintf(cmdline1, _countof(cmdline1), L"/name=ImDisk%I64x%s /filename=\"%s\"%s", pipe, txt_partition, filename, ro_discutils_list[readonly]);
 	_snwprintf(cmdline2, _countof(cmdline2), L"-o shm,%cd,r%c,%s -f ImDisk%I64x", dev_list[dev_type], ro_list[readonly], rm_list[removable], pipe);
 	h = CreateSemaphoreA(NULL, 0, 2, "Global\\MountImgSvcSema");
 	StartService(h_svc, 3, (void*)cmdline_ptr);
@@ -612,6 +634,13 @@ ready_again:
 		EnableWindow(hwnd_ok, TRUE);
 		SetDlgItemText(hDialog, IDOK, L"OK");
 		init_ok = TRUE;
+		ReleaseMutex(mount_mutex);
+		if (cmdline_mount) {
+			cmdline_mount = FALSE;
+			EnableWindow(hDialog, TRUE);
+			SendMessage(hDialog, WM_NEXTDLGCTL, (WPARAM)combo1.hwndItem, TRUE);
+			file_check();
+		}
 		return 0;
 	}
 
@@ -623,6 +652,7 @@ ready_again:
 		if (mount_point) PathAddBackslash(drive);
 		do {
 			if (GetVolumeInformation(drive, NULL, 0, NULL, NULL, NULL, NULL, 0)) {
+				if (cmdline_mount) break;
 				if (os_ver.dwMajorVersion < 6) {
 					_snwprintf(cmdline, _countof(cmdline), L"explorer /n,%s", drive);
 					start_process(cmdline, FALSE);
@@ -656,7 +686,7 @@ static INT_PTR __stdcall DlgProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPar
 	RECT coord;
 	HMODULE hDLL;
 	FARPROC lpFunc;
-	WCHAR txt[MAX_PATH + 40], param_name[24], *param_name_ptr;
+	WCHAR c, param_name[24], *param_name_ptr;
 	ULARGE_INTEGER param;
 	BOOL is_imdisk;
 	int i, n_drive, select, max;
@@ -739,12 +769,12 @@ static INT_PTR __stdcall DlgProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPar
 			select = -1;
 			mask = mask0 | GetLogicalDrives();
 			wcscpy(txt, L"\\\\.\\A:");
-			for (i = 'A'; i <= 'Z'; i++) {
+			for (c = 'A'; c <= 'Z'; c++) {
 				h = CreateFile(txt, 0, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 				is_imdisk = FALSE;
 				if (!(mask & 1) || (is_imdisk = DeviceIoControl(h, IOCTL_IMDISK_QUERY_VERSION, NULL, 0, &version, sizeof version, &data_size, NULL))) {
-					if (i >= 'C' && !is_imdisk && select == -1) select = n_drive;
-					drive_list[n_drive][0] = i;
+					if (c == cmdline_drive_letter || (c >= 'C' && !is_imdisk && select == -1)) select = n_drive;
+					drive_list[n_drive][0] = c;
 					drive_list[n_drive][1] = ':';
 					SendMessage(hwnd_combo2, CB_ADDSTRING, 0, (LPARAM)drive_list[n_drive++]);
 				}
@@ -752,17 +782,22 @@ static INT_PTR __stdcall DlgProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPar
 				mask >>= 1;
 				txt[4]++;
 			}
-			SendMessage(hwnd_combo2, CB_SETCURSEL, max(select, 0), 0);
+			i = max(select, 0);
+			SendMessage(hwnd_combo2, CB_SETCURSEL, i, 0);
+			wcscpy(drive, drive_list[i]);
 
 			SendMessage(hwnd_edit1, EM_SETLIMITTEXT, _countof(mountdir) - 1, 0);
 			SetDlgItemText(hDlg, ID_EDIT1, mountdir);
+
+			CheckDlgButton(hDlg, ID_CHECK1, readonly);
+			CheckDlgButton(hDlg, ID_CHECK2, removable);
 
 			// up-down control
 			h_updown = CreateWindow(UPDOWN_CLASS, NULL, WS_CHILDWINDOW | WS_VISIBLE | UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_ARROWKEYS | UDS_HOTTRACK, 0, 0, 0, 0, hDlg, NULL, hinst, NULL);
 			SendMessage(h_updown, UDM_SETBUDDY, (WPARAM)GetDlgItem(hDlg, ID_UPDOWN), 0);
 			SendMessage(h_updown, UDM_SETRANGE, 0, MAKELPARAM(128, 0));
-			SetDlgItemInt(hDlg, ID_UPDOWN, 1, FALSE);
-			partition = 1;
+			SetDlgItemInt(hDlg, ID_UPDOWN, cmdline_partition, FALSE);
+			partition = cmdline_partition;
 
 			// list view
 			h_listview = GetDlgItem(hDlg, ID_LISTVIEW);
@@ -787,11 +822,20 @@ static INT_PTR __stdcall DlgProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPar
 			}
 
 			file_check();
+			if (cmdline_dev_type) {
+				dev_type = cmdline_dev_type - 1;
+				CheckRadioButton(hDlg, ID_RB3, ID_RB5, ID_RB3 + dev_type);
+			}
 			hwnd_ok = GetDlgItem(hDlg, IDOK);
 			disp_controls();
-			SetFocus(combo1.hwndItem);
 
 			init_ok = TRUE;
+			if (cmdline_mount)
+				goto mount;
+			else {
+				EnableWindow(hDlg, TRUE);
+				SetFocus(combo1.hwndItem);
+			}
 			return FALSE;
 
 		case WM_NOTIFY:
@@ -824,7 +868,7 @@ static INT_PTR __stdcall DlgProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPar
 
 		case WM_DROPFILES:
 #ifdef _WIN64
-			if (!DragQueryFile((HDROP)wParam, 0, txt, _countof(txt))) {
+			if (!DragQueryFile((HDROP)wParam, 0, txt, _countof(txt) - 1)) {
 				// dragging from a 32-bit process gives invalid high order DWORD in wParam
 				ULARGE_INTEGER ptr;
 				ptr.QuadPart = (ULONGLONG)GlobalAlloc(GMEM_MOVEABLE, 0);
@@ -832,22 +876,22 @@ static INT_PTR __stdcall DlgProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPar
 				ptr.QuadPart -= 16;
 				ptr.LowPart = (DWORD)wParam;
 				wParam = (WPARAM)ptr.QuadPart;
-				DragQueryFile((HDROP)wParam, 0, txt, _countof(txt));
+				DragQueryFile((HDROP)wParam, 0, txt, _countof(txt) - 1);
 			}
 #else
-			DragQueryFile((HDROP)wParam, 0, txt, _countof(txt));
+			DragQueryFile((HDROP)wParam, 0, txt, _countof(txt) - 1);
 #endif
 			DragFinish((HDROP)wParam);
 			if (PathIsDirectory(txt)) {
 				SetDlgItemText(hDlg, ID_EDIT1, txt);
 				CheckRadioButton(hDlg, ID_RB1, ID_RB2, ID_RB2);
 				mount_point = TRUE;
-				disp_controls();
 			} else {
 				SetDlgItemText(hDlg, ID_COMBO1, txt);
 				wcscpy(filename, txt);
 				file_check();
 			}
+			disp_controls();
 			return TRUE;
 
 		case WM_COMMAND:
@@ -870,7 +914,7 @@ static INT_PTR __stdcall DlgProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPar
 					for (i = 0; i <= max; i++) {
 						param_name_ptr = param_name + _snwprintf(param_name, _countof(param_name), L"Im%d", i);
 						wcscpy(param_name_ptr, L"FileName");
-						data_size = sizeof txt;
+						data_size = sizeof(txt) - sizeof(WCHAR);
 						if (RegQueryValueEx(registry_key, param_name, NULL, NULL, (void*)txt, &data_size) == ERROR_SUCCESS && !wcscmp(txt, filename)) {
 							wcscpy(param_name_ptr, L"MountPoint");
 							data_size = sizeof txt;
@@ -904,7 +948,6 @@ static INT_PTR __stdcall DlgProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPar
 			wcscpy(drive, drive_list[SendMessage(hwnd_combo2, CB_GETCURSEL, 0, 0)]);
 			GetDlgItemText(hDlg, ID_EDIT1, mountdir, _countof(mountdir));
 			mount_point = IsDlgButtonChecked(hDlg, ID_RB2);
-			disp_controls();
 
 			if (LOWORD(wParam) == ID_PBUTTON1) {
 				ofn.hwndOwner = hDlg;
@@ -917,6 +960,8 @@ static INT_PTR __stdcall DlgProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPar
 					file_check();
 				}
 			}
+
+			disp_controls();
 
 			if (LOWORD(wParam) == ID_PBUTTON2) {
 				bi.hwndOwner = hDlg;
@@ -941,7 +986,7 @@ static INT_PTR __stdcall DlgProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPar
 			}
 
 			if (LOWORD(wParam) == ID_PBUTTON4) {
-				_snwprintf(txt, _countof(txt), L"rundll32 imdisk.cpl,RunDLL_MountFile %s", filename);
+				_snwprintf(txt, _countof(txt) - 1, L"rundll32 imdisk.cpl,RunDLL_MountFile %s", filename);
 				start_process(txt, FALSE);
 				EndDialog(hDlg, 1);
 			}
@@ -956,7 +1001,11 @@ static INT_PTR __stdcall DlgProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPar
 				}
 			}
 
+			if (LOWORD(wParam) == IDCANCEL)
+				EndDialog(hDlg, 0);
+
 			if (LOWORD(wParam) == IDOK) {
+mount:
 				win_boot = IsDlgButtonChecked(hDlg, ID_CHECK3);
 
 				// save parameters
@@ -993,11 +1042,13 @@ static INT_PTR __stdcall DlgProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPar
 				EnableWindow(hwnd_pbutton3, FALSE);
 				EnableWindow(hwnd_ok, FALSE);
 				SetDlgItemText(hDlg, IDOK, t[CTRL_16]);
-				CreateThread(NULL, 0, Mount, NULL, 0, NULL);
+				if (cmdline_mount) {
+					Mount(NULL);
+					return FALSE;
+				}
+				else
+					CreateThread(NULL, 0, Mount, NULL, 0, NULL);
 			}
-
-			if (LOWORD(wParam) == IDCANCEL)
-				EndDialog(hDlg, 0);
 
 			return TRUE;
 
@@ -1118,10 +1169,9 @@ static void __stdcall SvcMain(DWORD dwArgc, LPTSTR *lpszArgv)
 
 int __stdcall wWinMain(HINSTANCE hinstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow)
 {
-	WCHAR txt[MAX_PATH + 20];
 	int argc;
 	LPWSTR *argv;
-	WCHAR *arg_name;
+	WCHAR *cmdline_ptr, *exe_path, *opt;
 	HMODULE h_cpl;
 	HWND hwnd;
 	HKEY h_key;
@@ -1133,10 +1183,13 @@ int __stdcall wWinMain(HINSTANCE hinstance, HINSTANCE hPrevInstance, LPWSTR lpCm
 	int i, max;
 	SERVICE_TABLE_ENTRY DispatchTable[] = {{L"", SvcMain}, {NULL, NULL}};
 
+	pi_discutilsdevio.hProcess = INVALID_HANDLE_VALUE;
+
 	os_ver.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
 	GetVersionEx(&os_ver);
 
-	argv = CommandLineToArgvW(GetCommandLine(), &argc);
+	cmdline_ptr = GetCommandLine();
+	argv = CommandLineToArgvW(cmdline_ptr, &argc);
 
 	if (argc > 2 && !wcscmp(argv[1], L"/NOTIF")) {
 		if ((h_cpl = LoadLibraryA("imdisk.cpl")))
@@ -1156,27 +1209,10 @@ int __stdcall wWinMain(HINSTANCE hinstance, HINSTANCE hPrevInstance, LPWSTR lpCm
 
 	if ((os_ver.dwMajorVersion >= 6) && (argc <= 1 || wcscmp(argv[1], L"/UAC"))) {
 		// send non-elevated drive list to the elevated process
-		_snwprintf(txt, _countof(txt) - 1, L"/UAC %d \"%s\"", GetLogicalDrives(), argc > 1 ? argv[1] : L"");
-		txt[_countof(txt) - 1] = 0;
+		_snwprintf(txt, _countof(txt) - 1, L"/UAC %d %s", GetLogicalDrives(), cmdline_ptr);
 		ShellExecute(NULL, L"runas", argv[0], txt, NULL, SW_SHOWDEFAULT);
 		ExitProcess(0);
 	}
-
-	if (os_ver.dwMajorVersion < 6)
-		arg_name = argc > 1 ? argv[1] : L"";
-	else {
-		mask0 = _wtoi(argv[2]);
-		arg_name = argv[3];
-	}
-	_snwprintf(filename, _countof(filename) - 1, L"%s", arg_name);
-
-	hinst = GetModuleHandle(NULL);
-	if (!(h_cpl = LoadLibraryA("imdisk.cpl")))
-		MessageBox(NULL, L"Warning: cannot find imdisk.cpl.", L"ImDisk", MB_ICONWARNING);
-	ImDisk_GetDeviceListEx = GetProcAddress(h_cpl, "ImDiskGetDeviceListEx");
-	ImDisk_ForceRemoveDevice = GetProcAddress(h_cpl, "ImDiskForceRemoveDevice");
-	ImDisk_RemoveRegistrySettings = GetProcAddress(h_cpl, "ImDiskRemoveRegistrySettings");
-	ImDisk_NotifyShellDriveLetter = GetProcAddress(h_cpl, "ImDiskNotifyShellDriveLetter");
 
 	// load default values
 	mount_point = FALSE;
@@ -1192,6 +1228,77 @@ int __stdcall wWinMain(HINSTANCE hinstance, HINSTANCE hPrevInstance, LPWSTR lpCm
 		RegCloseKey(h_key);
 		net_installed = TRUE;
 	}
+
+	cmdline_ptr = L"";
+	exe_path = argv[0];
+
+	while (--argc > 0) {
+		argv++;
+		if (argv[0][0] == '/') {
+			opt = argv[0] + 1;
+			if (!wcscmp(opt, L"UAC")) {
+				if (argc < 3) ExitProcess(1);
+				mask0 = _wtoi(argv[1]);
+				argc -= 2;
+				argv += 2;
+				continue;
+			}
+			if (!_wcsnicmp(opt, L"MP=", 3)) {
+				opt += 3;
+				if (*opt && opt[1] == ':' && !opt[2])
+					cmdline_drive_letter = *opt;
+				else {
+					mount_point = TRUE;
+					wcsncpy(mountdir, opt, _countof(mountdir) - 1);
+				}
+				continue;
+			}
+			if (!_wcsicmp(opt, L"RO")) {
+				readonly = TRUE;
+				continue;
+			}
+			if (!_wcsicmp(opt, L"REM")) {
+				removable = TRUE;
+				continue;
+			}
+			if (!_wcsicmp(opt, L"HD")) {
+				cmdline_dev_type = 1;
+				continue;
+			}
+			if (!_wcsicmp(opt, L"CD")) {
+				cmdline_dev_type = 2;
+				continue;
+			}
+			if (!_wcsicmp(opt, L"FP")) {
+				cmdline_dev_type = 3;
+				continue;
+			}
+			if (!_wcsnicmp(opt, L"P=", 2)) {
+				cmdline_partition = _wtoi(opt + 2);
+				cmdline_partition_exist = TRUE;
+				continue;
+			}
+			if (!_wcsicmp(opt, L"MOUNT")) {
+				cmdline_mount = TRUE;
+				continue;
+			}
+			if (!_wcsicmp(opt, L"H") || !wcscmp(opt, L"?")) {
+				MessageBoxA(NULL, "MountImg.exe file_name [/MP=mount_point] [/RO] [/REM] [/HD | /CD | /FP] [/P=partition_number] [/MOUNT]", "ImDisk", MB_ICONINFORMATION);
+				ExitProcess(0);
+			}
+		} else
+			cmdline_ptr = argv[0];
+	}
+
+	wcsncpy(filename, cmdline_ptr, _countof(filename) - 1);
+
+	hinst = GetModuleHandle(NULL);
+	if (!(h_cpl = LoadLibraryA("imdisk.cpl")))
+		MessageBoxA(NULL, "Warning: cannot find imdisk.cpl.", "ImDisk", MB_ICONWARNING);
+	ImDisk_GetDeviceListEx = GetProcAddress(h_cpl, "ImDiskGetDeviceListEx");
+	ImDisk_ForceRemoveDevice = GetProcAddress(h_cpl, "ImDiskForceRemoveDevice");
+	ImDisk_RemoveRegistrySettings = GetProcAddress(h_cpl, "ImDiskRemoveRegistrySettings");
+	ImDisk_NotifyShellDriveLetter = GetProcAddress(h_cpl, "ImDiskNotifyShellDriveLetter");
 
 	// create service
 	h_scman = OpenSCManager(NULL, NULL, SC_MANAGER_CONNECT | SC_MANAGER_CREATE_SERVICE);
@@ -1210,8 +1317,8 @@ int __stdcall wWinMain(HINSTANCE hinstance, HINSTANCE hPrevInstance, LPWSTR lpCm
 	}
 
 	mount_mutex = CreateMutex(NULL, FALSE, NULL);
-	PathRemoveFileSpec(argv[0]);
-	SetCurrentDirectory(argv[0]);
+	PathRemoveFileSpec(exe_path);
+	SetCurrentDirectory(exe_path);
 	load_lang();
 	if (DialogBox(hinst, L"MOUNT_DLG", NULL, DlgProc) == 1) {
 		// workaround: the window of the driver GUI sometimes disappears under other windows

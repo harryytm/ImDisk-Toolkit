@@ -412,15 +412,12 @@ int __stdcall wWinMain(HINSTANCE hinstance, HINSTANCE hPrevInstance, LPWSTR lpCm
 	DWORD data_size;
 	DWORD access_list[] = {GENERIC_READ | GENERIC_WRITE, GENERIC_READ, FILE_READ_ATTRIBUTES, 0};
 	int n_access;
+	_Bool is_ramdisk;
 	FARPROC ImDiskOpenDeviceByMountPoint;
 	WCHAR txt[MAX_PATH + 1];
 
 	command_line = GetCommandLine();
 	argv = CommandLineToArgvW(command_line, &argc);
-	if (argc >= 2 && !wcscmp(argv[1], L"UAC")) {
-		ShellExecute(NULL, L"runas", argv[0], PathGetArgs(command_line) + 4, NULL, SW_SHOWDEFAULT);
-		ExitProcess(0);
-	}
 	if (argc < 3 || !argv[2][0]) ExitProcess(1);
 
 	if (!(h_cpl = LoadLibraryA("imdisk.cpl"))) {
@@ -459,9 +456,10 @@ int __stdcall wWinMain(HINSTANCE hinstance, HINSTANCE hPrevInstance, LPWSTR lpCm
 			error(NULL, txt);
 			ExitProcess(1);
 		}
+		is_ramdisk = IMDISK_IS_MEMORY_DRIVE(create_data.icd.Flags) || !wcsncmp(file_name, L"\\BaseNamedObjects\\Global\\RamDyn", 31);
 		if (n_access >= 2) {
 			flag_to_set = FLAG_ACCESS;
-			if (!(flags & FLAG_ACCESS) && !IMDISK_READONLY(create_data.icd.Flags) && !IMDISK_IS_MEMORY_DRIVE(create_data.icd.Flags) && wcsncmp(file_name, L"\\BaseNamedObjects\\Global\\RamDyn", 31))
+			if (!(flags & FLAG_ACCESS) && !IMDISK_READONLY(create_data.icd.Flags) && !is_ramdisk)
 				if (DialogBox(hinst, L"WARN_DLG", NULL, WarnProc)) ExitProcess(0);
 		}
 
@@ -481,7 +479,7 @@ int __stdcall wWinMain(HINSTANCE hinstance, HINSTANCE hPrevInstance, LPWSTR lpCm
 		DeviceIoControl(h, FSCTL_DISMOUNT_VOLUME, NULL, 0, NULL, 0, &data_size, NULL);
 
 		DeviceIoControl(h, FSCTL_LOCK_VOLUME, NULL, 0, NULL, 0, &data_size, NULL);
-		if (!(flags & FLAG_IMG_MOD) && IMDISK_IS_MEMORY_DRIVE(create_data.icd.Flags) && create_data.icd.Flags & IMDISK_IMAGE_MODIFIED)
+		if (!(flags & FLAG_IMG_MOD) && is_ramdisk && create_data.icd.Flags & IMDISK_IMAGE_MODIFIED)
 			switch (DialogBox(hinst, L"IMGMOD_DLG", NULL, ImgModProc)) {
 				case IDCANCEL:
 					ExitProcess(0);

@@ -1,0 +1,69 @@
+.Set RptFileName=NUL
+.Set InfFileName=NUL
+.Set CompressionType=LZX
+.Set CompressionMemory=21
+
+files\config.exe
+files\cp-admin.lnk
+files\cp.lnk
+MountImg\DevioNet.dll
+MountImg\DiscUtils.Core.dll
+MountImg\DiscUtils.Dmg.dll
+MountImg\DiscUtils.Streams.dll
+MountImg\DiscUtils.Vdi.dll
+MountImg\DiscUtils.Vhd.dll
+MountImg\DiscUtils.Vhdx.dll
+MountImg\DiscUtils.Vmdk.dll
+MountImg\DiscUtils.Xva.dll
+MountImg\DiscUtilsDevio.exe
+MountImg\ImDiskNet.dll
+files\MountImg.exe
+files\ImDisk-Dlg.exe
+files\ImDiskTk-svc32.exe
+files\ImDiskTk-svc64.exe
+files\RamDiskUI.exe
+files\RamDyn32.exe
+files\RamDyn64.exe
+
+.Set DestinationDir=lang
+install\lang\english.txt
+install\lang\french.txt
+install\lang\german.txt
+install\lang\russian.txt
+install\lang\schinese.txt
+install\lang\spanish.txt
+install\lang\swedish.txt
+
+.Set DestinationDir=driver
+files\driver\gpl.txt
+files\driver\imdisk.inf
+files\driver\install.cmd
+files\driver\msgboxw.exe
+files\driver\readme.txt
+files\driver\runwaitw.exe
+files\driver\uninstall_imdisk.cmd
+
+.Set DestinationDir=driver\awealloc\amd64
+files\driver\awealloc\amd64\awealloc.sys
+.Set DestinationDir=driver\awealloc\i386
+files\driver\awealloc\i386\awealloc.sys
+
+.Set DestinationDir=driver\cli\amd64
+files\driver\cli\amd64\imdisk.exe
+.Set DestinationDir=driver\cli\i386
+files\driver\cli\i386\imdisk.exe
+
+.Set DestinationDir=driver\cpl\amd64
+files\driver\cpl\amd64\imdisk.cpl
+.Set DestinationDir=driver\cpl\i386
+files\driver\cpl\i386\imdisk.cpl
+
+.Set DestinationDir=driver\svc\amd64
+files\driver\svc\amd64\imdsksvc.exe
+.Set DestinationDir=driver\svc\i386
+files\driver\svc\i386\imdsksvc.exe
+
+.Set DestinationDir=driver\sys\amd64
+files\driver\sys\amd64\imdisk.sys
+.Set DestinationDir=driver\sys\i386
+files\driver\sys\i386\imdisk.sys

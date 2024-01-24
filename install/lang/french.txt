@@ -1,6 +1,6 @@
 [Setup]
 ImDisk - Installation
-Bienvenu dans l'installateur du ImDisk Toolkit.
+Bienvenue dans l'installateur du ImDisk Toolkit.
 Ceci installera le ImDisk Toolkit (version %S).
 Dossier d'installation :
  Composants 
@@ -9,7 +9,6 @@ Librairie DiscUtils (utilise .NET Framework 4)
 Outil de Configuration de RamDisk
  Options 
 Entrées dans les menus contextuels
-Demander les droits admin dans l'Explorateur
 Créer des raccourcis sur le bureau
 Charger ImDskSvc automatiquement
 Langue :
@@ -18,7 +17,6 @@ Installer le pilote. Ceci inclut un composant du Panneau de Configuration, un ou
 Requis pour monter des formats de fichier image avancés tels que VHD, VDI, VMDK et quelques autres.##Ajoute également un outil en ligne de commande dans le dossier d'installation, DiscUtilsDevio.exe, et une boîte de dialogue dédiée pour utiliser la librairie depuis le menu contextuel de fichier dans l'Explorateur.
 Cet outil vous permettra de configurer facilement un ou plusieurs RamDisks avec divers paramètres.
 Ajouter des entrées dans le menu contextuel de lecteur et le menu contextuel de fichier pour gérer les volumes ImDisk et les fichiers images depuis l'Explorateur.##Cette option peut être définie plus tard dans le Menu Démarrer de Windows.
-Ceci affecte les commandes dans le menu contextuel de lecteur : "Sauvegarder dans un fichier image" et "Démonter le disque virtuel ImDisk".##Résout certains problèmes liés à l'UAC.##Cette option peut être définie plus tard dans le Menu Démarrer de Windows.
 Créer des raccourcis sur le bureau.##Tous les raccourcis sont toujours créés dans le Menu Démarrer de Windows.
 Lance ImDskSvc automatiquement au démarrage du système.##Aucun outil dans ce paquet utilise ce service, vous pouvez donc sans risque décocher cette option.##Il est installé par le pilote pour initier des connexions TCP/IP ou port série avec des logiciels proxy.
 Crédits
@@ -44,6 +42,7 @@ Traductions :
 - Svenska: Åke Engelbrektson / Olof Lagerkvist
 - Deutsch: Bodo Thevissen
 - русский: 0x00ffh
+- 简体中文: Arne Sacnussem
 
 Réglages Généraux
 Désinstaller
@@ -70,7 +69,6 @@ Suppression des composants restants...
 ImDisk - Installation
  Réglages Généraux 
 Activer les entrées dans les menus contextuels
-Demander les droits administrateur dans l'Explorateur
 Restaurer les messages cachés
  Cacher les lecteurs suivants dans l'Explorateur : 
 Sauvegarder les Paramètres...
@@ -82,6 +80,9 @@ Ces changements ne prendront effet#qu'après le redémarrage de Windows !
 
 [RamDiskUI]
  Outil de Configuration de RamDisk 
+OK
+Quitter
+
 Standard
 Taille :
 Ko

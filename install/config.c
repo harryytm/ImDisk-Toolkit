@@ -18,7 +18,7 @@ static HINSTANCE hinst;
 static HICON hIcon, hIconWarn;
 static HBRUSH hBrush;
 static RECT icon_coord, iconwarn_coord;
-static HWND hwnd_check[7], hwnd_text1, hwnd_static1, hwnd_static2, hwnd_static3, hwnd_uninst;
+static HWND hwnd_check[6], hwnd_text1, hwnd_static1, hwnd_static2, hwnd_static3, hwnd_uninst;
 static WPARAM prev_wparam = 0;
 static int prev_mark = 0;
 static _Bool copy_error = FALSE, reboot = FALSE, process_uninst = FALSE;
@@ -45,9 +45,9 @@ static DWORD EstimatedSize = 1813;
 static WCHAR *driver_svc_list[] = {L"ImDskSvc", L"AWEAlloc", L"ImDisk"};
 static WCHAR *tk_svc_list[] = {L"ImDiskRD", L"ImDiskTk-svc", L"ImDiskImg"};
 
-static WCHAR *lang_list[] = {L"english", L"deutsch", L"español", L"français", L"русский", L"svenska"};
-static WCHAR *lang_file_list[] = {L"english", L"german", L"spanish", L"french", L"russian", L"swedish"};
-static USHORT lang_id_list[] = {0, 0x07, 0x0a, 0x0c, 0x19, 0x1d};
+static WCHAR *lang_list[] = {L"english", L"deutsch", L"español", L"français", L"русский", L"svenska", L"简体中文"};
+static WCHAR *lang_file_list[] = {L"english", L"german", L"spanish", L"french", L"russian", L"swedish", L"schinese"};
+static USHORT lang_id_list[] = {0, 0x07, 0x0a, 0x0c, 0x19, 0x1d, 0x04};
 static int n_lang = 0;
 static _Bool lang_cmdline = FALSE;
 
@@ -58,14 +58,14 @@ enum {
 	TITLE,
 	TXT_1, TXT_2, TXT_3,
 	COMP_0, COMP_1, COMP_2, COMP_3,
-	OPT_0, OPT_1, OPT_2, OPT_3, OPT_4,
+	OPT_0, OPT_1, OPT_2, OPT_3,
 	LANG_TXT,
-	DESC_0, DESC_1, DESC_2, DESC_3, DESC_4, DESC_5, DESC_6, DESC_7,
+	DESC_0, DESC_1, DESC_2, DESC_3, DESC_4, DESC_5, DESC_6,
 	CTRL_1, CTRL_2, CTRL_3, CTRL_4,
 	ERR_1, ERR_2, ERR_3,
 	PREV_TXT,
 	FIN_1, FIN_2, FIN_3,
-	CRED_0, CRED_1, CRED_2, CRED_3, CRED_4, TRANS_0, TRANS_1, TRANS_2, TRANS_3, TRANS_4, TRANS_MAX,
+	CRED_0, CRED_1, CRED_2, CRED_3, CRED_4, TRANS_0, TRANS_1, TRANS_2, TRANS_3, TRANS_4, TRANS_5, TRANS_MAX,
 	SHORTCUT_1, SHORTCUT_2, SHORTCUT_3, SHORTCUT_4, SHORTCUT_5,
 	CONTEXT_1, CONTEXT_2, CONTEXT_3,
 
@@ -74,7 +74,7 @@ enum {
 	U_MSG_1, U_MSG_2, U_MSG_3, U_MSG_4,
 
 	S_TITLE,
-	S_CTRL_0, S_CTRL_1, S_CTRL_2, S_CTRL_3, S_CTRL_4, S_CTRL_5, S_CTRL_6, S_CTRL_7, S_CTRL_8, S_CTRL_9,
+	S_CTRL_0, S_CTRL_1, S_CTRL_2, S_CTRL_3, S_CTRL_4, S_CTRL_5, S_CTRL_6, S_CTRL_7, S_CTRL_8,
 
 	NB_TXT
 };
@@ -136,7 +136,7 @@ static void start_process(BYTE wait)
 }
 
 
-static void shortcut(WCHAR *arg)
+static void shortcut(WCHAR *path, WCHAR *arg)
 {
 	GUID IID_IShellLinkW;
 	IShellLink *psl;
@@ -218,22 +218,22 @@ static void del_shortcut(WCHAR *file)
 	DeleteFile(path);
 }
 
-static void write_context_menu(WCHAR *path, UINT admin_required)
+static void write_context_menu(WCHAR *path, _Bool use_cpl)
 {
 	WCHAR path_test[MAX_PATH + 20];
 
 	write_key("*\\shell\\ImDiskMountFile", t[CONTEXT_1]);
 	_snwprintf(path_test, _countof(path_test), L"%sMountImg.exe", path);
-	_snwprintf(cmd, _countof(cmd), L"\"%sMountImg.exe\" \"%%L\"", path);
-	write_key("*\\shell\\ImDiskMountFile\\command", admin_required != BST_INDETERMINATE && PathFileExists(path_test) ? cmd : L"rundll32.exe imdisk.cpl,RunDLL_MountFile %L");
+	_snwprintf(cmd, _countof(cmd) - 1, L"\"%sMountImg.exe\" \"%%L\"", path);
+	write_key("*\\shell\\ImDiskMountFile\\command", !use_cpl && PathFileExists(path_test) ? cmd : L"rundll32.exe imdisk.cpl,RunDLL_MountFile %L");
 
 	write_key("Drive\\shell\\ImDiskSaveImage", t[CONTEXT_2]);
-	_snwprintf(cmd, _countof(cmd), L"\"%sImDisk-Dlg.exe\" %SCP %%L", path, admin_required ? "UAC " : "");
-	write_key("Drive\\shell\\ImDiskSaveImage\\command", admin_required != BST_INDETERMINATE ? cmd : L"rundll32.exe imdisk.cpl,RunDLL_SaveImageFile %L");
+	_snwprintf(cmd, _countof(cmd) - 1, L"\"%sImDisk-Dlg.exe\" CP %%L", path);
+	write_key("Drive\\shell\\ImDiskSaveImage\\command", !use_cpl ? cmd : L"rundll32.exe imdisk.cpl,RunDLL_SaveImageFile %L");
 
 	write_key("Drive\\shell\\ImDiskUnmount", t[CONTEXT_3]);
-	_snwprintf(cmd, _countof(cmd), L"\"%sImDisk-Dlg.exe\" %SRM %%L", path, admin_required ? "UAC " : "");
-	write_key("Drive\\shell\\ImDiskUnmount\\command", admin_required != BST_INDETERMINATE ? cmd : L"rundll32.exe imdisk.cpl,RunDLL_RemoveDevice %L");
+	_snwprintf(cmd, _countof(cmd) - 1, L"\"%sImDisk-Dlg.exe\" RM %%L", path);
+	write_key("Drive\\shell\\ImDiskUnmount\\command", !use_cpl ? cmd : L"rundll32.exe imdisk.cpl,RunDLL_RemoveDevice %L");
 }
 
 
@@ -250,7 +250,7 @@ static INT_PTR __stdcall CreditsProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM 
 			SetDlgItemText(hDlg, IDOK, t[FIN_3]);
 			i = 0;
 			for (k = CRED_1; k <= TRANS_MAX; k++) {
-				if ((j = _snwprintf(cmd + i, _countof(cmd), k < TRANS_0 ? L"%.200s\r\n\r\n" : L"%.99s\r\n", t[k])) < 0) break;
+				if ((j = _snwprintf(cmd + i, _countof(cmd) - 1, k < TRANS_0 ? L"%.200s\r\n\r\n" : L"%.99s\r\n", t[k])) < 0) break;
 				i += j;
 			}
 			SetDlgItemText(hDlg, ID_EDIT1, cmd);
@@ -355,6 +355,7 @@ static void install(HWND hDlg)
 	SetCursor(LoadImage(NULL, MAKEINTRESOURCE(OCR_WAIT), IMAGE_CURSOR, 0, 0, LR_DEFAULTSIZE | LR_SHARED));
 
 	// remove obsolete items
+	del(L"DiscUtils.dll");
 	del(L"ImDisk-UAC.exe");
 	del(L"setup.exe");
 	if (RegOpenKeyExA(HKEY_LOCAL_MACHINE, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", 0, KEY_SET_VALUE | KEY_WOW64_64KEY, &h_key) == ERROR_SUCCESS) {
@@ -362,7 +363,7 @@ static void install(HWND hDlg)
 		RegCloseKey(h_key);
 	}
 
-	_snwprintf(cmd, _countof(cmd), L"lang\\%s.txt", lang_file_list[n_lang]);
+	_snwprintf(cmd, _countof(cmd) - 1, L"lang\\%s.txt", lang_file_list[n_lang]);
 	MoveFileEx(cmd, L"lang.txt", 0);
 	move(L"lang.txt");
 	move(L"ImDisk-Dlg.exe");
@@ -374,16 +375,15 @@ static void install(HWND hDlg)
 	CreateDirectory(startmenu, NULL);
 	startmenu_ptr = PathAddBackslash(startmenu);
 	_snwprintf(startmenu_ptr, 99, L"%.94s.lnk", t[SHORTCUT_2]);
-	shortcut(L" /u");
+	shortcut(path, L" /u");
 	_snwprintf(startmenu_ptr, 99, L"%.94s.lnk", t[SHORTCUT_1]);
-	shortcut(NULL);
-	_snwprintf(startmenu_ptr, 99, L"%.94s.url", t[SHORTCUT_3]);
+	shortcut(path, NULL);
 
+	_snwprintf(startmenu_ptr, 99, L"%.94s.url", t[SHORTCUT_3]);
 	memcpy(&IID_IUniformResourceLocatorA, &_CLSID_InternetShortcut, sizeof(GUID));
 	*(unsigned char*)&IID_IUniformResourceLocatorA = 0x80;
 	memcpy(&IID_IPersistFile, &_CLSID_ShellLink, sizeof(GUID));
 	IID_IPersistFile.Data1 = 0x0000010b;
-
 	if (SUCCEEDED(CoCreateInstance(&_CLSID_InternetShortcut, NULL, CLSCTX_INPROC_SERVER, &IID_IUniformResourceLocatorA, (void**)&purl))) {
 		purl->lpVtbl->SetURL(purl, "https://sourceforge.net/projects/imdisk-toolkit/", 0);
 		if (SUCCEEDED(purl->lpVtbl->QueryInterface(purl, &IID_IPersistFile, (void**)&ppf))) {
@@ -392,7 +392,7 @@ static void install(HWND hDlg)
 		}
 		purl->lpVtbl->Release(purl);
 	}
-	desk_lnk = IsDlgButtonChecked(hDlg, ID_CHECK6);
+	desk_lnk = IsDlgButtonChecked(hDlg, ID_CHECK5);
 
 	// uninstall settings
 	RegCreateKeyExA(HKEY_LOCAL_MACHINE, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\ImDiskApp", 0, NULL, REG_OPTION_NON_VOLATILE, KEY_SET_VALUE | KEY_WOW64_64KEY, NULL, &h_key, NULL);
@@ -434,7 +434,7 @@ static void install(HWND hDlg)
 		wcscpy(cmd, L"reg copy HKLM\\SOFTWARE\\ImDisk\\DriverBackup HKLM\\SYSTEM\\CurrentControlSet\\Services\\ImDisk\\Parameters /f");
 		start_process(TRUE);
 		del_key(HKEY_LOCAL_MACHINE, "SOFTWARE\\ImDisk\\DriverBackup");
-		j = IsDlgButtonChecked(hDlg, ID_CHECK7);
+		j = IsDlgButtonChecked(hDlg, ID_CHECK6);
 		for (i = 0; i < _countof(driver_svc_list); i++) {
 			svc_handle = OpenService(scman_handle, driver_svc_list[i], SERVICE_CHANGE_CONFIG | SERVICE_START);
 			if (!i && (j || ImDskSvc_starttype != SERVICE_DISABLED))
@@ -446,7 +446,7 @@ static void install(HWND hDlg)
 		RegDeleteValueA(h_key, "DisplayName");
 		RegCloseKey(h_key);
 		wcscpy(startmenu_ptr, L"ImDisk Virtual Disk Driver.lnk");
-		CopyFile(L"cp.lnk", startmenu, FALSE);
+		CopyFile(os_ver.dwMajorVersion >= 6 ? L"cp-admin.lnk" : L"cp.lnk", startmenu, FALSE);
 		wcscpy(desk_ptr, L"ImDisk Virtual Disk Driver.lnk");
 		if (desk_lnk) CopyFile(startmenu, desk, FALSE);
 		else DeleteFile(desk);
@@ -461,13 +461,20 @@ static void install(HWND hDlg)
 		else
 			RegCloseKey(h_key);
 
-		move(L"DiscUtils.dll");
+		move(L"DiscUtils.Core.dll");
+		move(L"DiscUtils.Dmg.dll");
+		move(L"DiscUtils.Streams.dll");
+		move(L"DiscUtils.Vdi.dll");
+		move(L"DiscUtils.Vhd.dll");
+		move(L"DiscUtils.Vhdx.dll");
+		move(L"DiscUtils.Vmdk.dll");
+		move(L"DiscUtils.Xva.dll");
 		move(L"DiscUtilsDevio.exe");
 		move(L"DevioNet.dll");
 		move(L"ImDiskNet.dll");
 		move(L"MountImg.exe");
 
-		shortcut(NULL);
+		shortcut(path, NULL);
 		if (desk_lnk) CopyFile(startmenu, desk, FALSE);
 		else DeleteFile(desk);
 
@@ -477,7 +484,7 @@ static void install(HWND hDlg)
 			data_size = sizeof max;
 			RegQueryValueEx(h_key, L"ImMaxReg", NULL, NULL, (void*)&max, &data_size);
 			for (i = 0; i <= max; i++) {
-				param_name_ptr = cmd + _snwprintf(cmd, _countof(cmd), L"Im%d", i);
+				param_name_ptr = cmd + _snwprintf(cmd, _countof(cmd) - 1, L"Im%d", i);
 				wcscpy(param_name_ptr, L"FileName");
 				if (RegQueryValueEx(h_key, cmd, NULL, NULL, NULL, NULL) == ERROR_SUCCESS) {
 					wcscpy(param_name_ptr, L"Device");
@@ -526,7 +533,7 @@ static void install(HWND hDlg)
 		move(L"ImDiskTk-svc.exe");
 
 		move(L"RamDiskUI.exe");
-		shortcut(NULL);
+		shortcut(path, NULL);
 		if (desk_lnk) CopyFile(startmenu, desk, FALSE);
 		else DeleteFile(desk);
 
@@ -626,7 +633,7 @@ static void install(HWND hDlg)
 		// context menus
 		if (IsDlgButtonChecked(hDlg, ID_CHECK4)) {
 			*path_name_ptr = 0;
-			write_context_menu(path, IsDlgButtonChecked(hDlg, ID_CHECK5));
+			write_context_menu(path, FALSE);
 		} else {
 			del_command_key("*\\shell\\ImDiskMountFile");
 			del_command_key("Drive\\shell\\ImDiskSaveImage");
@@ -665,14 +672,14 @@ static void install(HWND hDlg)
 
 static void load_lang_install(HWND hDlg)
 {
-	_snwprintf(cmd, _countof(cmd), L"lang\\%s.txt", lang_file_list[n_lang]);
+	_snwprintf(cmd, _countof(cmd) - 1, L"lang\\%s.txt", lang_file_list[n_lang]);
 	load_lang(cmd);
 
 	// set localized strings
 	if (t[0]) {
 		SetWindowText(hDlg, t[TITLE]);
 		SetDlgItemText(hDlg, ID_TEXT1, t[TXT_1]);
-		SetDlgItemText(hDlg, ID_TEXT10, t[TXT_3]);
+		SetDlgItemText(hDlg, ID_TEXT9, t[TXT_3]);
 		SetDlgItemText(hDlg, ID_GROUP1, t[COMP_0]);
 		SetDlgItemText(hDlg, ID_CHECK1, t[COMP_1]);
 		SetDlgItemText(hDlg, ID_CHECK2, t[COMP_2]);
@@ -681,15 +688,13 @@ static void load_lang_install(HWND hDlg)
 		SetDlgItemText(hDlg, ID_CHECK4, t[OPT_1]);
 		SetDlgItemText(hDlg, ID_CHECK5, t[OPT_2]);
 		SetDlgItemText(hDlg, ID_CHECK6, t[OPT_3]);
-		SetDlgItemText(hDlg, ID_CHECK7, t[OPT_4]);
-		SetDlgItemText(hDlg, ID_TEXT11, t[LANG_TXT]);
+		SetDlgItemText(hDlg, ID_TEXT10, t[LANG_TXT]);
 		SetDlgItemText(hDlg, ID_TEXT2, t[DESC_0]);
 		SetDlgItemText(hDlg, ID_PBUTTON2, t[CTRL_1]);
 		SetDlgItemText(hDlg, IDOK, t[CTRL_2]);
 		SetDlgItemText(hDlg, IDCANCEL, t[CTRL_3]);
 	}
 	_snwprintf(cmd, _countof(cmd) - 1, t[TXT_2] ? t[TXT_2] : L"This will install the ImDisk Toolkit (build %S).", APP_VERSION);
-	cmd[_countof(cmd) - 1] = 0;
 	SetDlgItemText(hDlg, ID_STATIC3, cmd);
 }
 
@@ -745,8 +750,7 @@ static INT_PTR __stdcall InstallProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM 
 			desk_ptr = PathAddBackslash(desk);
 
 			SendDlgItemMessage(hDlg, ID_EDIT1, EM_SETLIMITTEXT, MAX_PATH, 0);
-			EnableWindow(GetDlgItem(hDlg, ID_CHECK5), os_ver.dwMajorVersion >= 6);
-			CheckDlgButton(hDlg, ID_CHECK6, BST_CHECKED);
+			CheckDlgButton(hDlg, ID_CHECK5, BST_CHECKED);
 
 			if (RegOpenKeyExA(HKEY_LOCAL_MACHINE, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\ImDiskApp", 0, KEY_QUERY_VALUE | KEY_WOW64_64KEY, &h_key) == ERROR_SUCCESS) {
 				// set the options according to the previous installation
@@ -771,11 +775,7 @@ static INT_PTR __stdcall InstallProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM 
 
 				if (RegOpenKeyExA(HKEY_CLASSES_ROOT, "Drive\\shell\\ImDiskSaveImage\\command", 0, KEY_QUERY_VALUE | KEY_WOW64_64KEY, &h_key) == ERROR_SUCCESS) {
 					CheckDlgButton(hDlg, ID_CHECK4, BST_CHECKED);
-					data_size = sizeof cmd;
-					RegQueryValueEx(h_key, NULL, NULL, NULL, (void*)&cmd, &data_size);
 					RegCloseKey(h_key);
-					if (wcsstr(PathFindFileName(cmd), L"UAC") && os_ver.dwMajorVersion >= 6)
-						CheckDlgButton(hDlg, ID_CHECK5, BST_CHECKED);
 				}
 
 				wcscpy(desk_ptr, L"ImDisk Virtual Disk Driver.lnk");
@@ -784,11 +784,11 @@ static INT_PTR __stdcall InstallProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM 
 					if (!PathFileExists(desk)) {
 						_snwprintf(desk_ptr, 99, L"%.94s.lnk", t[SHORTCUT_3]);
 						if (!PathFileExists(desk))
-							CheckDlgButton(hDlg, ID_CHECK6, BST_UNCHECKED);
+							CheckDlgButton(hDlg, ID_CHECK5, BST_UNCHECKED);
 					}
 				}
 			} else
-				for (i = ID_CHECK5 - (os_ver.dwMajorVersion < 6); i >= ID_CHECK2; i--)
+				for (i = ID_CHECK4; i >= ID_CHECK2; i--)
 					CheckDlgButton(hDlg, i, BST_CHECKED);
 
 			// ImDskSvc
@@ -796,7 +796,7 @@ static INT_PTR __stdcall InstallProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM 
 			if ((svc_handle = OpenService(scman_handle, driver_svc_list[0], SERVICE_QUERY_CONFIG))) {
 				qsc = (QUERY_SERVICE_CONFIG*)&cmd;
 				if (QueryServiceConfig(svc_handle, qsc, 8192, &data_size))
-					CheckDlgButton(hDlg, ID_CHECK7, (ImDskSvc_starttype = qsc->dwStartType) == SERVICE_AUTO_START);
+					CheckDlgButton(hDlg, ID_CHECK6, (ImDskSvc_starttype = qsc->dwStartType) == SERVICE_AUTO_START);
 				CloseServiceHandle(svc_handle);
 			}
 			CloseServiceHandle(scman_handle);
@@ -884,9 +884,6 @@ static INT_PTR __stdcall InstallProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM 
 			return FALSE;
 
 		case WM_COMMAND:
-			if (os_ver.dwMajorVersion >= 6)
-				EnableWindow(hwnd_check[4], IsDlgButtonChecked(hDlg, ID_CHECK4));
-
 			if (LOWORD(wParam) == ID_PBUTTON1) {
 				ZeroMemory(&bi, sizeof bi);
 				bi.hwndOwner = hDlg;
@@ -945,9 +942,8 @@ static DWORD __stdcall uninstall(LPVOID lpParam)
 	scman_handle = OpenSCManager(NULL, NULL, SC_MANAGER_CONNECT);
 	for (i = 0; i < _countof(tk_svc_list); i++) {
 		_snwprintf(cmd, _countof(cmd) - 1, t[U_MSG_3], tk_svc_list[i]);
-		cmd[_countof(cmd) - 1] = 0;
 		set_uninstall_text(cmd);
-		_snwprintf(cmd, _countof(cmd), L"net stop %s /y", tk_svc_list[i]);
+		_snwprintf(cmd, _countof(cmd) - 1, L"net stop %s /y", tk_svc_list[i]);
 		start_process(TRUE);
 		svc_handle = OpenService(scman_handle, tk_svc_list[i], DELETE);
 		DeleteService(svc_handle);
@@ -978,7 +974,7 @@ static DWORD __stdcall uninstall(LPVOID lpParam)
 					}
 					set_uninstall_text(t[U_MSG_2]);
 					i = 1; do {
-						_snwprintf(cmd, _countof(cmd), L"imdisk -D -u %u", list[i]);
+						_snwprintf(cmd, _countof(cmd) - 1, L"imdisk -D -u %u", list[i]);
 						start_process(TRUE);
 					} while (++i <= list[0]);
 				}
@@ -986,20 +982,19 @@ static DWORD __stdcall uninstall(LPVOID lpParam)
 			}
 			for (i = 0; i < _countof(driver_svc_list); i++) {
 				_snwprintf(cmd, _countof(cmd) - 1, t[U_MSG_3], driver_svc_list[i]);
-				cmd[_countof(cmd) - 1] = 0;
 				set_uninstall_text(cmd);
-				_snwprintf(cmd, _countof(cmd), L"net stop %s /y", driver_svc_list[i]);
+				_snwprintf(cmd, _countof(cmd) - 1, L"net stop %s /y", driver_svc_list[i]);
 				start_process(TRUE);
 			}
 			wcscpy(cmd, L"taskkill /f /im imdsksvc.exe");
 			start_process(TRUE);
 			SHGetFolderPath(NULL, CSIDL_WINDOWS, NULL, SHGFP_TYPE_CURRENT, dir);
-			_snwprintf(cmd, _countof(cmd), L"rundll32 setupapi.dll,InstallHinfSection DefaultUninstall %u %s\\inf\\imdisk.inf", silent_uninstall ? 128 : 132, dir);
+			_snwprintf(cmd, _countof(cmd) - 1, L"rundll32 setupapi.dll,InstallHinfSection DefaultUninstall %u %s\\inf\\imdisk.inf", silent_uninstall ? 128 : 132, dir);
 			start_process(FALSE);
 		} else {
 			RegSetValueExA(h_key, "DisplayName", 0, REG_SZ, (void*)reg_disp_name_drv, sizeof reg_disp_name_drv);
 			RegCloseKey(h_key);
-			write_context_menu(L"", BST_INDETERMINATE);
+			write_context_menu(L"", TRUE);
 		}
 	}
 
@@ -1041,7 +1036,7 @@ static DWORD __stdcall uninstall(LPVOID lpParam)
 		wcscpy(path_name_ptr, L"config.exe");
 		wcscpy(dir, path);
 		path_name_ptr[-1] = 0;
-		_snwprintf(cmd, _countof(cmd), L"cmd /c \"for /l %%I in (0,0,1) do (del \"%s\"&rd \"%s\"&if not exist \"%s\" exit)\"", dir, path, dir);
+		_snwprintf(cmd, _countof(cmd) - 1, L"cmd /c \"for /l %%I in (0,0,1) do (del \"%s\"&rd \"%s\"&if not exist \"%s\" exit)\"", dir, path, dir);
 		del_key(HKEY_LOCAL_MACHINE, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\ImDiskApp");
 		start_process(FALSE);
 	}
@@ -1142,13 +1137,12 @@ static INT_PTR __stdcall SettingsProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM
 				SetWindowText(hDlg, t[S_TITLE]);
 				SetDlgItemText(hDlg, ID_STATIC1, t[S_CTRL_0]);
 				SetDlgItemText(hDlg, ID_CHECK1, t[S_CTRL_1]);
-				SetDlgItemText(hDlg, ID_CHECK2, t[S_CTRL_2]);
-				SetDlgItemText(hDlg, ID_PBUTTON1, t[S_CTRL_3]);
-				SetDlgItemText(hDlg, ID_STATIC2, t[S_CTRL_4]);
-				SetDlgItemText(hDlg, ID_PBUTTON2, t[S_CTRL_5]);
-				SetDlgItemText(hDlg, ID_CHECK3, t[S_CTRL_6]);
-				SetDlgItemText(hDlg, IDOK, t[S_CTRL_7]);
-				SetDlgItemText(hDlg, IDCANCEL, t[S_CTRL_8]);
+				SetDlgItemText(hDlg, ID_PBUTTON1, t[S_CTRL_2]);
+				SetDlgItemText(hDlg, ID_STATIC2, t[S_CTRL_3]);
+				SetDlgItemText(hDlg, ID_PBUTTON2, t[S_CTRL_4]);
+				SetDlgItemText(hDlg, ID_CHECK2, t[S_CTRL_5]);
+				SetDlgItemText(hDlg, IDOK, t[S_CTRL_6]);
+				SetDlgItemText(hDlg, IDCANCEL, t[S_CTRL_7]);
 			}
 
 			// create list of letters
@@ -1172,15 +1166,8 @@ static INT_PTR __stdcall SettingsProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM
 
 			if (RegOpenKeyExA(HKEY_CLASSES_ROOT, "Drive\\shell\\ImDiskSaveImage\\command", 0, KEY_QUERY_VALUE | KEY_WOW64_64KEY, &reg_key) == ERROR_SUCCESS) {
 				CheckDlgButton(hDlg, ID_CHECK1, BST_CHECKED);
-				data_size = sizeof path;
-				RegQueryValueEx(reg_key, NULL, NULL, NULL, (void*)&path, &data_size);
 				RegCloseKey(reg_key);
-				if (wcsstr(PathFindFileName(path), L"UAC"))
-					CheckDlgButton(hDlg, ID_CHECK2, BST_CHECKED);
-			} else
-				EnableWindow(GetDlgItem(hDlg, ID_CHECK2), FALSE);
-			if (os_ver.dwMajorVersion < 6)
-				EnableWindow(GetDlgItem(hDlg, ID_CHECK2), FALSE);
+			}
 
 			if (RegOpenKeyExA(HKEY_LOCAL_MACHINE, "SOFTWARE\\ImDisk", 0, KEY_QUERY_VALUE | KEY_WOW64_64KEY, &reg_key) == ERROR_SUCCESS) {
 				data_size = sizeof dlg_flags;
@@ -1203,16 +1190,13 @@ static INT_PTR __stdcall SettingsProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM
 			return TRUE;
 
 		case WM_COMMAND:
-			if (os_ver.dwMajorVersion >= 6)
-				EnableWindow(GetDlgItem(hDlg, ID_CHECK2), IsDlgButtonChecked(hDlg, ID_CHECK1));
-
 			for (i = 25; i >= 0; i--) {
 				hidden_drives <<= 1;
 				if (IsDlgButtonChecked(hDlg, ID_CHECK_A + i))
 					hidden_drives++;
 			}
 			disp_warn = hidden_drives != hid_drive_ini;
-			SetDlgItemText(hDlg, ID_TEXT1, disp_warn ? t[S_CTRL_9] : version_str);
+			SetDlgItemText(hDlg, ID_TEXT1, disp_warn ? t[S_CTRL_8] : version_str);
 			EnableWindow(GetDlgItem(hDlg, ID_TEXT1), disp_warn);
 
 			if (LOWORD(wParam) == ID_PBUTTON1) {
@@ -1233,14 +1217,14 @@ static INT_PTR __stdcall SettingsProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM
 				ofn.lpstrDefExt = L"reg";
 				if (GetSaveFileName(&ofn)) {
 					DeleteFile(path);
-					_snwprintf(cmd, _countof(cmd), L"reg export HKLM\\SOFTWARE\\ImDisk \"%s\"%s", path, os_ver.dwMajorVersion >= 6 ? L" /y" : L"");
+					_snwprintf(cmd, _countof(cmd) - 1, L"reg export HKLM\\SOFTWARE\\ImDisk \"%s\"%s", path, os_ver.dwMajorVersion >= 6 ? L" /y" : L"");
 					start_process(TRUE);
 					if ((h_file = CreateFile(path, FILE_APPEND_DATA, FILE_SHARE_READ, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL)) != INVALID_HANDLE_VALUE) {
 						if (!GetLastError())
 							WriteFile(h_file, L"\xFEFFWindows Registry Editor Version 5.00\r\n\r\n", 82, &bytes_written, NULL);
 
 						i = 0; do _snwprintf(path_prev, _countof(path_prev), L"%s%d", path, i); while (PathFileExists(path_prev));
-						_snwprintf(cmd, _countof(cmd), L"reg export HKLM\\SYSTEM\\CurrentControlSet\\Services\\ImDisk\\Parameters \"%s\"%s", path_prev, os_ver.dwMajorVersion >= 6 ? L" /y" : L"");
+						_snwprintf(cmd, _countof(cmd) - 1, L"reg export HKLM\\SYSTEM\\CurrentControlSet\\Services\\ImDisk\\Parameters \"%s\"%s", path_prev, os_ver.dwMajorVersion >= 6 ? L" /y" : L"");
 						start_process(TRUE);
 						if ((h = CreateFile(path_prev, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_FLAG_DELETE_ON_CLOSE, NULL)) != INVALID_HANDLE_VALUE) {
 							GetFileSizeEx(h, &file_size);
@@ -1256,10 +1240,10 @@ static INT_PTR __stdcall SettingsProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM
 						}
 
 						if (hidden_drives) {
-							_snwprintf(cmd, _countof(cmd), L"[HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\Explorer]\r\n\"NoDrives\"=dword:%08x\r\n\r\n", hidden_drives);
+							_snwprintf(cmd, _countof(cmd) - 1, L"[HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\Explorer]\r\n\"NoDrives\"=dword:%08x\r\n\r\n", hidden_drives);
 							WriteFile(h_file, cmd, wcslen(cmd) * sizeof(WCHAR), &bytes_written, NULL);
 						}
-						if (IsDlgButtonChecked(hDlg, ID_CHECK3)) {
+						if (IsDlgButtonChecked(hDlg, ID_CHECK2)) {
 							WriteFile(h_file, L"[HKEY_CURRENT_USER\\Environment]\r\n", 66, &bytes_written, NULL);
 							RegOpenKeyExA(HKEY_CURRENT_USER, "Environment", 0, KEY_QUERY_VALUE, &reg_key);
 							write_file_reg_tmp(L"TMP");
@@ -1286,7 +1270,7 @@ static INT_PTR __stdcall SettingsProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM
 					RegCloseKey(reg_key);
 					*(wcsrchr(path, '\\') + 1) = 0;
 
-					write_context_menu(path, IsDlgButtonChecked(hDlg, ID_CHECK2));
+					write_context_menu(path, FALSE);
 				} else {
 					del_command_key("*\\shell\\ImDiskMountFile");
 					del_command_key("Drive\\shell\\ImDiskSaveImage");
@@ -1318,6 +1302,8 @@ int __stdcall wWinMain(HINSTANCE hinstance, HINSTANCE hPrevInstance, LPWSTR lpCm
 {
 	int i, argc;
 	LPWSTR *argv;
+	WCHAR *cmdline_ptr;
+	SHELLEXECUTEINFO sei;
 
 	os_ver.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
 	GetVersionEx(&os_ver);
@@ -1325,30 +1311,56 @@ int __stdcall wWinMain(HINSTANCE hinstance, HINSTANCE hPrevInstance, LPWSTR lpCm
 	hinst = GetModuleHandle(NULL);
 	hIcon = LoadImage(hinst, MAKEINTRESOURCE(1), IMAGE_ICON, 0, 0, LR_DEFAULTSIZE);
 
-	argv = CommandLineToArgvW(GetCommandLine(), &argc);
+	cmdline_ptr = GetCommandLine();
+	argv = CommandLineToArgvW(cmdline_ptr, &argc);
+
+	if (argc > 1 && !_wcsicmp(argv[1], L"/version")) {
+		puts(APP_VERSION);
+		ExitProcess(APP_NUMBER);
+	}
+
+	if (os_ver.dwMajorVersion >= 6) {
+		if (argc <= 1 || wcscmp(argv[1], L"/UAC")) {
+			_snwprintf(cmd, _countof(cmd) - 1, L"/UAC %s", cmdline_ptr);
+			sei.cbSize = sizeof sei;
+			sei.fMask = SEE_MASK_NOCLOSEPROCESS | SEE_MASK_NOASYNC;
+			sei.hwnd = NULL;
+			sei.lpVerb = L"runas";
+			sei.lpFile = argv[0];
+			sei.lpParameters = cmd;
+			sei.lpDirectory = NULL;
+			sei.nShow = SW_SHOWDEFAULT;
+			ShellExecuteEx(&sei);
+			WaitForSingleObject(sei.hProcess, INFINITE);
+			ExitProcess(0);
+		}
+		argc -= 2, argv += 2;
+	}
+
 	PathRemoveFileSpec(argv[0]);
 	SetCurrentDirectory(argv[0]);
 
-	if (argc > 1 && !wcscmp(argv[1], L"/silentuninstall")) {
+	if (argc > 1 && !_wcsicmp(argv[1], L"/silentuninstall")) {
 		silent_uninstall = TRUE;
 		uninstall(NULL);
 	} else if (PathFileExists(L"driver")) {
 		while (--argc > 0) {
 			argv++;
-			if (!wcscmp(argv[0], L"/silent")) silent = 1;
-			else if (!wcscmp(argv[0], L"/fullsilent")) silent = 2;
+			if (!_wcsicmp(argv[0], L"/silent")) silent = 1;
+			else if (!_wcsicmp(argv[0], L"/fullsilent")) silent = 2;
 			else if (!wcsncmp(argv[0], L"/installfolder:", 15))
 				path_cmdline = &argv[0][15];
 			else if (!wcsncmp(argv[0], L"/lang:", 6)) {
 				for (i = 0; i < _countof(lang_file_list); i++)
-					if (!wcscmp(&argv[0][6], lang_file_list[i])) {
+					if (!_wcsicmp(&argv[0][6], lang_file_list[i])) {
 						n_lang = i;
 						lang_cmdline = TRUE;
 					}
 			} else {
 				MessageBoxA(NULL, "Switches:\n\n/silent\nSilent installation. Error messages and reboot prompt are still displayed.\n\n/fullsilent\nSilent installation, without error message or prompt.\n\n"
 								  "/installfolder:\"path\"\nSet the installation folder.\n\n/lang:name\nBypass automatic language detection. 'name' is one of the available languages.\n\n"
-								  "/silentuninstall\nSilent uninstallation. Driver (and therefore all existing virtual disk) and parameters are removed. This switch can also be passed to config.exe.",
+								  "/silentuninstall\nSilent uninstallation. Driver (and therefore all existing virtual disk) and parameters are removed. This switch can also be passed to config.exe.\n\n"
+								  "/version\nReturn the application version in the standard output and the exit code.",
 								  "ImDisk - Setup", MB_ICONINFORMATION);
 				ExitProcess(0);
 			}

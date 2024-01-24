@@ -2,14 +2,14 @@
 #include <afxres.h>
 #include "resource.h"
 
-1 RT_MANIFEST "manifest"
+1 RT_MANIFEST "UAC.manifest"
 
 1 ICON "..\\VD.ico"
 
 STATUS_DLG DIALOGEX 0, 0, 170, 25
 		   FONT 9, "MS Shell Dlg"
 		   STYLE DS_SHELLFONT | WS_VISIBLE
-		   EXSTYLE WS_EX_TOOLWINDOW
+		   EXSTYLE WS_EX_TOOLWINDOW | WS_EX_TOPMOST | WS_EX_NOACTIVATE
 		   CAPTION "ImDisk"
 BEGIN
 	LTEXT "", ID_TEXT1, 5, 4, 162, 21
@@ -60,7 +60,7 @@ END
 
 
 1 VERSIONINFO
-FILEVERSION 0,2,3,0
+FILEVERSION 1,0,1,0
 BEGIN
 BLOCK "StringFileInfo"
 	BEGIN
@@ -68,7 +68,7 @@ BLOCK "StringFileInfo"
 		BEGIN
 			VALUE "FileDescription", "ImDisk"
 			VALUE "ProductName", "imdisk"
-			VALUE "ProductVersion", "0.2.3.0"
+			VALUE "ProductVersion", "1.0.1.0"
 		END
 	END
 BLOCK "VarFileInfo"
