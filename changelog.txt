@@ -1,3 +1,6 @@
+Version 20190130
+- RamDyn.exe: added a command to manually trigger the cleanup function
+
 Version 20181221
 - updated to driver 2.0.10
 - RamDiskUI.exe: added an information in a tooltip about the incompatibility between NTFS compression and dynamic ramdisks

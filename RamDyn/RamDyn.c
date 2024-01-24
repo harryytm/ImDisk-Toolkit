@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <winternl.h>
 #include <ntstatus.h>
+#include <aclapi.h>
 #include <intrin.h>
 #include "..\inc\imdproxy.h"
 
@@ -20,7 +21,7 @@ static ULONGLONG max_activity;
 static unsigned int clean_timer, clean_ratio;
 static _Bool physical;
 static volatile ULONGLONG data_amount;
-static WCHAR *image_file_name, *add_param, *drive_arg, drive_root[MAX_PATH + 1];
+static WCHAR *image_file_name, *add_param, *drive_arg;
 static WCHAR txt[MAX_PATH + 320] = {};
 static void **ptr_table, *virtual_mem_ptr;
 static _Bool *allocated_block;
@@ -34,6 +35,8 @@ static SYSTEM_INFO sys;
 static ULONG_PTR n_pages, *pfn;
 static int mem_block_size, mem_block_size_mask, mem_block_size_shift; 
 static _Bool (*data_search)(void *ptr, int size);
+
+static void make_event_name();
 
 
 static void disp_message(WCHAR *disp_text, WCHAR *arg, BOOL wait)
@@ -311,7 +314,7 @@ static DWORD __stdcall mem_clean(LPVOID lpParam)
 	__int64 prev_diff = 0, new_diff;
 	ULONGLONG free_bytes, total_bytes;
 	WCHAR file_name[MAX_PATH + 20];
-	HANDLE h_vol;
+	HANDLE h_vol, h_event;
 	IO_STATUS_BLOCK iosb;
 	FILE_FS_SIZE_INFORMATION size_inf;
 	USHORT compress = COMPRESSION_FORMAT_NONE;
@@ -321,36 +324,55 @@ static DWORD __stdcall mem_clean(LPVOID lpParam)
 	int i, j;
 	__int64 bit_pos, remain_cluster;
 	BYTE pass;
+	unsigned char sid[SECURITY_MAX_SID_SIZE];
+	DWORD sid_size = sizeof sid;
+	PACL pACL = NULL;
+	EXPLICIT_ACCESS ea = {GENERIC_ALL, SET_ACCESS, SUB_CONTAINERS_AND_OBJECTS_INHERIT, {NULL, NO_MULTIPLE_TRUSTEE, TRUSTEE_IS_SID, TRUSTEE_IS_WELL_KNOWN_GROUP, (LPTSTR)sid}};
+	SECURITY_DESCRIPTOR sd;
+	SECURITY_ATTRIBUTES sa = {sizeof(SECURITY_ATTRIBUTES), &sd, FALSE};
+
+	file_name[_countof(file_name) - 1] = 0;
+	CreateWellKnownSid(WinWorldSid, NULL, (SID*)sid, &sid_size);
+	SetEntriesInAcl(1, &ea, NULL, &pACL);
+	InitializeSecurityDescriptor(&sd, SECURITY_DESCRIPTOR_REVISION);
+	SetSecurityDescriptorDacl(&sd, TRUE, pACL, FALSE);
+	make_event_name();
+	h_event = CreateEvent(&sa, FALSE, FALSE, txt);
 
 	for (;;) {
-		Sleep(clean_timer);
+		dw = WaitForSingleObject(h_event, clean_timer);
+		if (dw == WAIT_FAILED) Sleep(clean_timer);
+		if (dw == WAIT_OBJECT_0) goto flush_vol;
 
 		// check ramdisk activity
 		for(;;) {
 			data_amount = 0;
 			Sleep(1000);
+flush_vol:
 			if (*(long*)(drive_arg + 1) == ':') {
-				_snwprintf(file_name, _countof(file_name), L"\\\\.\\%s", drive_arg);
+				_snwprintf(file_name, _countof(file_name) - 1, L"\\\\.\\%s", drive_arg);
 				h_vol = CreateFile(file_name, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, FILE_FLAG_NO_BUFFERING, NULL);
 			} else
 				h_vol = CreateFile(drive_arg, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS | FILE_FLAG_NO_BUFFERING, NULL);
 			FlushFileBuffers(h_vol);
-			if (data_amount < max_activity) break;
+			if (dw == WAIT_OBJECT_0 || data_amount < max_activity) break;
 			CloseHandle(h_vol);
 		}
 
 		// check whether the space between used bytes and allocated blocks has increased
 		if (NtQueryVolumeInformationFile(h_vol, &iosb, &size_inf, sizeof size_inf, FileFsSizeInformation) != STATUS_SUCCESS) goto close_vol_handle;
 		cluster_size = size_inf.BytesPerSector * size_inf.SectorsPerAllocationUnit;
+		if (dw == WAIT_OBJECT_0) goto cleanup;
+
 		total_bytes = size_inf.TotalAllocationUnits.QuadPart * cluster_size;
 		free_bytes = size_inf.AvailableAllocationUnits.QuadPart * cluster_size;
 
 		new_diff = (__int64)n_block * mem_block_size - (total_bytes - free_bytes);
 		if (new_diff - prev_diff < (__int64)(total_bytes * clean_ratio / 1000)) goto close_vol_handle;
 
-		// cleanup
+cleanup:
 		for (i = 0;; i++) {
-			_snwprintf(file_name, _countof(file_name), L"%sCLEAN%u", drive_root, i);
+			_snwprintf(file_name, _countof(file_name) - 1, L"%s\\CLEAN%u", drive_arg, i);
 			mfd.FileHandle = CreateFile(file_name, GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_NEW,
 										FILE_ATTRIBUTE_HIDDEN | FILE_ATTRIBUTE_SYSTEM | FILE_FLAG_DELETE_ON_CLOSE | FILE_FLAG_NO_BUFFERING | FILE_FLAG_WRITE_THROUGH, NULL);
 			if (mfd.FileHandle != INVALID_HANDLE_VALUE) break;
@@ -588,6 +610,14 @@ static int do_comm()
 
 #pragma GCC optimize "Os"
 
+static void make_event_name()
+{
+	WCHAR *ptr = &txt[13];
+
+	_snwprintf(txt, MAX_PATH - 1, L"Global\\RamDyn_%s", drive_arg);
+	do if (*ptr == '\\') *ptr = '/'; while (*(++ptr));
+}
+
 static LRESULT __stdcall WndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 {
 	HANDLE h, h_cpl;
@@ -633,31 +663,37 @@ int __stdcall wWinMain(HINSTANCE hinstance, HINSTANCE hPrevInstance, LPWSTR lpCm
 	_Bool use_trim = FALSE;
 
 	__wgetmainargs(&argc, &argv, &env, 0, &si);
-	if (argc < 7) {
+	if (argc < 3) {
 syntax_help:
 		MessageBoxA(NULL, "RamDyn.exe MountPoint Size|ImageFile CleanRatio|TRIM [CleanTimer CleanMaxActivity] PhysicalMemory BlockSize AddParam\n\n"
 						  "* MountPoint: a drive letter followed by a colon, or the full path to an empty NTFS folder.\n"
-						  "* Size|ImageFile: size of the volume, in KB. If this argument holds at least one non-numeric character, it is assumed to be the name of an image file to load.\n"
+						  "* Size|ImageFile: size of the volume, in KB. With at least one non-numeric character, it is assumed to be the name of an image file to load. "
+											"0 triggers the cleanup function for the specified mount point, if TRIM is not used (following parameters are ignored).\n"
 						  "* CleanRatio: with -1, TRIM commands are used in replacement of the cleanup function, and the 2 following parameters are not used; "
-									   "otherwise, it's an approximate ratio, per 1000, of the total drive space from which the cleanup function attempts to free the memory of the deleted files (default: 10).\n"
+										"otherwise, it's an approximate ratio, per 1000, of the total drive space from which the cleanup function attempts to free the memory of the deleted files (default: 10).\n"
 						  "* CleanTimer: minimal time between 2 cleanups (default: 10).\n"
 						  "* CleanMaxActivity: the cleanup function waits until reads and writes are below this value, in MB/s (default: 10).\n"
 						  "* PhysicalMemory: use 0 for allocating virtual memory, 1 for allocating physical memory (default: 0); "
-										   "allocating physical memory requires the privilege to lock pages in memory in the local group policy.\n"
+											"allocating physical memory requires the privilege to lock pages in memory in the local group policy.\n"
 						  "* BlockSize: size of memory blocks, in power of 2, from 12 (4 KB) to 30 (1 GB) (default: 20).\n"
 						  "* AddParam: additional parameters to pass to imdisk.exe. Use double-quotes for zero or several parameters.",
 					"Syntax", MB_OK);
 		ExitProcess(1);
 	}
 	drive_arg = argv[1];
-	_snwprintf(drive_root, _countof(drive_root) - 1, L"%s\\", argv[1]);
-	drive_root[_countof(drive_root) - 1] = 0;
 
 	str_ptr = image_file_name = argv[2];
 	if (!*str_ptr) ExitProcess(1);
 	while (*str_ptr >= '0' && *str_ptr <= '9') str_ptr++;
-	if (!*str_ptr) proxy_info.file_size = _wtoi64(argv[2]) << 10;
-	else {
+	if (!*str_ptr) {
+		if ((proxy_info.file_size = _wtoi64(argv[2]) << 10)) {
+			if (argc < 7) goto syntax_help;
+		} else {
+			make_event_name();
+			SetEvent(OpenEvent(EVENT_MODIFY_STATE, FALSE, txt));
+			ExitProcess(0);
+		}
+	} else {
 		if ((h_image = CreateFile(argv[2], GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_FLAG_SEQUENTIAL_SCAN, NULL)) == INVALID_HANDLE_VALUE) ExitProcess(1);
 		GetFileSizeEx(h_image, (LARGE_INTEGER*)&proxy_info.file_size);
 	}
