@@ -15,7 +15,7 @@ BEGIN
 	CONTROL "", ID_STATIC1, WC_STATIC, 0, 0, 0, 300, 41
 	CONTROL 1, ID_STATIC2, WC_STATIC, SS_ICON | SS_REALSIZEIMAGE | SS_CENTERIMAGE, 3, 0, 48, 41
 	LTEXT "Welcome to the installer for ImDisk Toolkit.", ID_TEXT1, 54, 8, 244, 18
-	LTEXT "", ID_STATIC3, 54, 27, 244, 10
+	LTEXT "", ID_STATIC3, 54, 27, 246, 13
 	LTEXT "Installation folder:", ID_TEXT9, 10, 52, 78, 10
 	EDITTEXT ID_EDIT1, 89, 50, 182, 12, ES_AUTOHSCROLL
 	PUSHBUTTON "...", ID_PBUTTON1, 273, 50, 16, 12
@@ -100,7 +100,7 @@ END
 
 
 1 VERSIONINFO
-FILEVERSION 7,0,0,0
+FILEVERSION 7,0,1,0
 BEGIN
 BLOCK "StringFileInfo"
 	BEGIN
@@ -108,7 +108,7 @@ BLOCK "StringFileInfo"
 		BEGIN
 			VALUE "FileDescription", "ImDisk Toolkit Configuration"
 			VALUE "ProductName", "imdisk"
-			VALUE "ProductVersion", "7.0.0.0"
+			VALUE "ProductVersion", "7.0.1.0"
 		END
 	END
 BLOCK "VarFileInfo"

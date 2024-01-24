@@ -1,7 +1,7 @@
-#define _WIN32_WINNT 0x0601
 #include <windows.h>
 #include <winternl.h>
 #include <ntstatus.h>
+#include <ntsecapi.h>
 #include <wtsapi32.h>
 #include <stdio.h>
 #include <aclapi.h>
@@ -9,8 +9,6 @@
 #include "..\inc\imdproxy.h"
 #include "..\inc\imdisk.h"
 
-#define RtlGenRandom SystemFunction036
-__declspec(dllimport) BOOLEAN __stdcall RtlGenRandom(PVOID RandomBuffer, ULONG RandomBufferLength);
 typedef struct {int newmode;} _startupinfo;
 __declspec(dllimport) int __cdecl __wgetmainargs(int *_Argc, wchar_t ***_Argv, wchar_t ***_Env, int _DoWildCard, _startupinfo *_StartInfo);
 NTSYSCALLAPI NTSTATUS NTAPI NtSetEvent(HANDLE EventHandle, PLONG PreviousState);
@@ -669,6 +667,7 @@ int __stdcall wWinMain(HINSTANCE hinstance, HINSTANCE hPrevInstance, LPWSTR lpCm
 	EXPLICIT_ACCESS ea = {GENERIC_ALL, SET_ACCESS, SUB_CONTAINERS_AND_OBJECTS_INHERIT, {NULL, NO_MULTIPLE_TRUSTEE, TRUSTEE_IS_SID, TRUSTEE_IS_WELL_KNOWN_GROUP, (LPTSTR)sid}};
 	SECURITY_DESCRIPTOR sd;
 	SECURITY_ATTRIBUTES sa = {sizeof(SECURITY_ATTRIBUTES), &sd, FALSE};
+	unsigned int eax, edx;
 
 	__wgetmainargs(&argc, &argv, &env, 0, &si);
 	if (argc < 3) {
@@ -755,7 +754,10 @@ syntax_help:
 	if (CPUInfo[3] & 0x4000000)
 #endif
 		data_search = data_search_sse2;
-	if ((CPUInfo[2] & 0x18000000) == 0x18000000 && ((unsigned char)_xgetbv(0) & 6) == 6) data_search = data_search_avx;
+	if ((CPUInfo[2] & 0x18000000) == 0x18000000) {
+		asm("xgetbv" : "=a" (eax), "=d" (edx) : "c" (0));
+		if ((eax & 6) == 6) data_search = data_search_avx;
+	}
 
 	SetProcessShutdownParameters(0x100, 0);
 	ProcessIdToSessionId(GetCurrentProcessId(), &session_id);

@@ -34,8 +34,9 @@ static WCHAR install_path[MAX_PATH], *path_cmdline = NULL;
 static WCHAR path_prev[MAX_PATH + 30] = {};
 static WCHAR desk[MAX_PATH + 100], *desk_ptr, startmenu[MAX_PATH + 100];
 static WCHAR cmd[32768];
-static WCHAR *file_list[] = {L"DevioNet.dll", L"DiscUtils.dll", L"DiscUtilsDevio.exe", L"ImDiskNet.dll", L"ImDiskTk-svc.exe", L"ImDisk-Dlg.exe",
-							 L"lang.txt", L"MountImg.exe", L"RamDiskUI.exe", L"RamDyn.exe", L"config.exe", L"setup.exe", L"ImDisk-UAC.exe"};
+static WCHAR *file_list[] = {L"DiscUtils.Core.dll", L"DiscUtils.Dmg.dll", L"DiscUtils.Streams.dll", L"DiscUtils.Vdi.dll", L"DiscUtils.Vhd.dll", L"DiscUtils.Vhdx.dll", L"DiscUtils.Vmdk.dll", L"DiscUtils.Xva.dll",
+							 L"DevioNet.dll", L"DiscUtilsDevio.exe", L"ImDiskNet.dll", L"ImDisk-Dlg.exe", L"ImDiskTk-svc.exe", L"lang.txt", L"MountImg.exe", L"RamDiskUI.exe", L"RamDyn.exe",
+							 L"DiscUtils.dll", L"ImDisk-UAC.exe", L"setup.exe", L"config.exe"};
 
 static WCHAR version_str[] = L"ImDisk Toolkit\n" APP_VERSION;
 
@@ -1031,7 +1032,7 @@ static DWORD __stdcall uninstall(LPVOID lpParam)
 	if (dir[0]) {
 		wcscpy(path, dir);
 		path_name_ptr = wcsrchr(path, '\\') + 1;
-		for (i = 0; i < _countof(file_list) - 3; i++)
+		for (i = 0; i < _countof(file_list) - 4; i++)
 			del(file_list[i]);
 		wcscpy(path_name_ptr, L"config.exe");
 		wcscpy(dir, path);

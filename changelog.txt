@@ -1,3 +1,8 @@
+Version 20201120
+- updated russian language
+- fix in the uninstaller: some files were not removed (regression from 20200402)
+- executables are now compiled with MinGW 10.2.1 (instead of 7.3.0)
+
 Version 20200727
 - added brazilian portuguese language
 - config.exe: added an option to avoid Explorer window appearing after volume mounting

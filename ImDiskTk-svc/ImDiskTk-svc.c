@@ -1,7 +1,6 @@
 #define SERVICE_CONTROL_PRESHUTDOWN 0x0000000F
 #define SERVICE_ACCEPT_PRESHUTDOWN 0x00000100
 #include <windows.h>
-#include <stdio.h>
 #include <wtsapi32.h>
 #include <winternl.h>
 #include <ntstatus.h>
@@ -61,14 +60,14 @@ static void scan_dir_copy(int index_source, int index_dest)
 	*(ULONG*)(path_source + index_source) = '*';
 	if ((fff = FindFirstFile(path_source, &entry)) == INVALID_HANDLE_VALUE) return;
 	do {
-		name_size = wcslen(entry.cFileName) + 1;
+		name_size = lstrlenW(entry.cFileName) + 1;
 		if (index_source + name_size > 32765 || index_dest + name_size > 32765) continue;
 		memcpy(&path_source[index_source], entry.cFileName, name_size * sizeof(WCHAR));
 		memcpy(&path_dest[index_dest], entry.cFileName, name_size * sizeof(WCHAR));
 		if (entry.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
 			if (entry.cFileName[0] == '.' && (!entry.cFileName[1] || (entry.cFileName[1] == '.' && !entry.cFileName[2]))) continue;
 			i = 0;
-			while (excluded_list[i] && _wcsicmp(base_source, excluded_list[i])) i++;
+			while (excluded_list[i] && lstrcmpiW(base_source, excluded_list[i])) i++;
 			if (excluded_list[i]) continue;
 			switch (attrib = GetFileAttributes(path_dest)) {
 				default:
@@ -104,7 +103,7 @@ static void scan_dir_delete(int index_source, int index_dest, BOOL del_recurs)
 	*(ULONG*)(path_dest + index_dest) = '*';
 	if ((fff = FindFirstFile(path_dest, &entry)) == INVALID_HANDLE_VALUE) return;
 	do {
-		name_size = wcslen(entry.cFileName) + 1;
+		name_size = lstrlenW(entry.cFileName) + 1;
 		if (index_source + name_size > 32765 || index_dest + name_size > 32765) continue;
 		memcpy(&path_source[index_source], entry.cFileName, name_size * sizeof(WCHAR));
 		memcpy(&path_dest[index_dest], entry.cFileName, name_size * sizeof(WCHAR));
@@ -113,7 +112,7 @@ static void scan_dir_delete(int index_source, int index_dest, BOOL del_recurs)
 		if (entry.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
 			if (entry.cFileName[0] == '.' && (!entry.cFileName[1] || (entry.cFileName[1] == '.' && !entry.cFileName[2]))) continue;
 			i = 0;
-			while (excluded_list[i] && _wcsicmp(base_dest, excluded_list[i])) i++;
+			while (excluded_list[i] && lstrcmpiW(base_dest, excluded_list[i])) i++;
 			if (excluded_list[i]) continue;
 			if (!(entry.dwFileAttributes & FILE_ATTRIBUTE_REPARSE_POINT)) {
 				*(ULONG*)(path_source + index_source + name_size - 1) = '\\';
@@ -174,20 +173,20 @@ static DWORD __stdcall save_ramdisk(LPVOID lpParam)
 	key_name[1] = '_';
 	for (key_name[0] = '0'; key_name[0] <= 'Z'; key_name[0] == '9' ? key_name[0] = 'A' : key_name[0]++) {
 		key_name_ptr = key_name[0] == wanted_drive ? &key_name[2] : key_name;
-		wcscpy(&key_name[2], L"SyncFlags");
+		lstrcpyW(&key_name[2], L"SyncFlags");
 		data_size = sizeof flags;
 		if (!(RegQueryValueEx(reg_key, key_name_ptr, NULL, NULL, (void*)&flags, &data_size) == ERROR_SUCCESS && flags & 1)) continue;
-		wcscpy(&key_name[2], L"ImageFile");
+		lstrcpyW(&key_name[2], L"ImageFile");
 		data_size = sizeof image_file;
 		if (!(RegQueryValueEx(reg_key, key_name_ptr, NULL, NULL, (void*)&image_file, &data_size) == ERROR_SUCCESS && image_file[0])) continue;
 		image_file[_countof(image_file) - 2] = 0;
-		wcscpy(&key_name[2], L"VolumeID");
+		lstrcpyW(&key_name[2], L"VolumeID");
 		data_size = sizeof reg_volume_id;
 		if (RegQueryValueEx(reg_key, key_name_ptr, NULL, NULL, (void*)&reg_volume_id, &data_size) != ERROR_SUCCESS) continue;
 
 		// source
 		if (key_name[0] <= '9') {
-			wcscpy(&key_name[2], L"RDMountPoint");
+			lstrcpyW(&key_name[2], L"RDMountPoint");
 			mount_point[0] = 0;
 			data_size = sizeof mount_point;
 			RegQueryValueEx(reg_key, key_name, NULL, NULL, (void*)mount_point, &data_size);
@@ -198,13 +197,13 @@ static DWORD __stdcall save_ramdisk(LPVOID lpParam)
 			mount_point[1] = ':';
 			mount_point[2] = 0;
 		}
-		if (mount_point[wcslen(mount_point) - 1] != '\\') wcscat(mount_point, L"\\");
+		if (mount_point[lstrlenW(mount_point) - 1] != '\\') lstrcatW(mount_point, L"\\");
 		if (!GetVolumeInformation(mount_point, NULL, 0, &volume_id, NULL, NULL, NULL, 0) || volume_id != reg_volume_id) continue;
 
 		// destination
 		attrib = GetFileAttributes(image_file);
 		if ((dest_is_dir = attrib != INVALID_FILE_ATTRIBUTES && attrib & FILE_ATTRIBUTE_DIRECTORY)) {
-			if (image_file[wcslen(image_file) - 1] != '\\') wcscat(image_file, L"\\");
+			if (image_file[lstrlenW(image_file) - 1] != '\\') lstrcatW(image_file, L"\\");
 		} else {
 			if (!(drive_mask = 0x3ffffff ^ GetLogicalDrives())) continue;
 			temp_letter[0] = _bit_scan_reverse(drive_mask) + 'A';
@@ -220,21 +219,26 @@ static DWORD __stdcall save_ramdisk(LPVOID lpParam)
 		// excluded folders
 		sync_excluded = path_dest + 32768;
 		*sync_excluded = 0;
-		wcscpy(&key_name[2], L"SyncExcluded");
+		lstrcpyW(&key_name[2], L"SyncExcluded");
 		data_size = 499 * sizeof(WCHAR);
 		RegQueryValueEx(reg_key, key_name_ptr, NULL, NULL, (void*)sync_excluded, &data_size);
 		for (i = 0;; i++) {
 			while (*(ULONG*)sync_excluded == '\r' + ('\n' << 16)) sync_excluded += 2;
 			if (!*sync_excluded) break;
 			excluded_list[i] = sync_excluded;
-			if (!(sync_excluded = wcsstr(sync_excluded, L"\r\n"))) break;
+			do sync_excluded++; while (*sync_excluded && *(ULONG*)sync_excluded != '\r' + ('\n' << 16));
 			*sync_excluded = 0;
 			sync_excluded += 2;
 		}
 
-		i = _snwprintf(path_source, 32767, L"\\\\?\\%s", mount_point);
+		lstrcpyW(path_source, L"\\\\?\\");
+		lstrcpyW(&path_source[4], mount_point);
+		i = lstrlenW(path_source);
 		base_source = path_source + i;
-		j = _snwprintf(path_dest, 32767, dest_is_dir && image_file[0] == '\\' && image_file[1] == '\\' ? L"%s" : L"\\\\?\\%s", dest_is_dir ? image_file : temp_letter);
+
+		lstrcpyW(path_dest, L"\\\\?\\");
+		lstrcpyW(dest_is_dir && image_file[0] == '\\' && image_file[1] == '\\' ? path_dest : &path_dest[4], dest_is_dir ? image_file : temp_letter);
+		j = lstrlenW(path_dest);
 		base_dest = path_dest + j;
 
 		if (flags & 4) scan_dir_delete(i, j, FALSE);
@@ -293,21 +297,25 @@ int __stdcall wWinMain(HINSTANCE hinstance, HINSTANCE hPrevInstance, LPWSTR lpCm
 	OSVERSIONINFO os_ver;
 	HKEY reg_key;
 	DWORD data_size;
-	char timeout[20];
+	char timeout[20], *str_ptr;
 	WCHAR *command_line;
+	int i = 0;
 
 	command_line = GetCommandLine();
-	command_line += wcslen(command_line);
-	if (!wcscmp(command_line - 4, L"SYNC"))
+	command_line += lstrlenW(command_line);
+	if (!lstrcmpW(command_line - 4, L"SYNC"))
 		save_ramdisk(NULL);
 	else {
 		os_ver.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
 		GetVersionEx(&os_ver);
 		if (os_ver.dwMajorVersion < 6) {
 			RegCreateKeyExA(HKEY_LOCAL_MACHINE, "SYSTEM\\CurrentControlSet\\Control", 0, NULL, REG_OPTION_NON_VOLATILE, KEY_QUERY_VALUE | KEY_SET_VALUE | KEY_WOW64_64KEY, NULL, &reg_key, NULL);
+			timeout[0] = 0;
 			data_size = sizeof timeout;
 			RegQueryValueExA(reg_key, "WaitToKillServiceTimeout", NULL, NULL, (void*)timeout, &data_size);
-			if (atol(timeout) < 600000) RegSetValueExA(reg_key, "WaitToKillServiceTimeout", 0, REG_SZ, (void*)"600000", 7);
+			str_ptr = timeout;
+			while (*str_ptr) { i *= 10; i += *str_ptr - '0'; str_ptr++; }
+			if (i < 600000) RegSetValueExA(reg_key, "WaitToKillServiceTimeout", 0, REG_SZ, (void*)"600000", 7);
 			RegCloseKey(reg_key);
 			SvcStatus.dwControlsAccepted = SERVICE_ACCEPT_STOP | SERVICE_ACCEPT_SHUTDOWN;
 		}
