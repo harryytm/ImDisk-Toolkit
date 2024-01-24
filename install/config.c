@@ -45,9 +45,9 @@ static DWORD EstimatedSize = 1813;
 static WCHAR *driver_svc_list[] = {L"ImDskSvc", L"DevIoDrv", L"AWEAlloc", L"ImDisk"};
 static WCHAR *tk_svc_list[] = {L"ImDiskRD", L"ImDiskTk-svc", L"ImDiskImg"};
 
-static WCHAR *lang_list[] = {L"english", L"deutsch", L"español", L"français", L"italiano", L"português brasileiro", L"русский", L"suomi", L"svenska", L"简体中文"};
-static WCHAR *lang_file_list[] = {L"english", L"german", L"spanish", L"french", L"italian", L"brazilian-portuguese", L"russian", L"finnish", L"swedish", L"schinese"};
-static USHORT lang_id_list[] = {0, 0x07, 0x0a, 0x0c, 0x10, 0x16, 0x19, 0x0b, 0x1d, 0x04};
+static WCHAR *lang_list[] = {L"english", L"deutsch", L"español", L"français", L"italiano", L"magyar", L"português brasileiro", L"русский", L"suomi", L"svenska", L"简体中文"};
+static WCHAR *lang_file_list[] = {L"english", L"german", L"spanish", L"french", L"italian", L"hungarian", L"brazilian-portuguese", L"russian", L"finnish", L"swedish", L"schinese"};
+static USHORT lang_id_list[] = {0, 0x07, 0x0a, 0x0c, 0x10, 0x0e, 0x16, 0x19, 0x0b, 0x1d, 0x04};
 static int n_lang = 0;
 static _Bool lang_cmdline = FALSE;
 
@@ -65,7 +65,7 @@ enum {
 	ERR_1, ERR_2, ERR_3,
 	PREV_TXT,
 	FIN_1, FIN_2, FIN_3,
-	CRED_0, CRED_1, CRED_2, CRED_3, TRANS_0, TRANS_1, TRANS_2, TRANS_3, TRANS_4, TRANS_5, TRANS_6, TRANS_7, TRANS_8, TRANS_MAX,
+	CRED_0, CRED_1, CRED_2, CRED_3, TRANS_0, TRANS_1, TRANS_2, TRANS_3, TRANS_4, TRANS_5, TRANS_6, TRANS_7, TRANS_8, TRANS_9, TRANS_MAX,
 	SHORTCUT_1, SHORTCUT_2, SHORTCUT_3, SHORTCUT_4, SHORTCUT_5,
 	CONTEXT_1, CONTEXT_2, CONTEXT_3,
 
@@ -177,13 +177,47 @@ static void del_command_key(char *key)
 	del_key(HKEY_CLASSES_ROOT, key);
 }
 
-static void write_key(char *key, WCHAR *value)
+static void write_key(char *key, WCHAR *name, WCHAR *value)
 {
 	HKEY h_key;
 
 	RegCreateKeyExA(HKEY_CLASSES_ROOT, key, 0, NULL, REG_OPTION_NON_VOLATILE, KEY_SET_VALUE | KEY_WOW64_64KEY, NULL, &h_key, NULL);
-	RegSetValueEx(h_key, NULL, 0, REG_SZ, (void*)value, (wcslen(value) + 1) * sizeof(WCHAR));
+	RegSetValueEx(h_key, name, 0, REG_SZ, (void*)value, (wcslen(value) + 1) * sizeof(WCHAR));
 	RegCloseKey(h_key);
+}
+
+static void add_icon(char *key, _Bool use_cpl)
+{
+	HKEY h_key;
+
+	if (!use_cpl) {
+		_snwprintf(cmd, _countof(cmd) - 1, L"\"%sconfig.exe\"", path);
+		write_key(key, L"Icon", cmd);
+	} else if (RegOpenKeyExA(HKEY_CLASSES_ROOT, key, 0, KEY_SET_VALUE | KEY_WOW64_64KEY, &h_key) == ERROR_SUCCESS) {
+		RegDeleteValueA(h_key, "Icon");
+		RegCloseKey(h_key);
+	}
+}
+
+static void write_context_menu(WCHAR *path, _Bool use_cpl)
+{
+	WCHAR path_test[MAX_PATH + 20];
+
+	write_key("*\\shell\\ImDiskMountFile", NULL, t[CONTEXT_1]);
+	_snwprintf(path_test, _countof(path_test), L"%sMountImg.exe", path);
+	_snwprintf(cmd, _countof(cmd) - 1, L"\"%sMountImg.exe\" \"%%L\"", path);
+	write_key("*\\shell\\ImDiskMountFile\\command", NULL, !use_cpl && PathFileExists(path_test) ? cmd : L"rundll32.exe imdisk.cpl,RunDLL_MountFile %L");
+	add_icon("*\\shell\\ImDiskMountFile", use_cpl);
+
+	write_key("Drive\\shell\\ImDiskSaveImage", NULL, t[CONTEXT_2]);
+	_snwprintf(cmd, _countof(cmd) - 1, L"\"%sImDisk-Dlg.exe\" CP %%L", path);
+	write_key("Drive\\shell\\ImDiskSaveImage\\command", NULL, !use_cpl ? cmd : L"rundll32.exe imdisk.cpl,RunDLL_SaveImageFile %L");
+	add_icon("Drive\\shell\\ImDiskSaveImage", use_cpl);
+
+	write_key("Drive\\shell\\ImDiskUnmount", NULL, t[CONTEXT_3]);
+	_snwprintf(cmd, _countof(cmd) - 1, L"\"%sImDisk-Dlg.exe\" RM %%L", path);
+	write_key("Drive\\shell\\ImDiskUnmount\\command", NULL, !use_cpl ? cmd : L"rundll32.exe imdisk.cpl,RunDLL_RemoveDevice %L");
+	add_icon("Drive\\shell\\ImDiskUnmount", use_cpl);
 }
 
 static void move(WCHAR *file)
@@ -210,24 +244,6 @@ static BOOL del(WCHAR *file)
 {
 	_snwprintf(path_name_ptr, 99, L"%.98s", file);
 	return DeleteFile(path);
-}
-
-static void write_context_menu(WCHAR *path, _Bool use_cpl)
-{
-	WCHAR path_test[MAX_PATH + 20];
-
-	write_key("*\\shell\\ImDiskMountFile", t[CONTEXT_1]);
-	_snwprintf(path_test, _countof(path_test), L"%sMountImg.exe", path);
-	_snwprintf(cmd, _countof(cmd) - 1, L"\"%sMountImg.exe\" \"%%L\"", path);
-	write_key("*\\shell\\ImDiskMountFile\\command", !use_cpl && PathFileExists(path_test) ? cmd : L"rundll32.exe imdisk.cpl,RunDLL_MountFile %L");
-
-	write_key("Drive\\shell\\ImDiskSaveImage", t[CONTEXT_2]);
-	_snwprintf(cmd, _countof(cmd) - 1, L"\"%sImDisk-Dlg.exe\" CP %%L", path);
-	write_key("Drive\\shell\\ImDiskSaveImage\\command", !use_cpl ? cmd : L"rundll32.exe imdisk.cpl,RunDLL_SaveImageFile %L");
-
-	write_key("Drive\\shell\\ImDiskUnmount", t[CONTEXT_3]);
-	_snwprintf(cmd, _countof(cmd) - 1, L"\"%sImDisk-Dlg.exe\" RM %%L", path);
-	write_key("Drive\\shell\\ImDiskUnmount\\command", !use_cpl ? cmd : L"rundll32.exe imdisk.cpl,RunDLL_RemoveDevice %L");
 }
 
 

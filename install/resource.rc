@@ -100,7 +100,7 @@ END
 
 
 1 VERSIONINFO
-FILEVERSION 9,0,0,0
+FILEVERSION 9,1,0,0
 BEGIN
 BLOCK "StringFileInfo"
 	BEGIN
@@ -108,7 +108,7 @@ BLOCK "StringFileInfo"
 		BEGIN
 			VALUE "FileDescription", "ImDisk Toolkit Configuration"
 			VALUE "ProductName", "imdisk"
-			VALUE "ProductVersion", "9.0.0.0"
+			VALUE "ProductVersion", "9.1.0.0"
 		END
 	END
 BLOCK "VarFileInfo"

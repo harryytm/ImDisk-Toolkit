@@ -45,6 +45,7 @@ ImDisk - Создатели
 - Italiano: Ajeje Brazorf
 - Português Brasileiro: Rodolfo Bendinelli
 - suomi: Sampo Hippeläinen
+- magyar: I. Horváth Ferenc
 
 Основные настройки
 Удаление

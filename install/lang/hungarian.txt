@@ -3,11 +3,11 @@ ImDisk - Telepítés
 Üdvözöllek az ImDisk Toolkit telepítőjében.
 Ezzel telepíted az ImDisk Toolkit-et (build %S).
 Telepítési mappa:
-Komponensek 
+ Komponensek 
 ImDisk Virtual Disk Driver (szükséges)
 DiscUtils könyvtár (.NET Framework 4-et használ)
 RamDisk konfigurációs eszköz
-Opciók 
+ Opciók 
 Integrálás a helyi menükbe
 Asztali parancsikonok létrehozása
 Parancsikon minden felhasználónak
@@ -83,7 +83,7 @@ Ezek a változtatások#csak a Windows újraindítása után lépnek életbe!
 
 
 [RamDiskUI]
- RamDisk konfiguráció
+ RamDisk konfiguráció 
 OK
 Kilépés
 
@@ -139,7 +139,7 @@ Ide bármilyen paramétert hozzáadhatsz, amelyet a grafikus felhasználói fel�
 Adat
 Tartalom betöltése képfájlból vagy mappából:
 Szinkronizálás a rendszer leállításakor
-Csak az Archívum attribútummal rendelkező fájlok másolása
+Csak az archív attribútumú fájlok
 Törölje a ram lemezről eltávolított adatokat
 Kizárt mappák:
 Azonnali szinkronizálás
@@ -204,7 +204,7 @@ MB/mp
 Lefoglalt memóriablokkok mérete:
 OK
 Mégsem
-TRIM parancs "Automatikus" használata, ha van rá mód. Sokkal hatékonyabb,#de NTFS-t és legalább Windows 7-et igényel.##Ellenkező esetben szükség esetén, az alábbi 3 paramétertől függően, a takarítás funkció megtisztítja az egész üres helyet egy 0-val töltött ideiglenes fájllal (mivel a 0-val kitöltött adatblokkok automatikusan felszabadulnak).
+TRIM parancs "Automatikus" használata, ha van rá mód. Sokkal hatékonyabb,#de NTFS-t és legalább Windows 7-et igényel.##Ellenkező esetben szükség esetén, az alábbi 3 paramétertől függően, a takarítás#funkció megtisztítja az egész üres helyet egy 0-val töltött ideiglenes fájllal#(mivel a 0-val kitöltött adatblokkok automatikusan felszabadulnak).
 Alapértelmezett: 20.##Lefoglalt bájtok száma memóriablokkonként, 2-es hatványaiban.#A minimális érték 12 (4 kB). Használj 13-at 8 kB-hoz, 14-et 16 kB-hoz, és így tovább, 30-ig (1 GB).##Az alacsonyabb érték csökkentheti a memóriahasználatot és javíthatja#a töredezett fájlok esetén a takarítási funkció hatékonyságát, de csökkenti a teljesítményt.
 Alapértelmezett: 10.##A tisztítás funkció csak akkor fut, ha ennyi memória felszabadítható.#Az érték a teljes meghajtó terület aránya (pl.: 10/1000 egy 4 GB-os meghajtó = 40 MB).#Ez csak becslés: a ténylegesen felszabaduló #memória mennyisége eltérhet.
 Alapértelmezett: 10.##Az alacsony érték a takarítást reagálóbbá teheti, de helytelen lehet#abban az esetben, ha a fájlokat rendszeresen törlik anélkül, hogy újból létrehoznák.
@@ -217,7 +217,7 @@ Bezárás
 
 
 [MountImg]
-Új virtuális lemez csatlakoztatása 
+ Új virtuális lemez csatlakoztatása 
 Képfájl:
 Meghajtó betűjel
 Csatolási pont
@@ -241,8 +241,8 @@ Címke
 Autóindítási regisztráció törlése és a kiválasztott#meghajtó vagy csatolási pont leválasztása.
 Add meg a képfájl nevét, klikk a "..." gombra, vagy húzd ide a képfájlt az egérrel.#Hibás kiterjesztésű fájl esetén nem lesz sikeres a csatolás!##Ha a file nem létezik, a rendszer fel#fog kérni, hogy hozz létre új „nyers” fájlt.##A legördülő lista mutatja az automatikus#indításra regisztrált fájlokat.
 A csatolási pontnak egy NTFS-köteten lévő üres könyvtárnak kell lennie.##Ha egérrel idehúzol egy mappát, az lesz kiválasztva csatolási pont.
-A "CD/DVD" ajánlott ISO, BIN és NRG fájlokhoz, a #"Floppy" a VFD fájlokhoz, a "Hard Disk" minden más formátumhoz.
-Írj be 1-et, ha a képfájl nem tartalmaz partíciót, vagy csak egyet. A 0 a teljes képfájlt jelenti:#a partíciós tábla, ha van, felülíródik.
+A "CD/DVD" ajánlott ISO, BIN és NRG fájlokhoz, a "Floppy"#a VFD fájlokhoz, a "Hard Disk" minden más formátumhoz.
+Írj be 1-et, ha a képfájl nem tartalmaz partíciót, vagy csak egyet.#A 0 a teljes képfájlt jelenti: a partíciós tábla, ha van, felülíródik.
 A képfájlba való írás megakadályozása.
 Ez letiltja az írási gyorsító tárat: az adatok azonnal a képfájlba#íródnak, növeli a biztonságot, de ez csökkenti a teljesítményt.
 Regisztrálja a képfájlt a megadott paraméterekkel automatikus csatolásra.#Maximum 64000 képfájl regisztrálható.
@@ -262,7 +262,7 @@ Kilépés
 
 Új képfájl készítése
 A képfájl nem létezik.#Hozzak létre egy új nyers képfájlt?
-       Fájl méret:#        (Min. 65kB)
+       Fájl méret:#       (Min. 65kB)
 Csatolás
 Készítés
 Mégsem
@@ -281,7 +281,7 @@ PB
 Figyelem: nincs jogod a kötet megfelelő leválasztásához.#Lehet, hogy az írási pufferekben még van adat, fennáll az adatvesztés veszélye.##Folytatod?
 A kötetet egy folyamat használja, és ezért nem zárolható.##Ha az összes adatot elmentetted, folytasd bátran, a kötet megfelelően lesz leválasztva.##Folytatod?
 A virtuális lemez tartalma módosult.##Mentsük, a virtuális lemezt képfájlként mielőtt leválasztjuk a kötetet?
-Ne legyen megjelenítve ez a figyelmeztetés ismét
+Ne mutasd ezt a figyelmeztetést ismét
 Ne kérdezd újra
 OK
 Mégsem

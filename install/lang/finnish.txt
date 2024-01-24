@@ -45,6 +45,7 @@ Käännökset:
 - italiano: Ajeje Brazorf
 - português brasileiro: Rodolfo Bendinelli
 - suomi: Sampo Hippeläinen
+- magyar: I. Horváth Ferenc
 
 Yleiset asetukset
 Poista asennus

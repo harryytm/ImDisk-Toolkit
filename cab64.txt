@@ -32,6 +32,7 @@ install\lang\english.txt
 install\lang\finnish.txt
 install\lang\french.txt
 install\lang\german.txt
+install\lang\hungarian.txt
 install\lang\italian.txt
 install\lang\russian.txt
 install\lang\schinese.txt

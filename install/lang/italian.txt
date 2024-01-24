@@ -45,6 +45,7 @@ Traduzioni:
 - italiano: Ajeje Brazorf
 - português brasileiro: Rodolfo Bendinelli
 - suomi: Sampo Hippeläinen
+- magyar: I. Horváth Ferenc
 
 Impostazioni Generali
 Disinstalla

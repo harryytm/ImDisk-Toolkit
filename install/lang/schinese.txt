@@ -45,6 +45,7 @@ ImDisk - 贡献者/鸣谢
 - italiano: Ajeje Brazorf
 - português brasileiro: Rodolfo Bendinelli
 - suomi: Sampo Hippeläinen
+- magyar: I. Horváth Ferenc
 
 一般设置
 卸载

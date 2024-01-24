@@ -45,6 +45,7 @@ Traducciones:
 - italiano: Ajeje Brazorf
 - português brasileiro: Rodolfo Bendinelli
 - suomi: Sampo Hippeläinen
+- magyar: I. Horváth Ferenc
 
 Ajustes Generales
 Desinstalar

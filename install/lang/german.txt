@@ -45,6 +45,7 @@ ImDisk - Mitwirkende
 - italiano: Ajeje Brazorf
 - português brasileiro: Rodolfo Bendinelli
 - suomi: Sampo Hippeläinen
+- magyar: I. Horváth Ferenc
 
 Allgemeine Einstellungen
 Deinstallation

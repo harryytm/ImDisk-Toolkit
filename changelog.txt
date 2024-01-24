@@ -1,3 +1,7 @@
+Version 20220807
+- added hungarian language
+- added an icon in context menus (Windows 7 and later)
+
 Version 20220301
 - updated to driver 2.1.1 (2.0.9 kept on x64 systems without SHA256 signature support)
 - installer: removed the option to disable automatic loading of ImDskSvc
