@@ -43,8 +43,8 @@ static DWORD EstimatedSize = 1813;
 static WCHAR *driver_svc_list[] = {L"ImDskSvc", L"DevIoDrv", L"AWEAlloc", L"ImDisk"};
 static WCHAR *tk_svc_list[] = {L"ImDiskRD", L"ImDiskTk-svc", L"ImDiskImg"};
 
-static WCHAR *lang_list[] = {L"english", L"deutsch", L"español", L"français", L"italiano", L"magyar", L"português brasileiro", L"русский", L"suomi", L"svenska", L"简体中文", L"正體中文 (香港)", L"한국어"};
-static WCHAR *lang_file_list[] = {L"english", L"german", L"spanish", L"french", L"italian", L"hungarian", L"brazilian-portuguese", L"russian", L"finnish", L"swedish", L"schinese", L"tchinese", L"korean"};
+static WCHAR *lang_list[] = {L"english", L"deutsch", L"español", L"français", L"italiano", L"magyar", L"português brasileiro", L"русский", L"suomi", L"svenska", L"türkçe", L"简体中文", L"正體中文 (香港)", L"한국어"};
+static WCHAR *lang_file_list[] = {L"english", L"german", L"spanish", L"french", L"italian", L"hungarian", L"brazilian-portuguese", L"russian", L"finnish", L"swedish", L"turkish", L"schinese", L"tchinese", L"korean"};
 static int n_lang = 0;
 
 static _Bool lang_cmdline = FALSE;
@@ -66,7 +66,7 @@ enum {
 	ERR_1, ERR_2, ERR_3,
 	PREV_TXT,
 	FIN_1, FIN_2, FIN_3,
-	CRED_0, CRED_1, CRED_2, CRED_3, TRANS_0, TRANS_1, TRANS_2, TRANS_3, TRANS_4, TRANS_5, TRANS_6, TRANS_7, TRANS_8, TRANS_9, TRANS_10, TRANS_11, TRANS_MAX,
+	CRED_0, CRED_1, CRED_2, CRED_3, TRANS_0, TRANS_1, TRANS_2, TRANS_3, TRANS_4, TRANS_5, TRANS_6, TRANS_7, TRANS_8, TRANS_9, TRANS_10, TRANS_11, TRANS_12, TRANS_MAX,
 	SHORTCUT_1, SHORTCUT_2, SHORTCUT_3, SHORTCUT_4, SHORTCUT_5,
 	CONTEXT_1, CONTEXT_2, CONTEXT_3,
 
@@ -792,12 +792,13 @@ static INT_PTR __stdcall InstallProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM 
 					case 0x19: n_lang = 7; break; // russian
 					case 0x0b: n_lang = 8; break; // finnish
 					case 0x1d: n_lang = 9; break; // swedish
+					case 0x1f: n_lang = 10; break; // turkish
 					case 0x04: switch (full_lang_id) {
-							case 0x7C04: case 0x0C04: case 0x1404: case 0x0404: n_lang = 11; break; // tchinese
-							default: n_lang = 10; // schinese
+							case 0x7C04: case 0x0C04: case 0x1404: case 0x0404: n_lang = 12; break; // tchinese
+							default: n_lang = 11; // schinese
 						}
 						break;
-					case 0x12: n_lang = 12; break; // korean
+					case 0x12: n_lang = 13; break; // korean
 				}
 			}
 			SendDlgItemMessage(hDlg, ID_COMBO1, CB_SETCURSEL, n_lang, 0);

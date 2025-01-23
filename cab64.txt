@@ -50,6 +50,7 @@ install\lang\schinese.txt
 install\lang\spanish.txt
 install\lang\swedish.txt
 install\lang\tchinese.txt
+install\lang\turkish.txt
 
 .Set DestinationDir=driver
 files\driver\gpl.txt

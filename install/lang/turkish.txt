@@ -1,0 +1,332 @@
+[Setup]
+ImDisk - Kurulum
+ImDisk Toolkit yükleyicisine hoş geldiniz.
+Bu, ImDisk Toolkit'i (derleme %S) yükleyecektir.
+Kurulum klasörü:
+ Bileşenler 
+ImDisk Sanal Disk Sürücüsü (gerekli)
+DiscUtils kütüphanesi (.NET Framework 4.8 kullanır)
+RamDisk Yapılandırma Aracı
+ Seçenekler 
+Bağlam menülerindeki girdileri etkinleştir
+Masaüstünde kısayollar oluştur
+Tüm kullanıcılar için kısayollar
+Dil:
+Ayrıntıları görmek için lütfen farenizi bir öğenin üzerinde tutun.
+Sürücüyü yükle. Bu, bir Denetim Masası uygulaması, bir komut satırı aracı, imdisk.exe ve Explorer bağlam menülerinden birimleri yönetmek için arayüzler içerir.##Ayrıntılar için lütfen komut istemine "imdisk" yazın.
+Gelişmiş imaj dosya formatlarını (VHD, VDI, VMDK ve diğer bazıları) bağlamak için gereklidir.##Kurulum klasörüne bir komut satırı aracı olan DiscUtilsDevio.exe ve kütüphaneyi Explorer dosya bağlam menüsünden kullanmak için özel bir iletişim kutusu ekler.
+Bu araç, bir veya birden fazla RamDisk'i çeşitli ayarlarla kolayca yapılandırmanıza olanak tanır.
+ImDisk birimlerini ve imaj dosyalarını doğrudan Explorer'dan yönetmek için sürücü bağlam menüsüne ve dosya bağlam menüsüne girişler ekler.##Bu seçenek daha sonra Windows Başlat Menüsünden ayarlanabilir.
+Masaüstünde kısayollar oluştur.##Tüm kısayollar her zaman Windows Başlat Menüsünde oluşturulur.
+Aktif kullanıcı yerine tüm kullanıcılar için kısayollar oluşturur.
+Krediler
+Yükle
+İptal
+Yükleniyor...
+Dosya kopyalama hatası.
+Geçersiz yol.
+Hata: hizmet oluşturulamıyor.
+Önceki kurulum başka bir klasörde. #Kaldırmak ister misiniz?
+Kurulum tamamlandı.
+Kurulum tamamlandı.##Ancak, sisteminizde .NET Framework 4.8 bulunmuyor.#Bu olmadan bazı imaj dosya formatlarını bağlayamayabilirsiniz.##Yükleyiciyi indirmek için lütfen <a href="https://dotnet.microsoft.com/download/dotnet-framework/net48">Microsoft İndirme Merkezi</a>ni ziyaret edin.
+Tamam
+
+ImDisk - Katkıda Bulunanlar
+● Olof Lagerkvist: ImDisk Sanal Disk Sürücüsü ve DiscUtils kütüphanesini kullanmak için çeşitli araçlar
+● v77: RamDisk Yapılandırma Aracı, DiscUtils ile iletişim kutusu ve bu paketin yükleyicisi
+● Kenneth Bell: DiscUtils .NET kütüphanesi
+Çeviriler:
+- français: v77
+- español: alacran
+- svenska: Åke Engelbrektson / Olof Lagerkvist
+- deutsch: Bodo Thevissen
+- русский: 0x00ffh / Strani
+- 简体中文: Arne Sacnussem
+- italiano: Ajeje Brazorf
+- português brasileiro: Rodolfo Bendinelli
+- suomi: Sampo Hippeläinen
+- magyar: I. Horváth Ferenc
+- 한국어: 비너스걸💋 (VenusGirl)
+- 正體中文(香港): 楊添明
+- türkçe: Mesut Akcan
+
+Genel Ayarlar
+Kaldır
+Ana sayfa
+RamDisk Yapılandırma
+İmaj Dosyasını Bağla
+
+ImDisk Sanal Disk Olarak Bağla
+Disk içeriğini imaj dosyası olarak kaydet
+ImDisk Sanal Diskini Çıkar
+
+
+ImDisk - Kurulum
+Sürücüyü kaldır (yeniden başlatma gerekmez)
+Ayarları kaldır
+TEMP değişkenlerini sıfırla
+Kaldır
+İptal
+ImDisk sanal disk algılandı.#Mevcut tüm ImDisk sanal diskleri çıkarılacak!
+ImDisk birimleri çıkarılıyor...
+%s durduruluyor...
+Kalan bileşenler kaldırılıyor...
+
+
+ImDisk - Kurulum
+ Genel Ayarlar 
+Bağlam menülerindeki girdileri etkinleştir
+Birim bağlama işleminden sonra Explorer'ı gösterme
+Gizli iletişim kutularını geri yükle
+ Explorer'da şu sürücüleri gizle: 
+Parametreleri Kaydet...
+TEMP Çevre Değişkenleri ile
+Tamam
+İptal
+Bu değişiklikler yalnızca Windows'u#yeniden başlattıktan sonra etkili olacak!
+
+
+[RamDiskUI]
+ RamDisk Yapılandırma Aracı 
+Tamam
+Çıkış
+
+Temel
+    Boyut:
+KB
+MB
+GB
+Belleği Dinamik Olarak Ayır
+    Sürücü Harfi:
+Çıkart
+    Dosya Sistemi:
+Windows Başlangıcında Başlat
+TEMP Klasörü Oluştur
+TEMP Değişkenlerini Ayarla...
+En az: %d %s
+En çok: %d %s
+Bütün belleği ayırmak yerine,#yalnızca gerçekten kullanıldığında ayrılır.#Bu daha yavaş ancak ramdiskin yalnızca küçük bir kısmını#kullanıyorsanız çok fazla bellek tasarrufu sağlar.
+Seçilen ImDisk sürücüsünü çıkart ve kaydını sil.
+Varsayılan: NTFS.##*FAT* dosya sistemleri genellikle daha hızlıdır ancak daha az özelliğe sahiptir.#FAT ve FAT32 ayrıca maksimum birim boyutunda sınırlamalara sahiptir.
+Oluşturulduktan sonra, ramdiskin Windows ile başlatılması için kaydedilmesini sağlar.#Birden fazla ramdisk kaydedilebilir.
+Birimin kökünde bir Temp klasörü oluşturun.##Başka klasörler oluşturmak için, sabit diskinizdeki bir klasörde ne istediğinizi tanımlayın#ve bunu Veri sekmesinde belirtin.
+
+Gelişmiş
+Küme Boyutu:
+Sürücü Etiketi:
+Hızlı Biçimlendir
+NTFS Sıkıştırmayı Etkinleştir
+AWE Fiziksel Belleği Kullan
+Dinamik RamDisk Parametreleri...
+Bağlama Noktası Kullan:
+Çıkart
+Bağlandıktan Sonra Çalıştır:
+Ek Parametreler:
+Varsayılan
+0.5 KB
+1 KB
+2 KB
+4 KB
+8 KB
+16 KB
+32 KB
+64 KB
+Daha büyük kümeler genellikle daha hızlıdır ancak çok sayıda dosya varsa daha fazla disk alanı kullanabilir.
+Etiket boyutu dosya sistemiyle sınırlıdır: NTFS için 32 karakter, FAT için 11 karakter.
+Varsayılan: devre dışı.##Hızlı biçimlendirme yapar. Bu, RamDisk oluşturmayı hızlandırabilir ancak ayrılan bellek#hemen Windows Görev Yöneticisi'nde kullanılabilir olarak görünmez.
+Varsayılan: devre dışı.##Dosyalar ramdiske yazılmadan önce sıkıştırılabilir.#Sadece NTFS dosya sistemi ile çalışır.#Hız önemliyse kullanmayın!##Dinamik ramdisklerde önerilmez#çünkü bellek düzgün bir şekilde serbest bırakılmayabilir.
+Varsayılan: devre dışı.##Belleği AWE üzerinden ayırır.#Bu, belleğin asla sayfa dosyasına yazılmayacağını garanti eder.##32 bit sistemlerde, işlem başına 2GB ve 4GB sınırlarını aşarak#sistemin yönetebildiği kadar bellek ayırır#(yönetilmeyen veya görünmez bellek hariç).
+Varsayılan: devre dışı.##Sürücü harfi yerine bir klasör kullanarak ramdiski bağlayın.
+Seçilen ImDisk bağlama noktasını çıkart ve kaydını sil.
+Bağlama noktası NTFS birimde bulunan boş bir klasör olmalıdır.#Windows başlangıcında en fazla 10 bağlama noktası kayıt edilebilir.
+Birim hazır olduğunda (biçimlendirilip veriler kopyalandıktan sonra), belirtilen dosyayı çalıştırır.#Bu bir yürütülebilir dosya veya bir komut dosyası olabilir.#Dosya oturum 0'da ("Sistem" kullanıcısı) çalıştırılır,#yani hiçbir pencere gösterilmez.
+Buraya GUI tarafından zaten kullanılmayan herhangi bir parametre ekleyebilirsiniz.#Örneğin, "-o rem" parametresi sürücüye çıkarılabilir özellik ekleyecektir.#Tüm parametreleri listelemek için "..." düğmesine tıklayın.
+
+Veri
+İçeriği İmaj Dosyasından veya Klasörden Yükle:
+Sistem Kapanışında Senkronize Et
+Yalnızca Arşiv özniteliğine sahip dosyaları kopyala
+RamDisk'ten çıkarılan verileri sil
+Hariç Tutulan Klasörler:
+Şimdi Senkronize Et
+Bir klasör seçerseniz, ramdisk oluşturulduktan sonra tüm içeriği,#dosya sistemine bağlı olarak dosya öznitelikleri ve ACL ile birlikte kopyalanır.##Bir imaj dosyası ham, bölümlenmemiş ve#geçerli bir dosya sistemine sahip olmalıdır.#Böyle bir imaj, örneğin Explorer'da bir sürücü harfine sağ tıklanarak#oluşturulabilir: "Disk içeriğini imaj dosyası olarak kaydet".
+Varsayılan: devre dışı.##Aşağıdaki parametrelere bağlı olarak, sistem kapatıldığında#verileri ramdiskten klasöre veya imaj dosyasına kopyalar.
+Bir satırda bir klasör.#Klasörler ramdiskin köküne göre ayarlıdır#(sürücü harfi veya bağlama noktası): bunu eklemeyin.
+Şimdi tüm kayıtlı ramdiskleri senkronize et.
+
+Dinamik ramdisklerle AWE kullanmak, yerel grup ilkelerinde sayfalardaki kilitleri açma ayrıcalığını gerektirir. Devam etmek isterseniz, bu ayrıcalık Yöneticiler grubu için verilecektir.##Devam etmek istiyor musunuz?
+Ayrıcalık başarıyla verildi. Bu değişikliğin geçerli olması için oturumu kapatmanız gereklidir. Şimdi oturumu kapat?
+Hata: ayrıcalık verilemiyor.
+
+Hazır
+İşlem başlatılıyor...
+Hata: boyut en az %d KB olmalıdır.
+Hata: boyut %d %cB’yi geçmemelidir.
+Hata: geçersiz boyut.
+Hata: boş klasör seçilmedi.
+Seçilen bağlama noktası çıkartılacaktır. Kaydedilmemiş tüm veriler kaybolacaktır. Devam edilsin mi?
+Seçilen bağlama noktası çıkartılıyor...
+Bu birim çıkartılacaktır. Kaydedilmemiş tüm veriler kaybolacaktır. Devam edilsin mi?
+Mevcut birim çıkartılıyor...
+Hata: birim çıkartılamıyor.
+Yeni RamDisk bağlanıyor...
+Hata: bağlama noktası hedefi alınamıyor.
+Hata: dosya geçerli bir dosya sistemi içermiyor.
+Hata: birim biçimlendirilemiyor.
+Hata: birim bağlanamıyor.
+Dosyalar kopyalanıyor...
+Hata: dosyalar kopyalanamıyor.
+Kullanıcı komutu çalıştırılıyor...
+Hata: kullanıcı komutu çalıştırılamıyor.
+Yeni sürücü görüntüleniyor...
+Parametreler kaydediliyor...
+Uyarı: çok fazla bağlama noktası. Bu, kayıt edilmeyecek.
+Hata: servis oluşturulamıyor.
+Tamamlandı.
+Birim çıkartılıyor...
+Senkronize ediliyor...
+
+Temp Değişkenlerini Kullan
+Kullanıcı:
+Sistem:
+Hepsine Ayarla:
+Bir Bağlama Noktası Kullan
+Kaynak:
+Hedef:
+Varsayılanları Ayarla
+Tamam
+İptal
+Hata: bağlama noktası oluşturulamıyor.
+
+Bellek Serbest Bırakma Yöntemi:
+Otomatik
+TRIM Komutları
+Boş Alan Temizliği
+ Boş Alan Temizliği Parametreleri 
+Bu parametreler TRIM komutları kullanıldığında dikkate alınmaz.
+Temizlenecek Minimum Veri Miktarı:
+İki Temizlik Arasındaki Minimum Süre:
+Temizlik Öncesi Maksimum Aktivite:
+Saniye
+MB/sn
+Ayrılan Bellek Bloklarının Boyutu:
+Tamam
+İptal
+"Otomatik", TRIM komutlarını destekleniyorsa kullanır. Bu, çok daha verimlidir#ancak NTFS ve Windows 7 veya daha yeni sürüm gerektirir.##Aksi takdirde, aşağıdaki 3 parametreye bağlı olarak gerektiğinde tüm boş alan,#geçici bir dosya ile temizlenir.
+Varsayılan: 20.##Ayrılan bellek bloklarının boyutunu, 2'nin üssü olarak belirler.#En düşük değer 12'dir (4 KB). 13 ile 8 KB, 14 ile 16 KB#ve bu şekilde 30’a kadar (1 GB).##Düşük bir değer, belleğin daha verimli kullanılması ve dosya kırılması durumunda temizlik fonksiyonunun#verimliliğini artırabilir, ancak performansı düşürebilir.
+Varsayılan: 10.##Temizlik fonksiyonu yalnızca bu kadar bellek serbest bırakılabiliyorsa çalışır.#Bu oran toplam sürücü alanına göre belirlenir (örneğin:#4 GB'lik bir sürücüde 10/1000 = 40 MB). Bu sadece bir tahmindir: gerçekte#serbest bırakılan bellek miktarı biraz daha yüksek veya düşük olabilir.
+Varsayılan: 10.##Düşük bir değer temizlik işlemini daha duyarlı hale getirebilir#ancak düzenli olarak dosyaların silindiği ancak yeniden oluşturulmadığı durumlarda uygun olmayabilir.
+Varsayılan: 10.##Temizlik işlemi öncesinde okuma ve yaz
+
+Uyarı: Windows'un hızlı başlatma özelliği etkin. Bu bazı sorunlara yol açabilir:##● Sistem, ramdisk içeriğini kapatırken sabit diske yazar ve açılışta geri yükler.#● ImDisk Toolkit'in veri senkronizasyon özelliği sistem kapandığında çalışmaz.##Hızlı başlatmayı devre dışı bırakmak için Kapatma ayarlarını açın.
+Kapatma ayarları
+Bu uyarıyı tekrar gösterme
+Kapat
+
+
+[MountImg]
+ Yeni Sanal Disk Bağla 
+İmaj Dosyası:
+Sürücü Harfi
+Bağlama Noktası
+Çıkart
+Aygıt Türü:
+Sabit Disk
+CD/DVD
+Disket
+Salt okunur
+Taşınabilir
+Bölüm:
+Windows Başlangıcında Bağla
+Sürücü Arayüzüne Geç
+Tamam
+İptal
+Bağlanıyor...
+ImDisk - Bağlama Noktası
+Boyut
+Dosya Sistemi
+Etiket
+Seçilen imaj dosyasını Windows başlangıcından kaydeder#ve ardından seçilen sürücüyü veya bağlama noktasını çıkarır.
+İmaj dosyası adını girin, "..." butonu ile seçin#veya sürükleyip bırakın.#Yanlış bir uzantı bağlamayı başarısız kılabilir!##Dosya yoksa,#yeni bir ham dosya oluşturmanız istenecektir.##Açılır liste, Windows başlangıcında#bağlanacak kayıtlı dosyaları gösterir.
+Bağlama noktası, NTFS biriminde bulunan boş bir klasör olmalıdır.##Bir klasörü sürükleyip bırakırsanız, bu klasör bağlama noktası olarak seçilir.
+ISO, BIN ve NRG dosyaları için "CD/DVD";#VFD dosyaları için "Disket",#Diğer formatlar için "Sabit Disk" önerilir.
+İmaj dosyası bir bölüm içermiyorsa veya yalnızca bir bölüm içeriyorsa 1 girin.#0, tüm imaj anlamına gelir: bölüm tablosu varsa, üzerine yazılacaktır.
+İmaj dosyasına yazmayı engelle.
+Bu genellikle yazma önbelleğini devre dışı bırakır:#veriler imaj dosyasına hemen yazılır,#ancak bu performansı düşürebilir.
+Windows başlangıcında bağlanacak imaj dosyasını ve parametreleri kaydeder.#64000 adede kadar imaj dosyası kaydedilebilir.
+
+Bağlama sırasında bir hata oluştu.#Lütfen parametreleri kontrol edin.
+Hata: seçili bağlama noktasının dosya sistemi yeniden ayrıştırma noktalarını desteklemiyor.
+Seçilen klasör zaten bir bağlama noktasıdır.#Devam etmeyi seçerseniz, daha önce bağlanan birim bu bağlama noktası üzerinden erişilemez hale gelecektir.##Yine de devam etmek istiyor musunuz?
+Hata: Seçilen bağlama noktası boş bir klasör değil.
+Hata: Seçilen sürücü harfi zaten kullanımda.
+Hata: Hizmet oluşturulamıyor.
+
+Geçersiz Dosya Sistemi
+Birim geçerli bir dosya sistemi içermiyor.##Ne yapmak istersiniz?
+Çıkart
+Biçimlendir
+Çıkış
+
+Yeni İmaj Dosyası Oluştur
+Dosya mevcut değil.#Yeni bir RAW imaj dosyası oluşturmak ister misiniz?
+      Dosya Boyutu:#      (En az 65KB)
+Bağla
+Oluştur
+İptal
+Hata: dosya oluşturulamıyor.
+Hata: belirtilen boyutta bir dosya oluşturulamıyor.
+
+Bayt
+KB
+MB
+GB
+TB
+PB
+
+
+[ImDisk-Dlg]
+Uyarı: Bu birimi doğru şekilde çıkartmak için yeterli yetkiniz yok.#Yazma önbellekleri boşaltılmamış olabilir, bu nedenle veri kaybı riski vardır.##Yine de devam etmek istiyor musunuz?
+Birim başka bir işlem tarafından kullanılıyor ve kilitlenemiyor.##Tüm verileriniz kaydedilmişse, güvenle devam edebilirsiniz ve birim düzgün bir şekilde çıkarılacaktır.##Devam etmek istiyor musunuz?
+Sanal disk değiştirildi.##Kaldırmadan önce bir imaj dosyası olarak kaydetmek ister misiniz?
+Bu uyarıyı tekrar gösterme
+Tekrar sorma
+Tamam
+İptal
+Evet
+Hayır
+Aygıt açılıyor...
+Aygıt kaldırma hakkında uygulamaları bilgilendiriyor...
+Dosya önbellekleri boşaltılıyor...
+Birim kilitleniyor...
+Dosya sistemi çıkartılıyor...
+İmaj dosyası kaydediliyor...
+Aygıt kaldırılıyor...
+Sürücü harfi kaldırılıyor...
+Aygıt açılamıyor.
+%s, bir ImDisk sanal diski değil.
+Aygıt kaldırılamıyor.
+Bağlama noktası kaldırılamıyor.
+
+ Disk İmajını Kaydet 
+İmaj Dosyası:
+İmaj Dosyasında Ofset:
+Dosyanın başına bir MBR yaz
+Tamam
+İptal
+İmaj Dosyaları
+ISO İmajları
+Tüm Dosyalar
+%s kilitlendi ve hazır.
+%s, başka bir işlem tarafından kullanılıyor ve kilitlenemiyor.#Bu nedenle, kopyalama sırasında değiştirilebilir.
+%s kaydediliyor... %u%% 
+Birim %s başarıyla %s'ye kaydedildi.
+Desteklenmeyen sürücü türü.
+Birim özelliklerini alırken hata.
+İmaj dosyası açılamıyor.
+Bellek tahsis edilemiyor.
+Yeni MBR oluşturulurken hata oluştu.
+MBR yazma hatası.
+Dosya işaretçisini ayarlama hatası.
+Okuma hatası.
+Yazma hatası.

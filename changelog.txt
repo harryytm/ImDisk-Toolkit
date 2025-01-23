@@ -1,3 +1,6 @@
+Version 20241123
+- added turkish language
+
 Version 20240210
 - added traditional chinese language (Hong Kong region)
 - updated DiscUtils to .NET 4.8
