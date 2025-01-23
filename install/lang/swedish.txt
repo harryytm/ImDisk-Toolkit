@@ -5,7 +5,7 @@ Detta installerar ImDisk Toolkit (build %S).
 Installationsmapp:
  Komponenter 
 ImDisk Virtual Disk Driver (obligatorisk)
-DiscUtils library (använder .NET Framework 4)
+DiscUtils library (använder .NET Framework 4.8)
 RamDisk Configuration Tool
  Alternativ 
 Aktivera kontextmenyposter
@@ -28,7 +28,7 @@ Ogiltig sökväg.
 Fel: Kan inte skapa tjänst.
 Föregående installation finns i en annan mapp.#Vill du ta bort den?
 Installation slutförd.
-Installationen slutförd.##.NET Framework 4 finns dock inte i ditt system.#Utan det, kan du inte montera vissa avbildsformat.##Besök <a href="https://www.microsoft.com/en-us/download/details.aspx?id=17113">Microsoft Download Center</a> för att ladda ner en installerare.
+Installationen slutförd.##.NET Framework 4.8 finns dock inte i ditt system.#Utan det, kan du inte montera vissa avbildsformat.##Besök <a href="https://dotnet.microsoft.com/download/dotnet-framework/net48">Microsoft Download Center</a> för att ladda ner en installerare.
 OK
 
 ImDisk - Tack!
@@ -47,6 +47,7 @@ ImDisk - Tack!
 - suomi: Sampo Hippeläinen
 - magyar: I. Horváth Ferenc
 - 한국어: 비너스걸💋 (VenusGirl)
+- 正體中文(香港): 楊添明
 
 Allmänna inställningar
 Avinstallera

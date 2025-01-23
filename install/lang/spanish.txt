@@ -5,7 +5,7 @@ Este instalará ImDisk Toolkit (build %S).
 Carpeta de instalación:
  Componentes 
 Controlador de disco virtual (requerido)
-Librería DiscUtils (usa .NET Framework 4)
+Librería DiscUtils (usa .NET Framework 4.8)
 Herramienta de configuración RamDisk
  Opciones 
 Permitir entradas en menús contextuales
@@ -28,7 +28,7 @@ Ruta no válida.
 Error: No se puede crear el servicio.
 Existe una instalación anterior en otra carpeta.#¿Le gustaría eliminarla?
 Instalación finalizada.
-Instalación finalizada.##Sin embargo, .NET Framework 4 no está presente en su sistema. Sin él, usted no será capaz de montar algunos formatos de archivo de imagen.#Por favor, visite la <a href="https://www.microsoft.com/eses/download/details.aspx?id=17113">Centro de descargas de Microsoft</a> para descargar el instalador.
+Instalación finalizada.##Sin embargo, .NET Framework 4.8 no está presente en su sistema. Sin él, usted no será capaz de montar algunos formatos de archivo de imagen.#Por favor, visite la <a href="https://dotnet.microsoft.com/download/dotnet-framework/net48">Centro de descargas de Microsoft</a> para descargar el instalador.
 OK
 
 ImDisk - Créditos
@@ -47,6 +47,7 @@ Traducciones:
 - suomi: Sampo Hippeläinen
 - magyar: I. Horváth Ferenc
 - 한국어: 비너스걸💋 (VenusGirl)
+- 正體中文(香港): 楊添明
 
 Ajustes Generales
 Desinstalar

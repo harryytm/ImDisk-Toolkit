@@ -5,7 +5,7 @@ ImDisk - 安装
 安装目录:
  组件 
 ImDisk 虚拟驱动器驱动程序 (必要)
-DiscUtils 库 (使用 .NET Framework 4)
+DiscUtils 库 (使用 .NET Framework 4.8)
 RamDisk 配置工具
  选项 
 添加右键菜单选项
@@ -28,7 +28,7 @@ RamDisk 配置工具
 错误: 无法创建服务.
 发现旧版本.#是否删除?
 安装完成.
-安装完成.##未找到.NET Framework 4.#挂载某些镜像文件需要.NET Framework 4.##访问 <a href="https://www.microsoft.com/en-us/download/details.aspx?id=17113">Microsoft Download Center</a> 下载安装.
+安装完成.##未找到.NET Framework 4.8.#挂载某些镜像文件需要.NET Framework 4.##访问 <a href="https://dotnet.microsoft.com/download/dotnet-framework/net48">Microsoft Download Center</a> 下载安装.
 确定
 
 ImDisk - 贡献者/鸣谢
@@ -47,6 +47,7 @@ ImDisk - 贡献者/鸣谢
 - suomi: Sampo Hippeläinen
 - magyar: I. Horváth Ferenc
 - 한국어: 비너스걸💋 (VenusGirl)
+- 正體中文(香港): 楊添明
 
 一般设置
 卸载

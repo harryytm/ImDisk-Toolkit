@@ -5,7 +5,7 @@ Ezzel telepíted az ImDisk Toolkit-et (build %S).
 Telepítési mappa:
  Komponensek 
 ImDisk Virtual Disk Driver (szükséges)
-DiscUtils könyvtár (.NET Framework 4-et használ)
+DiscUtils könyvtár (.NET Framework 4.8-et használ)
 RamDisk konfigurációs eszköz
  Opciók 
 Integrálás a helyi menükbe
@@ -28,7 +28,7 @@ Hibás elérési út.
 Hiba: nem lehet a szolgáltatást létrehozni.
 Az előző telepítés egy másik mappában van.#El akarod távolítani?
 A telepítés befejeződött.
-A telepítés befejeződött.##A .NET Framework 4 azonban nincs telepítve a rendszeren.#E nélkül nem tudsz egyes képfájl formátumokat csatlakoztatni.##Kérlek, látogass el a <a href="https://www.microsoft.com/en-us/download/details.aspx?id=17113">Microsoft Download Center</a>-re a telepítő letöltéséhez.
+A telepítés befejeződött.##A .NET Framework 4.8 azonban nincs telepítve a rendszeren.#E nélkül nem tudsz egyes képfájl formátumokat csatlakoztatni.##Kérlek, látogass el a <a href="https://dotnet.microsoft.com/download/dotnet-framework/net48">Microsoft Download Center</a>-re a telepítő letöltéséhez.
 OK
 
 ImDisk - Stáblista
@@ -47,6 +47,7 @@ Fordítások:
 - suomi: Sampo Hippeläinen
 - magyar: I. Horváth Ferenc
 - 한국어: 비너스걸💋 (VenusGirl)
+- 正體中文(香港): 楊添明
 
 Általános beállítások
 Eltávolítás

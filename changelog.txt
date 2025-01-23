@@ -1,3 +1,8 @@
+Version 20240210
+- added traditional chinese language (Hong Kong region)
+- updated DiscUtils to .NET 4.8
+- minimal recommended requirement is now Windows 7
+
 Version 20240113
 - fix in RamDiskUI: in the synchronization tool, file removal did not work when the data source was an image file (regression from 20211103)
 - fix in RamDiskUI: if an image file was used with memory allocated dynamically, "Run after mounting" did not work at system startup

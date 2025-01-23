@@ -14,6 +14,6 @@ available separately on the website of their respective authors.
 Building a release requires the following steps:
 - MinGW must be extracted in the root of the same drive of the sources. Otherwise, batch files must be adapted.
 - comp_all.bat can be used to compile both the 32 and 64-bit executables.
-- The driver (http://www.ltr-data.se/opencode.html/#ImDisk) must be extracted in the "files" folder.
-- The DiscUtils library and related tools must be copied in the "MountImg" folder. See the FAQ of the driver for the links: http://reboot.pro/topic/15593-faqs-and-how-tos/
+- The driver (https://ltr-data.se/opencode.html/#ImDisk) must be extracted in the "files\driver" folder.
+- The DiscUtils library and related tools (https://ltr-data.se/opencode.html/#ImDisk) must be extracted in the "MountImg\DiscUtils" folder.
 - Finally, make_releases.bat can be used to produce the final install packages. It assumes that the x64 version of 7-Zip is installed: https://www.7-zip.org/

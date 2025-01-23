@@ -31,9 +31,9 @@ static WCHAR install_path[MAX_PATH], *path_cmdline = NULL;
 static WCHAR path_prev[MAX_PATH + 30] = {};
 static WCHAR desk[MAX_PATH + 100], *desk_ptr, desk_all[MAX_PATH + 100], *desk_all_ptr, startmenu[MAX_PATH + 100], *startmenu_ptr, startmenu_all[MAX_PATH + 100], *startmenu_all_ptr;
 static WCHAR cmd[32768];
-static WCHAR *file_list[] = {L"DiscUtils.Core.dll", L"DiscUtils.Dmg.dll", L"DiscUtils.Streams.dll", L"DiscUtils.Vdi.dll", L"DiscUtils.Vhd.dll", L"DiscUtils.Vhdx.dll", L"DiscUtils.Vmdk.dll", L"DiscUtils.Xva.dll",
-							 L"DevioNet.dll", L"DiscUtilsDevio.exe", L"ImDiskNet.dll", L"ImDisk-Dlg.exe", L"ImDiskTk-svc.exe", L"lang.txt", L"MountImg.exe", L"RamDiskUI.exe", L"RamDyn.exe",
-							 L"DiscUtils.dll", L"ImDisk-UAC.exe", L"setup.exe", L"config.exe"};
+static WCHAR *file_list[] = {L"ImDisk-Dlg.exe", L"ImDiskTk-svc.exe", L"lang.txt", L"MountImg.exe", L"RamDiskUI.exe", L"RamDyn.exe", L"config.exe"};
+static WCHAR *obsolete_list[] = {L"DiscUtils.Core.dll", L"DiscUtils.Dmg.dll", L"DiscUtils.Streams.dll", L"DiscUtils.Vdi.dll", L"DiscUtils.Vhd.dll", L"DiscUtils.Vhdx.dll", L"DiscUtils.Vmdk.dll", L"DiscUtils.Xva.dll",
+								 L"DevioNet.dll", L"DiscUtilsDevio.exe", L"ImDiskNet.dll", L"DiscUtils.dll", L"ImDisk-UAC.exe", L"setup.exe"};
 
 static WCHAR version_str[] = L"ImDisk Toolkit\n" APP_VERSION;
 
@@ -43,9 +43,8 @@ static DWORD EstimatedSize = 1813;
 static WCHAR *driver_svc_list[] = {L"ImDskSvc", L"DevIoDrv", L"AWEAlloc", L"ImDisk"};
 static WCHAR *tk_svc_list[] = {L"ImDiskRD", L"ImDiskTk-svc", L"ImDiskImg"};
 
-static WCHAR *lang_list[] = {L"english", L"deutsch", L"español", L"français", L"italiano", L"magyar", L"português brasileiro", L"русский", L"suomi", L"svenska", L"简体中文", L"한국어"};
-static WCHAR *lang_file_list[] = {L"english", L"german", L"spanish", L"french", L"italian", L"hungarian", L"brazilian-portuguese", L"russian", L"finnish", L"swedish", L"schinese", L"korean"};
-static USHORT lang_id_list[] = {0, 0x07, 0x0a, 0x0c, 0x10, 0x0e, 0x16, 0x19, 0x0b, 0x1d, 0x04, 0x12};
+static WCHAR *lang_list[] = {L"english", L"deutsch", L"español", L"français", L"italiano", L"magyar", L"português brasileiro", L"русский", L"suomi", L"svenska", L"简体中文", L"正體中文 (香港)", L"한국어"};
+static WCHAR *lang_file_list[] = {L"english", L"german", L"spanish", L"french", L"italian", L"hungarian", L"brazilian-portuguese", L"russian", L"finnish", L"swedish", L"schinese", L"tchinese", L"korean"};
 static int n_lang = 0;
 
 static _Bool lang_cmdline = FALSE;
@@ -67,7 +66,7 @@ enum {
 	ERR_1, ERR_2, ERR_3,
 	PREV_TXT,
 	FIN_1, FIN_2, FIN_3,
-	CRED_0, CRED_1, CRED_2, CRED_3, TRANS_0, TRANS_1, TRANS_2, TRANS_3, TRANS_4, TRANS_5, TRANS_6, TRANS_7, TRANS_8, TRANS_9, TRANS_10, TRANS_MAX,
+	CRED_0, CRED_1, CRED_2, CRED_3, TRANS_0, TRANS_1, TRANS_2, TRANS_3, TRANS_4, TRANS_5, TRANS_6, TRANS_7, TRANS_8, TRANS_9, TRANS_10, TRANS_11, TRANS_MAX,
 	SHORTCUT_1, SHORTCUT_2, SHORTCUT_3, SHORTCUT_4, SHORTCUT_5,
 	CONTEXT_1, CONTEXT_2, CONTEXT_3,
 
@@ -93,7 +92,7 @@ static void load_lang(WCHAR *file)
 
 	if ((h = CreateFile(file, GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL)) == INVALID_HANDLE_VALUE) return;
 	GetFileSizeEx(h, &size);
-	if (size.QuadPart > 1 << 17) {
+	if (size.QuadPart > 128 << 10) {
 		CloseHandle(h);
 		return;
 	}
@@ -248,6 +247,31 @@ static BOOL del(WCHAR *file)
 	return DeleteFile(path);
 }
 
+static _Bool remove_discutils() {
+	WIN32_FIND_DATA entry;
+	HANDLE fff;
+	_Bool err = FALSE;
+	WCHAR du_str[100];
+
+	du_str[99] = 0;
+	wcscpy(path_name_ptr, L"DiscUtils\\*");
+	fff = FindFirstFile(path, &entry);
+	do {
+		if (entry.cFileName[0] == '.') continue;
+		_snwprintf(du_str, 99, L"DiscUtils\\%s", entry.cFileName);
+		if (!del(du_str) && GetLastError() == ERROR_ACCESS_DENIED) {
+			MoveFileEx(path, NULL, MOVEFILE_DELAY_UNTIL_REBOOT);
+			err = TRUE;
+		}
+	} while (FindNextFile(fff, &entry));
+	FindClose(fff);
+	path_name_ptr[9] = 0;
+	if (!RemoveDirectory(path)) {
+		MoveFileEx(path, NULL, MOVEFILE_DELAY_UNTIL_REBOOT);
+		err = TRUE;
+	}
+	return err;
+}
 
 static INT_PTR __stdcall CreditsProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lParam)
 {
@@ -316,7 +340,7 @@ static INT_PTR __stdcall DotNetProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM l
 				ShExInf.fMask = SEE_MASK_CLASSNAME;
 				ShExInf.lpFile = ((NMLINK*)lParam)->item.szUrl;
 				ShExInf.nShow = SW_SHOWNORMAL;
-				ShExInf.lpClass = L"http";
+				ShExInf.lpClass = L"https";
 				ShellExecuteEx(&ShExInf);
 			}
 			return TRUE;
@@ -341,7 +365,9 @@ static void install(HWND hDlg)
 	HKEY h_key;
 	WCHAR image_file[MAX_PATH], *param_name_ptr;
 	BOOL driver_ok, desk_lnk, show_dotnet = FALSE, priv_req, sync;
-	DWORD data_size, RD_found, awealloc, dynamic, sync_flags;
+	DWORD data_size, net_release, RD_found, awealloc, dynamic, sync_flags;
+	WIN32_FIND_DATA entry;
+	HANDLE fff;
 	WCHAR privilege_name[] = L"SeLockMemoryPrivilege";
 	HANDLE token = INVALID_HANDLE_VALUE;
 	TOKEN_PRIVILEGES tok_priv;
@@ -357,20 +383,23 @@ static void install(HWND hDlg)
 
 	GetDlgItemText(hDlg, ID_EDIT1, path, MAX_PATH);
 	if (!CreateDirectory(path, NULL) && (GetLastError() != ERROR_ALREADY_EXISTS)) {
+bad_dir:
 		if (silent < 2) MessageBox(hDlg, t[ERR_2], t[TITLE], MB_ICONERROR);
 		return;
 	}
 	wcscpy(install_path, path);
 	path_name_ptr = PathAddBackslash(path);
+	wcscpy(path_name_ptr, L"DiscUtils");
+	if (!CreateDirectory(path, NULL) && (GetLastError() != ERROR_ALREADY_EXISTS))
+		goto bad_dir;
 
 	EnableWindow(GetDlgItem(hDlg, IDOK), FALSE);
 	SetDlgItemText(hDlg, IDOK, t[CTRL_4]);
 	SetCursor(LoadImage(NULL, MAKEINTRESOURCE(OCR_WAIT), IMAGE_CURSOR, 0, 0, LR_DEFAULTSIZE | LR_SHARED));
 
 	// remove obsolete items
-	del(L"DiscUtils.dll");
-	del(L"ImDisk-UAC.exe");
-	del(L"setup.exe");
+	for (i = 0; i < _countof(obsolete_list); i++)
+		del(obsolete_list[i]);
 	if (RegOpenKeyExA(HKEY_LOCAL_MACHINE, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", 0, KEY_SET_VALUE | KEY_WOW64_64KEY, &h_key) == ERROR_SUCCESS) {
 		RegDeleteValueA(h_key, "ImDisk_notif");
 		RegCloseKey(h_key);
@@ -446,11 +475,6 @@ static void install(HWND hDlg)
 			reboot = TRUE;
 			CloseServiceHandle(svc_handle);
 		}
-		if (os_ver.dwMajorVersion >= 6 && !GetProcAddress(LoadLibraryA("wintrust.dll"), "CryptCATAdminAcquireContext2")) {
-			MoveFileEx(L"209awealloc.sys", L"driver\\awealloc\\amd64\\awealloc.sys", MOVEFILE_REPLACE_EXISTING);
-			MoveFileEx(L"209imdisk.sys", L"driver\\sys\\amd64\\imdisk.sys", MOVEFILE_REPLACE_EXISTING);
-			MoveFileEx(L"209imdisk.inf", L"driver\\imdisk.inf", MOVEFILE_REPLACE_EXISTING);
-		}
 		wcscpy(cmd, L"rundll32 setupapi.dll,InstallHinfSection DefaultInstall 128 driver\\imdisk.inf");
 		start_process(TRUE);
 	}
@@ -487,7 +511,7 @@ static void install(HWND hDlg)
 		RegDeleteValueA(h_key, "DisplayName");
 		RegCloseKey(h_key);
 		wcscpy(startmenu_ptr, L"ImDisk Virtual Disk Driver.lnk");
-		CopyFile(os_ver.dwMajorVersion >= 6 ? L"cp-admin.lnk" : L"cp.lnk", startmenu, FALSE);
+		CopyFile(L"ImDisk Virtual Disk Driver.lnk", startmenu, FALSE);
 		wcscpy(desk_ptr, L"ImDisk Virtual Disk Driver.lnk");
 		if (desk_lnk) CopyFile(startmenu, desk, FALSE);
 		else DeleteFile(desk);
@@ -497,24 +521,22 @@ static void install(HWND hDlg)
 	_snwprintf(startmenu_ptr, 99, L"%.94s.lnk", t[SHORTCUT_5]);
 	wcscpy(desk_ptr, startmenu_ptr);
 	if (IsDlgButtonChecked(hDlg, ID_CHECK2)) {
-		if (RegOpenKeyExA(HKEY_LOCAL_MACHINE, "SOFTWARE\\Microsoft\\.NETFramework\\v4.0.30319", 0, KEY_QUERY_VALUE | KEY_WOW64_64KEY, &h_key) != ERROR_SUCCESS)
-			show_dotnet = !silent;
-		else
+		data_size = sizeof net_release;
+		if (RegOpenKeyExA(HKEY_LOCAL_MACHINE, "SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full", 0, KEY_QUERY_VALUE | KEY_WOW64_64KEY, &h_key) == ERROR_SUCCESS &&
+			RegQueryValueExA(h_key, "Release", NULL, NULL, (void*)&net_release, &data_size) == ERROR_SUCCESS && net_release >= 528040)
 			RegCloseKey(h_key);
+		else
+			show_dotnet = !silent;
 
-		move(L"DiscUtils.Core.dll");
-		move(L"DiscUtils.Dmg.dll");
-		move(L"DiscUtils.Streams.dll");
-		move(L"DiscUtils.Vdi.dll");
-		move(L"DiscUtils.Vhd.dll");
-		move(L"DiscUtils.Vhdx.dll");
-		move(L"DiscUtils.Vmdk.dll");
-		move(L"DiscUtils.Xva.dll");
-		move(L"DiscUtilsDevio.exe");
-		move(L"DevioNet.dll");
-		move(L"ImDiskNet.dll");
+		fff = FindFirstFile(L"DiscUtils\\*", &entry);
+		do {
+			if (entry.cFileName[0] == '.') continue;
+			_snwprintf(cmd, 99, L"DiscUtils\\%s", entry.cFileName);
+			move(cmd);
+		} while (FindNextFile(fff, &entry));
+		FindClose(fff);
+
 		move(L"MountImg.exe");
-
 		shortcut(path, NULL);
 		if (desk_lnk) CopyFile(startmenu, desk, FALSE);
 		else DeleteFile(desk);
@@ -553,10 +575,7 @@ static void install(HWND hDlg)
 	} else {
 		DeleteFile(startmenu);
 		DeleteFile(desk);
-		del(L"DiscUtils.dll");
-		del(L"DiscUtilsDevio.exe");
-		del(L"DevioNet.dll");
-		del(L"ImDiskNet.dll");
+		remove_discutils();
 		del(L"MountImg.exe");
 	}
 
@@ -685,6 +704,7 @@ static void install(HWND hDlg)
 	if (path_prev[0] && wcscmp(install_path, path_prev) && (silent ||
 		MessageBox(hDlg, t[PREV_TXT] ? t[PREV_TXT] : L"The previous installation is in another folder.\nDo you want to remove it?", t[TITLE], MB_YESNO | MB_ICONQUESTION) == IDYES)) {
 		path_name_ptr = PathAddBackslash(wcscpy(path, path_prev));
+		if (remove_discutils()) reboot = TRUE;
 		for (i = 0; i < _countof(file_list); i++)
 			if (!del(file_list[i]) && GetLastError() == ERROR_ACCESS_DENIED) {
 				MoveFileEx(path, NULL, MOVEFILE_DELAY_UNTIL_REBOOT);
@@ -750,6 +770,7 @@ static INT_PTR __stdcall InstallProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM 
 	VS_FIXEDFILEINFO *v1, *v2;
 	DWORD size_ver, data_size;
 	HKEY h_key;
+	LANGID prim_lang_id, full_lang_id;
 	int i;
 
 	switch (Msg)
@@ -760,9 +781,24 @@ static INT_PTR __stdcall InstallProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM 
 
 			// attempt to retrieve current language
 			if (!lang_cmdline) {
-				lang_id_list[0] = GetUserDefaultUILanguage() & 0x3ff;
-				n_lang = _countof(lang_id_list) - 1;
-				while (lang_id_list[n_lang] != lang_id_list[0]) n_lang--;
+				prim_lang_id = (full_lang_id = GetUserDefaultUILanguage()) & 0x3ff;
+				switch (prim_lang_id) {
+					case 0x07: n_lang = 1; break; // german
+					case 0x0a: n_lang = 2; break; // spanish
+					case 0x0c: n_lang = 3; break; // french
+					case 0x10: n_lang = 4; break; // italian
+					case 0x0e: n_lang = 5; break; // hungarian
+					case 0x16: n_lang = 6; break; // brazilian-portuguese
+					case 0x19: n_lang = 7; break; // russian
+					case 0x0b: n_lang = 8; break; // finnish
+					case 0x1d: n_lang = 9; break; // swedish
+					case 0x04: switch (full_lang_id) {
+							case 0x7C04: case 0x0C04: case 0x1404: case 0x0404: n_lang = 11; break; // tchinese
+							default: n_lang = 10; // schinese
+						}
+						break;
+					case 0x12: n_lang = 12; break; // korean
+				}
 			}
 			SendDlgItemMessage(hDlg, ID_COMBO1, CB_SETCURSEL, n_lang, 0);
 
@@ -1085,12 +1121,12 @@ static DWORD __stdcall uninstall(LPVOID lpParam)
 	if (dir[0]) {
 		wcscpy(path, dir);
 		path_name_ptr = wcsrchr(path, '\\') + 1;
-		for (i = 0; i < _countof(file_list) - 4; i++)
+		remove_discutils();
+		for (i = 0; i < _countof(file_list) - 1; i++)
 			del(file_list[i]);
 		wcscpy(path_name_ptr, L"config.exe");
-		wcscpy(dir, path);
-		path_name_ptr[-1] = 0;
-		_snwprintf(cmd, _countof(cmd) - 1, L"cmd /c \"for /l %%I in (0,0,1) do (del \"%s\"&rd \"%s\"&if not exist \"%s\" exit)\"", dir, path, dir);
+		*(wcsrchr(dir, '\\')) = 0;
+		_snwprintf(cmd, _countof(cmd) - 1, L"cmd /c \"for /l %%I in (0,0,1) do (del \"%s\"&rd \"%s\"&if not exist \"%s\" exit)\"", path, dir, path);
 		del_key(HKEY_LOCAL_MACHINE, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\ImDiskApp");
 		start_process(FALSE);
 	}

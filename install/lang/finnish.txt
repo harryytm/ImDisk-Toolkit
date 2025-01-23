@@ -5,7 +5,7 @@ Ohjelma asentaa ImDisk Toolkitin (koontiversio %S).
 Asennuskansio:
  Osat 
 ImDiskin virtuaalisten levyjen ajuri (vaaditaan)
-DiscUtils-kirjasto (vaatii .NET Framework 4)
+DiscUtils-kirjasto (vaatii .NET Framework 4.8)
 RamDisk-määritystyökalu
  Valinnat 
 Valinnat kontekstivalikoissa
@@ -28,7 +28,7 @@ VIrheellinen polku.
 Virhe palvelua luotaessa.
 Edellinen asennus on eri kansiossa.#Haluatko poistaa sen?
 Asennus valmis.
-Asennus valmis.##.NET Frameworkin versiota 4 ei havaittu järjestelmälläsi.#Ilman sitä et voi käyttää joitain levykuvien muotoja.##Sen saa asennettua <a href="https://www.microsoft.com/fi-fi/download/details.aspx?id=17113">Microsoftin latauskeskuksesta</a>.
+Asennus valmis.##.NET Frameworkin versiota 4.8 ei havaittu järjestelmälläsi.#Ilman sitä et voi käyttää joitain levykuvien muotoja.##Sen saa asennettua <a href="https://dotnet.microsoft.com/download/dotnet-framework/net48">Microsoftin latauskeskuksesta</a>.
 OK
 
 ImDisk - Tekijät
@@ -47,6 +47,7 @@ Käännökset:
 - suomi: Sampo Hippeläinen
 - magyar: I. Horváth Ferenc
 - 한국어: 비너스걸💋 (VenusGirl)
+- 正體中文(香港): 楊添明
 
 Yleiset asetukset
 Poista asennus

@@ -198,18 +198,18 @@ static BOOL discutils_check()
 	DWORD ExitCode;
 	long list_unit;
 	WCHAR cmdline[MAX_PATH + 100], txt_partition[24];
-	__int64 pipe;
-	int i;
+	__int64 pipe, t;
 
 	list_size = -1;
 	pipe = _rdtsc();
 	_snwprintf(txt_partition, _countof(txt_partition), list_partition != 1 ? L" /partition=%d" : L"", list_partition);
-	_snwprintf(cmdline, _countof(cmdline), L"DiscUtilsDevio /name=ImDisk%I64x%s /filename=\"%s\" /readonly", pipe, txt_partition, filename);
-	if (!CreateProcess(NULL, cmdline, NULL, NULL, FALSE, CREATE_NO_WINDOW, NULL, NULL, &si, &pi_discutilsdevio)) return FALSE;
+	_snwprintf(cmdline, _countof(cmdline), L"DiscUtils\\DiscUtilsDevio /name=ImDisk%I64x%s /filename=\"%s\" /readonly", pipe, txt_partition, filename);
+	if (!CreateProcess(NULL, cmdline, NULL, NULL, FALSE, CREATE_NO_WINDOW | ABOVE_NORMAL_PRIORITY_CLASS, NULL, NULL, &si, &pi_discutilsdevio)) return FALSE;
 	if ((list_unit = get_imdisk_unit()) < 0) return FALSE;
 	_snwprintf(cmdline, _countof(cmdline), L"imdisk -a -t proxy -u %d -o shm,%cd,ro,%s -f ImDisk%I64x", list_unit, dev_list[dev_type], rm_list[removable], pipe);
-	for (i = 0; i < 100; i++) {
-		Sleep(50);
+	t = _rdtsc();
+	do {
+		Sleep(0);
 		// check if DiscUtilsDevio is still active
 		GetExitCodeProcess(pi_discutilsdevio.hProcess, &ExitCode);
 		if (ExitCode != STILL_ACTIVE) break;
@@ -217,7 +217,7 @@ static BOOL discutils_check()
 			get_volume_param(list_unit);
 			break;
 		}
-	}
+	} while (_rdtsc() - t < 20000000000);
 	return list_size != -1;
 }
 
@@ -870,7 +870,7 @@ static INT_PTR __stdcall DlgProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPar
 
 		case WM_DROPFILES:
 #ifdef _WIN64
-			if (!DragQueryFile((HDROP)wParam, 0, txt, _countof(txt) - 1)) {
+			if (!DragQueryFile((HDROP)wParam, 0, txt, _countof(filename))) {
 				// dragging from a 32-bit process gives invalid high order DWORD in wParam
 				ULARGE_INTEGER ptr;
 				ptr.QuadPart = (ULONGLONG)GlobalAlloc(GMEM_MOVEABLE, 0);
@@ -878,10 +878,10 @@ static INT_PTR __stdcall DlgProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPar
 				ptr.QuadPart -= 16;
 				ptr.LowPart = (DWORD)wParam;
 				wParam = (WPARAM)ptr.QuadPart;
-				DragQueryFile((HDROP)wParam, 0, txt, _countof(txt) - 1);
+				DragQueryFile((HDROP)wParam, 0, txt, _countof(filename));
 			}
 #else
-			DragQueryFile((HDROP)wParam, 0, txt, _countof(txt) - 1);
+			DragQueryFile((HDROP)wParam, 0, txt, _countof(filename));
 #endif
 			DragFinish((HDROP)wParam);
 			if (PathIsDirectory(txt)) {
@@ -1084,7 +1084,7 @@ static DWORD __stdcall HandlerEx(DWORD dwControl, DWORD dwEventType, LPVOID lpEv
 
 static void __stdcall SvcMain(DWORD dwArgc, LPTSTR *lpszArgv)
 {
-	WCHAR cmd_line[MAX_PATH + 80];
+	WCHAR cmd_line[MAX_PATH + 100];
 	STARTUPINFO si = {sizeof si};
 	PROCESS_INFORMATION pi;
 	WCHAR txt_partition[24], param_name[24], *param_name_ptr, *cmd_line_ptr;
@@ -1098,22 +1098,21 @@ static void __stdcall SvcMain(DWORD dwArgc, LPTSTR *lpszArgv)
 	SetServiceStatus(SvcStatusHandle, &SvcStatus);
 
 	if (dwArgc >= 4) {
-		_snwprintf(cmd_line, _countof(cmd_line) - 1, L"DiscUtilsDevio %s", lpszArgv[1]);
+		_snwprintf(cmd_line, _countof(cmd_line) - 1, L"DiscUtils\\DiscUtilsDevio %s", lpszArgv[1]);
 		cmd_line[_countof(cmd_line) - 1] = 0;
 		if (CreateProcess(NULL, cmd_line, NULL, NULL, FALSE, CREATE_NO_WINDOW, NULL, NULL, &si, &pi)) {
 			_snwprintf(cmd_line, _countof(cmd_line) - 1, L"imdisk -a -t proxy -m \"%s\" %s", lpszArgv[3], lpszArgv[2]);
-			j = 0;
-			do {
+			for (j = 0; j < 100; j++) {
 				Sleep(100);
 				GetExitCodeProcess(pi.hProcess, &ExitCode);
 				if (ExitCode != STILL_ACTIVE) {
 					error = TRUE;
 					break;
 				}
-				error = start_process(cmd_line, TRUE);
-			} while (error && ++j < 100);
+				if (!(error = start_process(cmd_line, TRUE))) break;
+			}
 		} else error = TRUE;
-		
+
 		h = OpenSemaphoreA(SEMAPHORE_MODIFY_STATE, FALSE, "Global\\MountImgSvcSema");
 		ReleaseSemaphore(h, 1 + error, NULL);
 		CloseHandle(h);
@@ -1140,11 +1139,10 @@ static void __stdcall SvcMain(DWORD dwArgc, LPTSTR *lpszArgv)
 
 			pipe = _rdtsc();
 			_snwprintf(txt_partition, _countof(txt_partition), param.HighPart != 1 ? L" /partition=%d" : L"", param.HighPart);
-			_snwprintf(cmd_line, _countof(cmd_line), L"DiscUtilsDevio /name=ImDisk%I64x%s /filename=\"%s\"", pipe, txt_partition, filename);
+			_snwprintf(cmd_line, _countof(cmd_line), L"DiscUtils\\DiscUtilsDevio /name=ImDisk%I64x%s /filename=\"%s\"", pipe, txt_partition, filename);
 			if (!CreateProcess(NULL, cmd_line, NULL, NULL, FALSE, CREATE_NO_WINDOW, NULL, NULL, &si, &pi)) continue;
 			_snwprintf(cmd_line, _countof(cmd_line), L"imdisk -a -t proxy -m \"%s\" -o shm,%cd,r%c,%s -f ImDisk%I64x", drive, dev_list[param.LowPart >> 16], ro_list[param.LowPart & 1], rm_list[(param.LowPart >> 1) & 1], pipe);
-			j = 0;
-			do {
+			for (j = 0; j < 100; j++) {
 				Sleep(100);
 				GetExitCodeProcess(pi.hProcess, &ExitCode);
 				if (ExitCode != STILL_ACTIVE) {
@@ -1153,8 +1151,8 @@ static void __stdcall SvcMain(DWORD dwArgc, LPTSTR *lpszArgv)
 					error = TRUE;
 					break;
 				}
-				error = start_process(cmd_line, TRUE);
-			} while (error && ++j < 100);
+				if (!(error = start_process(cmd_line, TRUE))) break;
+			}
 			if (error) continue;
 
 			if (drive[0] && drive[1] == ':' && !drive[2]) {
@@ -1181,7 +1179,7 @@ int __stdcall wWinMain(HINSTANCE hinstance, HINSTANCE hPrevInstance, LPWSTR lpCm
 	SERVICE_DESCRIPTION svc_description;
 	WCHAR param_name[24], *param_name_ptr;
 	_Bool svc_required = FALSE;
-	DWORD data_size;
+	DWORD data_size, net_release;
 	int i, max;
 	SERVICE_TABLE_ENTRY DispatchTable[] = {{L"", SvcMain}, {NULL, NULL}};
 
@@ -1224,7 +1222,8 @@ int __stdcall wWinMain(HINSTANCE hinstance, HINSTANCE hPrevInstance, LPWSTR lpCm
 	data_size = sizeof show_explorer;
 	RegQueryValueEx(registry_key, L"ShowExplorer", NULL, NULL, (void*)&show_explorer, &data_size);
 
-	if (RegOpenKeyExA(HKEY_LOCAL_MACHINE, "SOFTWARE\\Microsoft\\.NETFramework\\v4.0.30319", 0, KEY_QUERY_VALUE | KEY_WOW64_64KEY, &h_key) == ERROR_SUCCESS) {
+	if (RegOpenKeyExA(HKEY_LOCAL_MACHINE, "SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full", 0, KEY_QUERY_VALUE | KEY_WOW64_64KEY, &h_key) == ERROR_SUCCESS &&
+		RegQueryValueExA(h_key, "Release", NULL, NULL, (void*)&net_release, &data_size) == ERROR_SUCCESS && net_release >= 528040) {
 		RegCloseKey(h_key);
 		net_installed = TRUE;
 	}

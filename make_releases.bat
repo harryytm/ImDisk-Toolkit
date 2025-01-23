@@ -11,7 +11,7 @@ copy /y /b MountImg\MountImg32.exe files\MountImg.exe
 copy /y /b ImDisk-Dlg\ImDisk-Dlg32.exe files\ImDisk-Dlg.exe
 copy /y /b ImDiskTk-svc\ImDiskTk-svc*.exe files
 copy /y /b install\config32.exe files\config.exe
-makecab /d CabinetName1=files.cab /d DiskDirectoryTemplate=%P% /f cab32.txt
+makecab /d DiskDirectoryTemplate=%P% /f cab32.txt
 "%ProgramW6432%\7-Zip\7z.exe" a ImDiskTk.zip %P% -mx=9
 
 del files\RamDyn32.exe files\ImDiskTk-svc32.exe
@@ -21,7 +21,7 @@ copy /y /b RamDiskUI\RamDiskUI64.exe files\RamDiskUI.exe
 copy /y /b MountImg\MountImg64.exe files\MountImg.exe
 copy /y /b ImDisk-Dlg\ImDisk-Dlg64.exe files\ImDisk-Dlg.exe
 copy /y /b install\config64.exe files\config.exe
-makecab /d CabinetName1=files.cab /d DiskDirectoryTemplate=%P% /f cab64.txt
+makecab /d DiskDirectoryTemplate=%P% /f cab64.txt
 "%ProgramW6432%\7-Zip\7z.exe" a ImDiskTk-x64.zip %P% -mx=9
 
 rd /s /q %P%

@@ -1,22 +1,11 @@
-.Set RptFileName=NUL
-.Set InfFileName=NUL
+.Set CabinetName1=files.cab
 .Set CompressionType=LZX
 .Set CompressionMemory=21
+.Set InfFileName=NUL
+.Set RptFileName=NUL
 
 files\config.exe
-files\cp-admin.lnk
-files\cp.lnk
-MountImg\DevioNet.dll
-MountImg\DiscUtils.Core.dll
-MountImg\DiscUtils.Dmg.dll
-MountImg\DiscUtils.Streams.dll
-MountImg\DiscUtils.Vdi.dll
-MountImg\DiscUtils.Vhd.dll
-MountImg\DiscUtils.Vhdx.dll
-MountImg\DiscUtils.Vmdk.dll
-MountImg\DiscUtils.Xva.dll
-MountImg\DiscUtilsDevio.exe
-MountImg\ImDiskNet.dll
+"files\ImDisk Virtual Disk Driver.lnk"
 files\MountImg.exe
 files\ImDisk-Dlg.exe
 files\ImDiskTk-svc32.exe
@@ -24,9 +13,30 @@ files\ImDiskTk-svc64.exe
 files\RamDiskUI.exe
 files\RamDyn32.exe
 files\RamDyn64.exe
-files\209awealloc.sys
-files\209imdisk.sys
-files\209imdisk.inf
+
+.Set DestinationDir=DiscUtils
+MountImg\DiscUtils\DevioNet.dll
+MountImg\DiscUtils\DiscUtils.Core.dll
+MountImg\DiscUtils\DiscUtils.Dmg.dll
+MountImg\DiscUtils\DiscUtils.Streams.dll
+MountImg\DiscUtils\DiscUtils.Vdi.dll
+MountImg\DiscUtils\DiscUtils.Vhd.dll
+MountImg\DiscUtils\DiscUtils.Vhdx.dll
+MountImg\DiscUtils\DiscUtils.Vmdk.dll
+MountImg\DiscUtils\DiscUtils.Xva.dll
+MountImg\DiscUtils\DiscUtilsDevio.exe
+MountImg\DiscUtils\DiscUtilsDevio.exe.config
+MountImg\DiscUtils\ImDiskNet.dll
+MountImg\DiscUtils\LTRData.Extensions.dll
+MountImg\DiscUtils\lzfse-net.dll
+MountImg\DiscUtils\lzfse.dll
+MountImg\DiscUtils\Microsoft.Bcl.HashCode.dll
+MountImg\DiscUtils\System.Buffers.dll
+MountImg\DiscUtils\System.Memory.dll
+MountImg\DiscUtils\System.Numerics.Vectors.dll
+MountImg\DiscUtils\System.Runtime.CompilerServices.Unsafe.dll
+MountImg\DiscUtils\System.Threading.Tasks.Extensions.dll
+MountImg\DiscUtils\System.ValueTuple.dll
 
 .Set DestinationDir=lang
 install\lang\brazilian-portuguese.txt
@@ -41,6 +51,7 @@ install\lang\russian.txt
 install\lang\schinese.txt
 install\lang\spanish.txt
 install\lang\swedish.txt
+install\lang\tchinese.txt
 
 .Set DestinationDir=driver
 files\driver\gpl.txt

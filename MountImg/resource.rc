@@ -70,7 +70,7 @@ END
 
 
 1 VERSIONINFO
-FILEVERSION 4,2,0,0
+FILEVERSION 5,0,0,0
 BEGIN
 BLOCK "StringFileInfo"
 	BEGIN
@@ -78,7 +78,7 @@ BLOCK "StringFileInfo"
 		BEGIN
 			VALUE "FileDescription", "Mount new virtual disk"
 			VALUE "ProductName", "imdisk"
-			VALUE "ProductVersion", "4.2.0.0"
+			VALUE "ProductVersion", "5.0.0.0"
 		END
 	END
 BLOCK "VarFileInfo"

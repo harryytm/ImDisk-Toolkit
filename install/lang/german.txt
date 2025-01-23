@@ -5,7 +5,7 @@ Dieser installiert das ImDisk Toolkit (Build %S).
 Installationsverzeichnis:
  Komponenten 
 ImDisk Virtual Disk Treiber (benötigt)
-DiscUtils Bibliothek (nutzt .Net Framework 4)
+DiscUtils Bibliothek (nutzt .Net Framework 4.8)
 RAM-Disk Konfigurator
  Einstellungen 
 Einträge in Kontextmenüs aktivieren
@@ -28,7 +28,7 @@ Ungültiger Pfad.
 Fehler: Kann Dienst nicht anlegen.
 Das vorherige Setup befindet sich in einem anderen Verzeichnis.#Möchtest du es löschen?
 Installation abgeschlossen.
-Installation abgeschlossen.##Allerdings ist .NET Framework 4 auf deinem System derzeit nicht installiert.#Ohne es kannst du einige Abbilder nicht einbinden.##Besuche <a href="https://www.microsoft.com/en-us/download/details.aspx?id=17113">Microsoft Download Center</a> für ein Setup.
+Installation abgeschlossen.##Allerdings ist .NET Framework 4.8 auf deinem System derzeit nicht installiert.#Ohne es kannst du einige Abbilder nicht einbinden.##Besuche <a href="https://dotnet.microsoft.com/download/dotnet-framework/net48">Microsoft Download Center</a> für ein Setup.
 OK
 
 ImDisk - Mitwirkende
@@ -47,6 +47,7 @@ ImDisk - Mitwirkende
 - suomi: Sampo Hippeläinen
 - magyar: I. Horváth Ferenc
 - 한국어: 비너스걸💋 (VenusGirl)
+- 正體中文(香港): 楊添明
 
 Allgemeine Einstellungen
 Deinstallation
