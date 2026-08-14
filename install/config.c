@@ -86,7 +86,7 @@ static void load_lang(WCHAR *file)
 {
 	HANDLE h;
 	LARGE_INTEGER size;
-	WCHAR *current_str;
+	WCHAR *current_str, *context;
 	DWORD dw;
 	int i;
 
@@ -101,9 +101,9 @@ static void load_lang(WCHAR *file)
 	ReadFile(h, lang_buf, size.LowPart, &dw, NULL);
 	CloseHandle(h);
 	if (!(current_str = wcsstr(lang_buf, L"[Setup]"))) return;
-	wcstok(current_str, L"\r\n");
+	wcstok(current_str, L"\r\n", &context);
 	for (i = 0; i < NB_TXT; i++) {
-		t[i] = wcstok(NULL, L"\r\n");
+		t[i] = wcstok(NULL, L"\r\n", &context);
 		if (wcslen(t[i]) >= 1024) t[i][1024] = 0;
 	}
 	size.LowPart /= sizeof(WCHAR);
@@ -1294,7 +1294,7 @@ static INT_PTR __stdcall SettingsProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM
 					hidden_drives++;
 			}
 			disp_warn = hidden_drives != hid_drive_ini;
-			SetDlgItemText(hDlg, ID_TEXT1, disp_warn ? t[S_CTRL_8] : version_str);
+			SetDlgItemText(hDlg, ID_TEXT1, disp_warn ? t[S_CTRL_9] : version_str);
 			EnableWindow(GetDlgItem(hDlg, ID_TEXT1), disp_warn);
 
 			if (LOWORD(wParam) == ID_PBUTTON1) {
@@ -1321,7 +1321,7 @@ static INT_PTR __stdcall SettingsProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM
 						if (!GetLastError())
 							WriteFile(h_file, L"\xFEFFWindows Registry Editor Version 5.00\r\n\r\n", 82, &bytes_written, NULL);
 
-						i = 0; do _snwprintf(path_prev, _countof(path_prev), L"%s%d", path, i); while (PathFileExists(path_prev));
+						i = 0; do _snwprintf(path_prev, _countof(path_prev), L"%s%d", path, i++); while (PathFileExists(path_prev));
 						_snwprintf(cmd, _countof(cmd) - 1, L"reg export HKLM\\SYSTEM\\CurrentControlSet\\Services\\ImDisk\\Parameters \"%s\"%s", path_prev, os_ver.dwMajorVersion >= 6 ? L" /y" : L"");
 						start_process(TRUE);
 						if ((h = CreateFile(path_prev, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_FLAG_DELETE_ON_CLOSE, NULL)) != INVALID_HANDLE_VALUE) {

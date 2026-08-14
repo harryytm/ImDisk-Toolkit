@@ -93,7 +93,7 @@ static void load_lang()
 {
 	HANDLE h;
 	LARGE_INTEGER size;
-	WCHAR *buf, *current_str;
+	WCHAR *buf, *current_str, *context;
 	DWORD dw;
 	int i;
 
@@ -110,9 +110,9 @@ static void load_lang()
 	ReadFile(h, buf, size.LowPart, &dw, NULL);
 	CloseHandle(h);
 	if (!(current_str = wcsstr(buf, L"[RamDiskUI]"))) return;
-	wcstok(current_str, L"\r\n");
+	wcstok(current_str, L"\r\n", &context);
 	for (i = 0; i < NB_TXT; i++)
-		t[i] = wcstok(NULL, L"\r\n");
+		t[i] = wcstok(NULL, L"\r\n", &context);
 	size.LowPart /= sizeof(WCHAR);
 	for (i = 0; i < size.LowPart; i++)
 		if (buf[i] == '#') buf[i] = '\n';

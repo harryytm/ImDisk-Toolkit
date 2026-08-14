@@ -1,3 +1,8 @@
+Version 20250206
+- fix in General Settings panel: a bug could occur with the save of parameters
+- fix in General Settings panel: a message was not properly displayed
+- executables are now compiled with MinGW 14.2.1 (instead of 13.2.1)
+
 Version 20241123
 - added turkish language
 
